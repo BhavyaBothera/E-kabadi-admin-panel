@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | E-Kabadi Command Center</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+
+        <header class="topbar" id="appTopbar"></header>
+
+        <main class="page-content">
+
+            <!-- HEADER -->
+            <div class="page-header">
+
+                <div>
+
+                    <div class="breadcrumb">
+                        Command Center / Settings
+                    </div>
+
+                    <h1>System Settings</h1>
+
+                    <p>
+                        Configure platform behaviour, pickup rules,
+                        notifications and administrator preferences.
+                    </p>
+
+                </div>
+
+                <div class="page-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="resetSettings">
+                        Reset Defaults
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="saveSettings">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SYSTEM STATUS -->
+            <section class="settings-status">
+
+                <div class="settings-status-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>
+                        E-Kabadi system operational
+                    </strong>
+
+                    <span>
+                        Configuration is stored locally in this
+                        prototype environment.
+                    </span>
+
+                </div>
+
+                <span class="status-badge status-active">
+                    Operational
+                </span>
+
+            </section>
+
+
+            <div class="settings-layout">
+
+                <!-- SETTINGS NAV -->
+                <aside class="settings-nav card">
+
+                    <button
+                        class="settings-tab active"
+                        data-section="general">
+
+                        <span>◉</span>
+
+                        General
+
+                    </button>
+
+
+                    <button
+                        class="settings-tab"
+                        data-section="pickup">
+
+                        <span>⌖</span>
+
+                        Pickup Operations
+
+                    </button>
+
+
+                    <button
+                        class="settings-tab"
+                        data-section="features">
+
+                        <span>✦</span>
+
+                        Platform Features
+
+                    </button>
+
+
+                    <button
+                        class="settings-tab"
+                        data-section="notifications">
+
+                        <span>◌</span>
+
+                        Notifications
+
+                    </button>
+
+
+                    <button
+                        class="settings-tab"
+                        data-section="payments">
+
+                        <span>₹</span>
+
+                        Payments
+
+                    </button>
+
+
+                    <button
+                        class="settings-tab"
+                        data-section="security">
+
+                        <span>⌁</span>
+
+                        Security
+
+                    </button>
+
+                </aside>
+
+
+                <!-- SETTINGS CONTENT -->
+                <div class="settings-content">
+
+
+                    <!-- GENERAL -->
+                    <section
+                        class="settings-section active"
+                        data-content="general">
+
+                        <div class="card settings-card">
+
+                            <div class="settings-card-header">
+
+                                <div>
+
+                                    <h3>
+                                        General Configuration
+                                    </h3>
+
+                                    <p>
+                                        Basic platform identity and
+                                        support information.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-form-grid">
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Platform Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="platformName"
+                                        class="form-control">
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Administrator
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        value="Bhavya Bothera"
+                                        class="form-control"
+                                        disabled>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Support Email
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        id="supportEmail"
+                                        class="form-control">
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Support Phone
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="supportPhone"
+                                        class="form-control">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card settings-card">
+
+                            <div class="settings-card-header">
+
+                                <div>
+
+                                    <h3>
+                                        Platform Information
+                                    </h3>
+
+                                    <p>
+                                        Environment and application
+                                        information.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-info-grid">
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Environment
+                                    </span>
+
+                                    <strong>
+                                        Prototype
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Version
+                                    </span>
+
+                                    <strong>
+                                        1.0.0
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Region
+                                    </span>
+
+                                    <strong>
+                                        India
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Currency
+                                    </span>
+
+                                    <strong>
+                                        INR (₹)
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- PICKUP -->
+                    <section
+                        class="settings-section"
+                        data-content="pickup">
+
+                        <div class="card settings-card">
+
+                            <div class="settings-card-header">
+
+                                <div>
+
+                                    <h3>
+                                        Pickup Operations
+                                    </h3>
+
+                                    <p>
+                                        Configure collection assignment
+                                        and pickup constraints.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-form-grid">
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Default Pickup Radius (km)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        id="defaultPickupRadius"
+                                        class="form-control">
+
+                                    <small>
+                                        Search for collectors within
+                                        this distance.
+                                    </small>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Maximum Pickup Distance (km)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        id="maxPickupDistance"
+                                        class="form-control">
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Minimum Pickup Weight (kg)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        min="0.1"
+                                        step="0.1"
+                                        id="minimumPickupWeight"
+                                        class="form-control">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-toggle-list">
+
+                                <div class="settings-toggle-row">
+
+                                    <div>
+
+                                        <strong>
+                                            Auto-assign collectors
+                                        </strong>
+
+                                        <span>
+                                            Automatically assign suitable
+                                            collectors to pickup requests.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="autoAssignCollectors">
+
+                                        <span
+                                            class="toggle-slider">
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="settings-toggle-row">
+
+                                    <div>
+
+                                        <strong>
+                                            Require citizen confirmation
+                                        </strong>
+
+                                        <span>
+                                            Citizen must confirm completed
+                                            collection.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="requireCitizenConfirmation">
+
+                                        <span
+                                            class="toggle-slider">
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="settings-toggle-row">
+
+                                    <div>
+
+                                        <strong>
+                                            Require collector verification
+                                        </strong>
+
+                                        <span>
+                                            Verify collector documents before
+                                            activation.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="requireCollectorVerification">
+
+                                        <span
+                                            class="toggle-slider">
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- FEATURES -->
+                    <section
+                        class="settings-section"
+                        data-content="features">
+
+                        <div class="card settings-card">
+
+                            <div class="settings-card-header">
+
+                                <div>
+
+                                    <h3>
+                                        Platform Features
+                                    </h3>
+
+                                    <p>
+                                        Enable or disable major E-Kabadi
+                                        platform capabilities.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-toggle-list">
+
+                                <div class="settings-toggle-row">
+
+                                    <div>
+
+                                        <strong>
+                                            AI Waste Analysis
+                                        </strong>
+
+                                        <span>
+                                            Enable AI-assisted waste
+                                            classification and analysis.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="enableAIAnalysis">
+
+                                        <span
+                                            class="toggle-slider">
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="settings-toggle-row">
+
+                                    <div>
+
+                                        <strong>
+                                            EcoCoin Rewards
+                                        </strong>
+
+                                        <span>
+                                            Allow citizens to earn and
+                                            redeem EcoCoins.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="enableRewards">
+
+                                        <span
+                                            class="toggle-slider">
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="settings-toggle-row">
+
+                                    <div>
+
+                                        <strong>
+                                            Platform Notifications
+                                        </strong>
+
+                                        <span>
+                                            Enable operational alerts and
+                                            administrator notifications.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="enableNotifications">
+
+                                        <span
+                                            class="toggle-slider">
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- NOTIFICATIONS -->
+                    <section
+                        class="settings-section"
+                        data-content="notifications">
+
+                        <div class="card settings-card">
+
+                            <div class="settings-card-header">
+
+                                <div>
+
+                                    <h3>
+                                        Notification Preferences
+                                    </h3>
+
+                                    <p>
+                                        Control when the admin receives
+                                        operational alerts.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="notification-preference-grid">
+
+                                <div class="notification-preference">
+
+                                    <div>
+                                        <strong>
+                                            New Pickup
+                                        </strong>
+
+                                        <span>
+                                            New pickup request created.
+                                        </span>
+                                    </div>
+
+                                    <span class="status-badge status-active">
+                                        Enabled
+                                    </span>
+
+                                </div>
+
+
+                                <div class="notification-preference">
+
+                                    <div>
+                                        <strong>
+                                            Collector Verification
+                                        </strong>
+
+                                        <span>
+                                            New collector requires approval.
+                                        </span>
+                                    </div>
+
+                                    <span class="status-badge status-active">
+                                        Enabled
+                                    </span>
+
+                                </div>
+
+
+                                <div class="notification-preference">
+
+                                    <div>
+                                        <strong>
+                                            Payment Attention
+                                        </strong>
+
+                                        <span>
+                                            Payment requires administrator
+                                            attention.
+                                        </span>
+                                    </div>
+
+                                    <span class="status-badge status-active">
+                                        Enabled
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- PAYMENTS -->
+                    <section
+                        class="settings-section"
+                        data-content="payments">
+
+                        <div class="card settings-card">
+
+                            <div class="settings-card-header">
+
+                                <div>
+
+                                    <h3>
+                                        Payment Configuration
+                                    </h3>
+
+                                    <p>
+                                        Configure payment release behaviour.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-toggle-list">
+
+                                <div class="settings-toggle-row">
+
+                                    <div>
+
+                                        <strong>
+                                            Automatic payment release
+                                        </strong>
+
+                                        <span>
+                                            Automatically release verified
+                                            payments after pickup completion.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="toggle">
+
+                                        <input
+                                            type="checkbox"
+                                            id="paymentAutoRelease">
+
+                                        <span
+                                            class="toggle-slider">
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-info-box">
+
+                                <strong>
+                                    Platform Fee
+                                </strong>
+
+                                <span>
+                                    Current platform fee:
+                                    <b>5%</b>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- SECURITY -->
+                    <section
+                        class="settings-section"
+                        data-content="security">
+
+                        <div class="card settings-card">
+
+                            <div class="settings-card-header">
+
+                                <div>
+
+                                    <h3>
+                                        Security
+                                    </h3>
+
+                                    <p>
+                                        Administrator access information.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-security-box">
+
+                                <div class="security-icon">
+                                    ✓
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Demo administrator account
+                                    </strong>
+
+                                    <span>
+                                        Authentication is currently
+                                        simulated using localStorage.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="settings-info-grid">
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Authentication
+                                    </span>
+
+                                    <strong>
+                                        Local Session
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Session Duration
+                                    </span>
+
+                                    <strong>
+                                        24 Hours
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Role
+                                    </span>
+
+                                    <strong>
+                                        Super Admin
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="settings-info-item">
+
+                                    <span>
+                                        Database
+                                    </span>
+
+                                    <strong>
+                                        Browser Storage
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<div id="toastRoot"></div>
+<div id="modalRoot"></div>
+
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+<script src="js/settings.js"></script>
+
+</body>
+</html>
