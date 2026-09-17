@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pickups | E-Kabadi Command Center</title>
+    <meta name="description" content="Manage and monitor E-Kabadi pickup operations.">
+
+    <link rel="icon" href="assets/favicon.svg">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside id="appSidebar" class="sidebar"></aside>
+
+    <!-- ================= MAIN ================= -->
+    <main class="main-wrapper">
+
+        <!-- TOPBAR -->
+        <header id="appTopbar" class="topbar"></header>
+
+        <!-- PAGE CONTENT -->
+        <section class="page-content">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+
+                <div>
+                    <div class="breadcrumb">
+                        <span>Operations</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Pickups</span>
+                    </div>
+
+                    <h1>Pickup Management</h1>
+
+                    <p class="page-description">
+                        Monitor, assign and manage waste collection requests.
+                    </p>
+                </div>
+
+                <div class="page-header-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="refreshPickupsBtn"
+                        type="button"
+                    >
+                        <span>↻</span>
+                        Refresh
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        id="exportPickupsBtn"
+                        type="button"
+                    >
+                        <span>↓</span>
+                        Export CSV
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="addPickupBtn"
+                        type="button"
+                    >
+                        <span>+</span>
+                        New Pickup
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= STATS ================= -->
+
+            <div class="stats-grid pickup-stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-green">
+                        <span>♻</span>
+                    </div>
+
+                    <div class="stat-content">
+                        <span class="stat-label">Total Pickups</span>
+                        <strong id="totalPickupsStat">0</strong>
+                        <small class="stat-meta">All requests</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-orange">
+                        <span>◷</span>
+                    </div>
+
+                    <div class="stat-content">
+                        <span class="stat-label">Pending</span>
+                        <strong id="pendingPickupsStat">0</strong>
+                        <small class="stat-meta">Awaiting assignment</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-blue">
+                        <span>↗</span>
+                    </div>
+
+                    <div class="stat-content">
+                        <span class="stat-label">Active</span>
+                        <strong id="activePickupsStat">0</strong>
+                        <small class="stat-meta">Collector assigned / working</small>
+                    </div>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-purple">
+                        <span>✓</span>
+                    </div>
+
+                    <div class="stat-content">
+                        <span class="stat-label">Completed</span>
+                        <strong id="completedPickupsStat">0</strong>
+                        <small class="stat-meta">Successfully collected</small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- ================= LIVE PIPELINE ================= -->
+
+            <div class="card pickup-pipeline-card">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Pickup Pipeline</h2>
+                        <p>Current operational status</p>
+                    </div>
+
+                    <span class="live-indicator">
+                        <span class="live-dot"></span>
+                        Live
+                    </span>
+                </div>
+
+                <div class="pickup-pipeline">
+
+                    <div class="pipeline-step">
+                        <div class="pipeline-number" id="pipelinePending">0</div>
+                        <span>Pending</span>
+                    </div>
+
+                    <div class="pipeline-line"></div>
+
+                    <div class="pipeline-step">
+                        <div class="pipeline-number" id="pipelineAssigned">0</div>
+                        <span>Assigned</span>
+                    </div>
+
+                    <div class="pipeline-line"></div>
+
+                    <div class="pipeline-step">
+                        <div class="pipeline-number" id="pipelineProgress">0</div>
+                        <span>In Progress</span>
+                    </div>
+
+                    <div class="pipeline-line"></div>
+
+                    <div class="pipeline-step pipeline-complete">
+                        <div class="pipeline-number" id="pipelineCompleted">0</div>
+                        <span>Completed</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= FILTERS ================= -->
+
+            <div class="card filters-card">
+
+                <div class="filters-header">
+
+                    <div>
+                        <h3>Pickup Requests</h3>
+                        <span id="pickupResultCount">0 pickups</span>
+                    </div>
+
+                    <button
+                        class="btn btn-ghost btn-sm"
+                        id="clearFiltersBtn"
+                        type="button"
+                    >
+                        Clear filters
+                    </button>
+
+                </div>
+
+
+                <div class="filters-grid">
+
+                    <div class="filter-group search-filter">
+
+                        <label for="pickupSearch">
+                            Search
+                        </label>
+
+                        <div class="search-box">
+                            <span class="search-icon">⌕</span>
+
+                            <input
+                                type="text"
+                                id="pickupSearch"
+                                placeholder="Search pickup ID, citizen or collector..."
+                                autocomplete="off"
+                            >
+                        </div>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="statusFilter">
+                            Status
+                        </label>
+
+                        <select id="statusFilter">
+
+                            <option value="all">
+                                All Statuses
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="collector_assigned">
+                                Collector Assigned
+                            </option>
+
+                            <option value="in_progress">
+                                In Progress
+                            </option>
+
+                            <option value="completed">
+                                Completed
+                            </option>
+
+                            <option value="cancelled">
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="collectorFilter">
+                            Collector
+                        </label>
+
+                        <select id="collectorFilter">
+                            <option value="all">
+                                All Collectors
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="areaFilter">
+                            Area
+                        </label>
+
+                        <select id="areaFilter">
+
+                            <option value="all">
+                                All Areas
+                            </option>
+
+                            <option value="Sector 18">
+                                Sector 18
+                            </option>
+
+                            <option value="Sector 62">
+                                Sector 62
+                            </option>
+
+                            <option value="Sector 76">
+                                Sector 76
+                            </option>
+
+                            <option value="Sector 137">
+                                Sector 137
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="sortFilter">
+                            Sort By
+                        </label>
+
+                        <select id="sortFilter">
+
+                            <option value="newest">
+                                Newest First
+                            </option>
+
+                            <option value="oldest">
+                                Oldest First
+                            </option>
+
+                            <option value="weight_high">
+                                Weight: High → Low
+                            </option>
+
+                            <option value="weight_low">
+                                Weight: Low → High
+                            </option>
+
+                            <option value="amount_high">
+                                Amount: High → Low
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= TABLE ================= -->
+
+            <div class="card table-card">
+
+                <div class="table-wrapper">
+
+                    <table class="data-table pickup-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Pickup</th>
+
+                                <th>Citizen</th>
+
+                                <th>Area</th>
+
+                                <th>Collector</th>
+
+                                <th>Schedule</th>
+
+                                <th>Weight</th>
+
+                                <th>Amount</th>
+
+                                <th>Status</th>
+
+                                <th class="text-right">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="pickupsTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- EMPTY STATE -->
+
+                <div
+                    id="pickupEmptyState"
+                    class="empty-state hidden"
+                >
+                    <div class="empty-state-icon">
+                        ♻
+                    </div>
+
+                    <h3>No pickups found</h3>
+
+                    <p>
+                        Try changing your filters or create a new pickup.
+                    </p>
+
+                    <button
+                        class="btn btn-primary"
+                        id="emptyAddPickupBtn"
+                        type="button"
+                    >
+                        Create Pickup
+                    </button>
+                </div>
+
+
+                <!-- PAGINATION -->
+
+                <div
+                    id="pickupPagination"
+                    class="pagination"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- Shared UI roots -->
+
+<div id="toastRoot"></div>
+<div id="modalRoot"></div>
+
+
+<!-- Scripts -->
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+
+<script src="js/pickups.js"></script>
+
+</body>
+</html>
