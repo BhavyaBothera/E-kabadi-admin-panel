@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analytics | E-Kabadi Command Center</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+
+        <!-- Topbar -->
+        <header class="topbar" id="appTopbar"></header>
+
+        <main class="page-content">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+
+                <div>
+                    <div class="breadcrumb">
+                        Command Center / Analytics
+                    </div>
+
+                    <h1>Analytics & Intelligence</h1>
+
+                    <p>
+                        Monitor waste recovery, environmental impact,
+                        revenue and operational performance.
+                    </p>
+                </div>
+
+                <div class="page-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="refreshAnalytics">
+                        ↻ Refresh
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="exportAnalytics">
+                        ↓ Export Report
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- FILTER BAR -->
+            <section class="card analytics-filter-card">
+
+                <div class="analytics-filter-header">
+
+                    <div>
+                        <strong>Analytics Period</strong>
+                        <span class="table-subtext">
+                            Adjust the reporting period
+                        </span>
+                    </div>
+
+                    <div class="analytics-live">
+                        <span class="live-dot"></span>
+                        Live Data
+                    </div>
+
+                </div>
+
+                <div class="analytics-filters">
+
+                    <button
+                        class="analytics-range active"
+                        data-range="7">
+                        Last 7 Days
+                    </button>
+
+                    <button
+                        class="analytics-range"
+                        data-range="30">
+                        Last 30 Days
+                    </button>
+
+                    <button
+                        class="analytics-range"
+                        data-range="90">
+                        Last 90 Days
+                    </button>
+
+                    <button
+                        class="analytics-range"
+                        data-range="365">
+                        This Year
+                    </button>
+
+                    <select
+                        id="analyticsArea"
+                        class="form-control">
+
+                        <option value="all">
+                            All Areas
+                        </option>
+
+                        <option value="sector62">
+                            Sector 62
+                        </option>
+
+                        <option value="sector18">
+                            Sector 18
+                        </option>
+
+                        <option value="sector76">
+                            Sector 76
+                        </option>
+
+                        <option value="sector137">
+                            Sector 137
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </section>
+
+
+            <!-- KPI GRID -->
+            <section class="stats-grid analytics-kpi-grid">
+
+                <div class="stat-card analytics-kpi">
+
+                    <div class="stat-icon green">
+                        ♻
+                    </div>
+
+                    <div>
+                        <span class="stat-label">
+                            Waste Processed
+                        </span>
+
+                        <strong id="analyticsWaste">
+                            0 kg
+                        </strong>
+
+                        <small class="stat-trend positive"
+                               id="wasteTrend">
+                            ↑ 12.4% vs previous period
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card analytics-kpi">
+
+                    <div class="stat-icon blue">
+                        ☁
+                    </div>
+
+                    <div>
+                        <span class="stat-label">
+                            CO₂ Saved
+                        </span>
+
+                        <strong id="analyticsCO2">
+                            0 kg
+                        </strong>
+
+                        <small class="stat-trend positive">
+                            Environmental impact
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card analytics-kpi">
+
+                    <div class="stat-icon purple">
+                        ₹
+                    </div>
+
+                    <div>
+                        <span class="stat-label">
+                            Recycling Revenue
+                        </span>
+
+                        <strong id="analyticsRevenue">
+                            ₹0
+                        </strong>
+
+                        <small class="stat-trend positive">
+                            Platform activity
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card analytics-kpi">
+
+                    <div class="stat-icon orange">
+                        ↗
+                    </div>
+
+                    <div>
+                        <span class="stat-label">
+                            Pickup Completion
+                        </span>
+
+                        <strong id="analyticsCompletion">
+                            0%
+                        </strong>
+
+                        <small class="stat-trend positive">
+                            Operational efficiency
+                        </small>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- MAIN CHARTS -->
+            <section class="analytics-grid">
+
+                <div class="card analytics-chart-card analytics-chart-large">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Pickup Activity</h3>
+
+                            <span class="table-subtext">
+                                Pickup requests over time
+                            </span>
+                        </div>
+
+                        <span class="chart-label">
+                            Pickups
+                        </span>
+
+                    </div>
+
+                    <div class="analytics-chart-wrapper">
+                        <canvas id="pickupTrendChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <div class="card analytics-chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Material Distribution</h3>
+
+                            <span class="table-subtext">
+                                Waste composition
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="analytics-chart-wrapper doughnut-wrapper">
+                        <canvas id="materialDistributionChart"></canvas>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SECOND ROW -->
+            <section class="analytics-grid">
+
+                <div class="card analytics-chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Waste Processed</h3>
+
+                            <span class="table-subtext">
+                                Daily recycling volume
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="analytics-chart-wrapper">
+                        <canvas id="wasteTrendChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <div class="card analytics-chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Revenue Trend</h3>
+
+                            <span class="table-subtext">
+                                Recycling transaction value
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="analytics-chart-wrapper">
+                        <canvas id="revenueTrendChart"></canvas>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ENVIRONMENTAL IMPACT -->
+            <section class="card environmental-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h3>Environmental Impact</h3>
+
+                        <span class="table-subtext">
+                            Estimated impact generated through
+                            recycling activity
+                        </span>
+                    </div>
+
+                    <span class="impact-badge">
+                        🌱 Sustainability
+                    </span>
+
+                </div>
+
+
+                <div class="impact-grid">
+
+                    <div class="impact-item">
+
+                        <div class="impact-icon">
+                            ☁
+                        </div>
+
+                        <div>
+                            <span>
+                                CO₂ Emissions Avoided
+                            </span>
+
+                            <strong id="impactCO2">
+                                0 kg
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="impact-item">
+
+                        <div class="impact-icon">
+                            💧
+                        </div>
+
+                        <div>
+                            <span>
+                                Water Conserved
+                            </span>
+
+                            <strong id="impactWater">
+                                0 L
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="impact-item">
+
+                        <div class="impact-icon">
+                            🌳
+                        </div>
+
+                        <div>
+                            <span>
+                                Trees Equivalent
+                            </span>
+
+                            <strong id="impactTrees">
+                                0
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="impact-item">
+
+                        <div class="impact-icon">
+                            ♻
+                        </div>
+
+                        <div>
+                            <span>
+                                Waste Diverted
+                            </span>
+
+                            <strong id="impactWaste">
+                                0 kg
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- BOTTOM ANALYTICS -->
+            <section class="analytics-grid">
+
+                <div class="card analytics-chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Pickup Status</h3>
+
+                            <span class="table-subtext">
+                                Current operational pipeline
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="analytics-chart-wrapper doughnut-wrapper">
+                        <canvas id="pickupStatusChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <div class="card analytics-chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Area Performance</h3>
+
+                            <span class="table-subtext">
+                                Waste collected by area
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="analytics-chart-wrapper">
+                        <canvas id="areaPerformanceChart"></canvas>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- INSIGHTS -->
+            <section class="card insights-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h3>Smart Insights</h3>
+
+                        <span class="table-subtext">
+                            Automatically generated operational observations
+                        </span>
+                    </div>
+
+                    <span class="ai-badge">
+                        ✦ AI Assisted
+                    </span>
+
+                </div>
+
+
+                <div id="analyticsInsights"
+                     class="insights-list">
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- Shared roots -->
+<div id="toastRoot"></div>
+<div id="modalRoot"></div>
+
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/analytics.js"></script>
+
+</body>
+</html>

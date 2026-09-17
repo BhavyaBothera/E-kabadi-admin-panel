@@ -4,6 +4,34 @@
    File: js/charts.js
    ============================================================ */
 
+   /* =========================================================
+   CHART.JS LOADER
+   ========================================================= */
+
+(function () {
+
+    if (typeof Chart !== "undefined") {
+        return;
+    }
+
+    const script =
+        document.createElement("script");
+
+    script.src =
+        "https://cdn.jsdelivr.net/npm/chart.js";
+
+    script.onload = function () {
+
+        window.dispatchEvent(
+            new Event("chartjsready")
+        );
+
+    };
+
+    document.head.appendChild(script);
+
+})();
+
 (function () {
 
     "use strict";
