@@ -1767,3 +1767,314 @@
     }
 
 }
+
+/* =========================================================
+   REWARDS & ECOCOINS
+   ========================================================= */
+
+.reward-stats-grid {
+    margin-bottom: 24px;
+}
+
+
+/* Hero */
+
+.reward-hero-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding: 17px 20px;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 13px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34, 197, 94, 0.1),
+            rgba(34, 197, 94, 0.025)
+        );
+}
+
+.reward-hero-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(34, 197, 94, 0.12);
+    color: var(--primary);
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.reward-hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.reward-hero-content strong {
+    font-size: 14px;
+}
+
+.reward-hero-content span {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.ecoin-rate {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    padding-left: 20px;
+    border-left: 1px solid var(--border-color);
+}
+
+.ecoin-rate span {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.ecoin-rate strong {
+    color: var(--primary);
+    font-size: 12px;
+}
+
+
+/* Reward cell */
+
+.reward-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reward-cell > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.reward-icon,
+.reward-detail-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+.reward-icon {
+    width: 39px;
+    height: 39px;
+    font-size: 16px;
+}
+
+.reward-detail-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+}
+
+.reward-icon-badge {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.reward-icon-coupon {
+    background: rgba(168, 85, 247, 0.1);
+    color: #9333ea;
+}
+
+.reward-icon-eco {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--success);
+}
+
+.reward-icon-challenge {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--info);
+}
+
+.reward-type {
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* EcoCoin cost */
+
+.ecoin-cost {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.ecoin-cost > span {
+    color: #d97706;
+    font-size: 12px;
+}
+
+.ecoin-cost strong {
+    font-size: 14px;
+}
+
+.ecoin-cost small {
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
+.reward-requirement {
+    display: block;
+    max-width: 180px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+
+/* Status */
+
+.reward-status-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 9px;
+    border: 0;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.reward-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.reward-status-active {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--success);
+}
+
+.reward-status-active .reward-status-dot {
+    background: var(--success);
+}
+
+.reward-status-paused {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.reward-status-paused .reward-status-dot {
+    background: #f59e0b;
+}
+
+.reward-status-inactive {
+    background: rgba(100, 116, 139, 0.1);
+    color: var(--text-muted);
+}
+
+.reward-status-inactive .reward-status-dot {
+    background: var(--text-muted);
+}
+
+
+/* Reward detail */
+
+.reward-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.reward-detail-header > div:nth-child(2) {
+    flex: 1;
+}
+
+.reward-detail-header h2 {
+    margin: 3px 0 0;
+}
+
+.reward-description-box {
+    padding: 15px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.reward-description-box span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.reward-description-box strong {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.reward-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+
+/* Add reward */
+
+.reward-form-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    border-radius: 13px;
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--primary);
+    font-size: 21px;
+    font-weight: 800;
+}
+
+
+/* Responsive */
+
+@media (max-width: 640px) {
+
+    .reward-hero-banner {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .ecoin-rate {
+        width: 100%;
+        padding-left: 0;
+        padding-top: 10px;
+        border-left: 0;
+        border-top: 1px solid var(--border-color);
+        align-items: flex-start;
+    }
+
+    .reward-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

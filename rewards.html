@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rewards | E-Kabadi Command Center</title>
+    <meta
+        name="description"
+        content="Manage E-Kabadi rewards and EcoCoin programs."
+    >
+
+    <link rel="icon" href="assets/favicon.svg">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside id="appSidebar" class="sidebar"></aside>
+
+    <!-- MAIN -->
+    <main class="main-wrapper">
+
+        <!-- TOPBAR -->
+        <header id="appTopbar" class="topbar"></header>
+
+        <section class="page-content">
+
+            <!-- ================= HEADER ================= -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <div class="breadcrumb">
+                        <span>Engagement</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Rewards</span>
+                    </div>
+
+                    <h1>Rewards & EcoCoins</h1>
+
+                    <p class="page-description">
+                        Manage citizen rewards, EcoCoins and environmental challenges.
+                    </p>
+
+                </div>
+
+                <div class="page-header-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="refreshRewardsBtn"
+                        type="button"
+                    >
+                        <span>↻</span>
+                        Refresh
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        id="exportRewardsBtn"
+                        type="button"
+                    >
+                        <span>↓</span>
+                        Export CSV
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="addRewardBtn"
+                        type="button"
+                    >
+                        <span>+</span>
+                        Create Reward
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= STATS ================= -->
+
+            <div class="stats-grid reward-stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-green">
+                        <span>★</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Total Rewards
+                        </span>
+
+                        <strong id="totalRewardsStat">
+                            0
+                        </strong>
+
+                        <small class="stat-meta">
+                            In reward catalogue
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-blue">
+                        <span>✓</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Active Rewards
+                        </span>
+
+                        <strong id="activeRewardsStat">
+                            0
+                        </strong>
+
+                        <small class="stat-meta">
+                            Available to citizens
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-orange">
+                        <span>◎</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            EcoCoin Cost
+                        </span>
+
+                        <strong id="averageRewardCostStat">
+                            0
+                        </strong>
+
+                        <small class="stat-meta">
+                            Average redemption cost
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-purple">
+                        <span>♻</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Eco Program
+                        </span>
+
+                        <strong>
+                            Active
+                        </strong>
+
+                        <small class="stat-meta">
+                            Citizen engagement enabled
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= ECOCOIN BANNER ================= -->
+
+            <div class="reward-hero-banner">
+
+                <div class="reward-hero-icon">
+                    ◎
+                </div>
+
+                <div class="reward-hero-content">
+
+                    <strong>
+                        EcoCoins turn recycling into rewards
+                    </strong>
+
+                    <span>
+                        Citizens earn EcoCoins by recycling waste and completing
+                        environmental activities.
+                    </span>
+
+                </div>
+
+                <div class="ecoin-rate">
+
+                    <span>
+                        1 EcoCoin
+                    </span>
+
+                    <strong>
+                        = Eco Action
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= FILTERS ================= -->
+
+            <div class="card filters-card">
+
+                <div class="filters-header">
+
+                    <div>
+
+                        <h3>
+                            Reward Catalogue
+                        </h3>
+
+                        <span id="rewardResultCount">
+                            0 rewards
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-ghost btn-sm"
+                        id="clearRewardFiltersBtn"
+                        type="button"
+                    >
+                        Clear filters
+                    </button>
+
+                </div>
+
+
+                <div class="filters-grid">
+
+                    <div class="filter-group search-filter">
+
+                        <label for="rewardSearch">
+                            Search
+                        </label>
+
+                        <div class="search-box">
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                            <input
+                                type="text"
+                                id="rewardSearch"
+                                placeholder="Search rewards..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="rewardStatusFilter">
+                            Status
+                        </label>
+
+                        <select id="rewardStatusFilter">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="paused">
+                                Paused
+                            </option>
+
+                            <option value="inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="rewardTypeFilter">
+                            Type
+                        </label>
+
+                        <select id="rewardTypeFilter">
+
+                            <option value="all">
+                                All Types
+                            </option>
+
+                            <option value="badge">
+                                Badge
+                            </option>
+
+                            <option value="coupon">
+                                Coupon
+                            </option>
+
+                            <option value="eco">
+                                Eco Reward
+                            </option>
+
+                            <option value="challenge">
+                                Challenge
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="rewardSortFilter">
+                            Sort By
+                        </label>
+
+                        <select id="rewardSortFilter">
+
+                            <option value="cost_low">
+                                Cost: Low → High
+                            </option>
+
+                            <option value="cost_high">
+                                Cost: High → Low
+                            </option>
+
+                            <option value="name">
+                                Name
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= REWARD TABLE ================= -->
+
+            <div class="card table-card">
+
+                <div class="table-wrapper">
+
+                    <table class="data-table reward-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Reward</th>
+
+                                <th>Type</th>
+
+                                <th>EcoCoin Cost</th>
+
+                                <th>Requirement</th>
+
+                                <th>Redemptions</th>
+
+                                <th>Status</th>
+
+                                <th class="text-right">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="rewardsTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div
+                    id="rewardEmptyState"
+                    class="empty-state hidden"
+                >
+
+                    <div class="empty-state-icon">
+                        ★
+                    </div>
+
+                    <h3>
+                        No rewards found
+                    </h3>
+
+                    <p>
+                        Try changing your filters or create a new reward.
+                    </p>
+
+                    <button
+                        class="btn btn-primary"
+                        id="emptyAddRewardBtn"
+                        type="button"
+                    >
+                        Create Reward
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="rewardPagination"
+                    class="pagination"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div id="toastRoot"></div>
+<div id="modalRoot"></div>
+
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+
+<script src="js/rewards.js"></script>
+
+</body>
+</html>
