@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payments | E-Kabadi Command Center</title>
+    <meta
+        name="description"
+        content="Manage citizen payments and recycling payouts."
+    >
+
+    <link rel="icon" href="assets/favicon.svg">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside id="appSidebar" class="sidebar"></aside>
+
+    <!-- MAIN -->
+    <main class="main-wrapper">
+
+        <!-- TOPBAR -->
+        <header id="appTopbar" class="topbar"></header>
+
+        <section class="page-content">
+
+            <!-- ================= HEADER ================= -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <div class="breadcrumb">
+                        <span>Finance</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Payments</span>
+                    </div>
+
+                    <h1>Payment Management</h1>
+
+                    <p class="page-description">
+                        Monitor citizen payouts, transactions and payment status.
+                    </p>
+
+                </div>
+
+                <div class="page-header-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="refreshPaymentsBtn"
+                        type="button"
+                    >
+                        <span>↻</span>
+                        Refresh
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        id="exportPaymentsBtn"
+                        type="button"
+                    >
+                        <span>↓</span>
+                        Export CSV
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= STATS ================= -->
+
+            <div class="stats-grid payment-stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-green">
+                        <span>₹</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Total Paid
+                        </span>
+
+                        <strong id="totalPaidStat">
+                            ₹0
+                        </strong>
+
+                        <small class="stat-meta">
+                            Completed payouts
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-orange">
+                        <span>◷</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Pending
+                        </span>
+
+                        <strong id="pendingAmountStat">
+                            ₹0
+                        </strong>
+
+                        <small class="stat-meta">
+                            Awaiting release
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-blue">
+                        <span>↗</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Transactions
+                        </span>
+
+                        <strong id="transactionCountStat">
+                            0
+                        </strong>
+
+                        <small class="stat-meta">
+                            All payment records
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-purple">
+                        <span>✓</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Success Rate
+                        </span>
+
+                        <strong id="paymentSuccessRateStat">
+                            0%
+                        </strong>
+
+                        <small class="stat-meta">
+                            Completed transactions
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= PAYMENT ALERT ================= -->
+
+            <div
+                id="pendingPaymentAlert"
+                class="payment-alert hidden"
+            >
+
+                <div class="payment-alert-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        Pending payments require attention
+                    </strong>
+
+                    <span id="pendingPaymentAlertText">
+                        There are pending payouts.
+                    </span>
+
+                </div>
+
+                <button
+                    class="btn btn-primary btn-sm"
+                    id="reviewPendingBtn"
+                    type="button"
+                >
+                    Review
+                </button>
+
+            </div>
+
+
+            <!-- ================= FILTERS ================= -->
+
+            <div class="card filters-card">
+
+                <div class="filters-header">
+
+                    <div>
+
+                        <h3>
+                            Transactions
+                        </h3>
+
+                        <span id="paymentResultCount">
+                            0 transactions
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-ghost btn-sm"
+                        id="clearPaymentFiltersBtn"
+                        type="button"
+                    >
+                        Clear filters
+                    </button>
+
+                </div>
+
+
+                <div class="filters-grid">
+
+                    <div class="filter-group search-filter">
+
+                        <label for="paymentSearch">
+                            Search
+                        </label>
+
+                        <div class="search-box">
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                            <input
+                                type="text"
+                                id="paymentSearch"
+                                placeholder="Search payment ID, citizen..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="paymentStatusFilter">
+                            Status
+                        </label>
+
+                        <select id="paymentStatusFilter">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="completed">
+                                Completed
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="failed">
+                                Failed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="paymentMethodFilter">
+                            Method
+                        </label>
+
+                        <select id="paymentMethodFilter">
+
+                            <option value="all">
+                                All Methods
+                            </option>
+
+                            <option value="upi">
+                                UPI
+                            </option>
+
+                            <option value="bank">
+                                Bank Transfer
+                            </option>
+
+                            <option value="wallet">
+                                Wallet
+                            </option>
+
+                            <option value="cash">
+                                Cash
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="paymentSortFilter">
+                            Sort By
+                        </label>
+
+                        <select id="paymentSortFilter">
+
+                            <option value="newest">
+                                Newest First
+                            </option>
+
+                            <option value="oldest">
+                                Oldest First
+                            </option>
+
+                            <option value="amount_high">
+                                Amount: High → Low
+                            </option>
+
+                            <option value="amount_low">
+                                Amount: Low → High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= TABLE ================= -->
+
+            <div class="card table-card">
+
+                <div class="table-wrapper">
+
+                    <table class="data-table payment-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Transaction</th>
+
+                                <th>Citizen</th>
+
+                                <th>Pickup</th>
+
+                                <th>Amount</th>
+
+                                <th>Method</th>
+
+                                <th>Date</th>
+
+                                <th>Status</th>
+
+                                <th class="text-right">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="paymentsTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div
+                    id="paymentEmptyState"
+                    class="empty-state hidden"
+                >
+
+                    <div class="empty-state-icon">
+                        ₹
+                    </div>
+
+                    <h3>
+                        No transactions found
+                    </h3>
+
+                    <p>
+                        Try changing your filters.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="paymentPagination"
+                    class="pagination"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div id="toastRoot"></div>
+<div id="modalRoot"></div>
+
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+
+<script src="js/payments.js"></script>
+
+</body>
+</html>
