@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Issues & Support | E-Kabadi Command Center</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+
+        <header class="topbar" id="appTopbar"></header>
+
+        <main class="page-content">
+
+            <!-- HEADER -->
+            <div class="page-header">
+
+                <div>
+
+                    <div class="breadcrumb">
+                        Command Center / Issues
+                    </div>
+
+                    <h1>Issues & Support</h1>
+
+                    <p>
+                        Track complaints, operational issues and
+                        support requests across the platform.
+                    </p>
+
+                </div>
+
+                <div class="page-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="refreshIssues">
+                        ↻ Refresh
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="exportIssues">
+                        ↓ Export CSV
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATS -->
+            <section class="stats-grid issues-stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orange">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            Total Issues
+                        </span>
+
+                        <strong id="totalIssues">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            Open Issues
+                        </span>
+
+                        <strong id="openIssues">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon purple">
+                        ◌
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            Investigating
+                        </span>
+
+                        <strong id="investigatingIssues">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span class="stat-label">
+                            Resolved
+                        </span>
+
+                        <strong id="resolvedIssues">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ALERT -->
+            <div
+                class="issue-alert"
+                id="issueAlert">
+
+                <div class="issue-alert-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong id="issueAlertTitle">
+                        High priority issues need attention
+                    </strong>
+
+                    <p id="issueAlertText">
+                        Review unresolved issues and assign
+                        appropriate action.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FILTERS -->
+            <section class="card issues-filter-card">
+
+                <div class="filter-grid">
+
+                    <div class="search-box">
+
+                        <span>⌕</span>
+
+                        <input
+                            type="search"
+                            id="issueSearch"
+                            placeholder="Search issue ID, title or user...">
+
+                    </div>
+
+
+                    <select
+                        id="issueStatusFilter"
+                        class="form-control">
+
+                        <option value="all">
+                            All Status
+                        </option>
+
+                        <option value="open">
+                            Open
+                        </option>
+
+                        <option value="investigating">
+                            Investigating
+                        </option>
+
+                        <option value="resolved">
+                            Resolved
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="issuePriorityFilter"
+                        class="form-control">
+
+                        <option value="all">
+                            All Priority
+                        </option>
+
+                        <option value="high">
+                            High
+                        </option>
+
+                        <option value="medium">
+                            Medium
+                        </option>
+
+                        <option value="low">
+                            Low
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="issueTypeFilter"
+                        class="form-control">
+
+                        <option value="all">
+                            All Types
+                        </option>
+
+                        <option value="payment">
+                            Payment
+                        </option>
+
+                        <option value="pickup">
+                            Pickup
+                        </option>
+
+                        <option value="verification">
+                            Verification
+                        </option>
+
+                        <option value="account">
+                            Account
+                        </option>
+
+                        <option value="technical">
+                            Technical
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="issueSort"
+                        class="form-control">
+
+                        <option value="newest">
+                            Newest First
+                        </option>
+
+                        <option value="oldest">
+                            Oldest First
+                        </option>
+
+                        <option value="priority">
+                            Highest Priority
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </section>
+
+
+            <!-- TABLE -->
+            <section class="card issues-table-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h3>Support Queue</h3>
+
+                        <span
+                            class="table-subtext"
+                            id="issueResultCount">
+                            0 issues
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Issue</th>
+
+                                <th>Reported By</th>
+
+                                <th>Type</th>
+
+                                <th>Priority</th>
+
+                                <th>Date</th>
+
+                                <th>Status</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="issuesTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div
+                    class="pagination"
+                    id="issuesPagination">
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<div id="toastRoot"></div>
+<div id="modalRoot"></div>
+
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+<script src="js/issues.js"></script>
+
+</body>
+</html>
