@@ -1,483 +1,249 @@
 /* ============================================================
    E-KABADI COMMAND CENTER
-   Charts
-   File: js/charts.js
+   Shared Chart Helpers
    ============================================================ */
 
-   /* =========================================================
-   CHART.JS LOADER
-   ========================================================= */
-
 (function () {
-
-    if (typeof Chart !== "undefined") {
-        return;
-    }
-
-    const script =
-        document.createElement("script");
-
-    script.src =
-        "https://cdn.jsdelivr.net/npm/chart.js";
-
-    script.onload = function () {
-
-        window.dispatchEvent(
-            new Event("chartjsready")
-        );
-
-    };
-
-    document.head.appendChild(script);
-
-})();
-
-(function () {
-
     "use strict";
-
-
-    if (typeof Chart === "undefined") {
-
-        console.warn(
-            "Chart.js is not loaded."
-        );
-
-        return;
-    }
-
 
     const chartInstances = {};
 
-
-    /* =========================================================
-       COMMON OPTIONS
-       ========================================================= */
-
-    const commonFont = {
-        family: "Inter, system-ui, sans-serif",
-        size: 10
-    };
-
-
-    const gridColor =
-        "rgba(15, 23, 42, 0.055)";
-
+    function getChartData() {
+        const analytics = window.EKABADI_DATA?.analytics || {};
+        return analytics;
+    }
 
     function destroyChart(name) {
-
         if (chartInstances[name]) {
-
             chartInstances[name].destroy();
-
             delete chartInstances[name];
         }
     }
 
+    function ensureChartJS(callback) {
+        if (typeof Chart !== "undefined") {
+            callback();
+            return;
+        }
 
-    /* =========================================================
-       WASTE LINE CHART
-       ========================================================= */
+        let loader = document.querySelector(
+            'script[data-ekabadi-chartjs="true"]'
+        );
+
+        if (!loader) {
+            loader = document.createElement("script");
+            loader.src = "https://cdn.jsdelivr.net/npm/chart.js";
+            loader.dataset.ekabadiChartjs = "true";
+            loader.onload = callback;
+            loader.onerror = function () {
+                console.warn("E-Kabadi: Chart.js could not be loaded.");
+            };
+            document.head.appendChild(loader);
+            return;
+        }
+
+        loader.addEventListener("load", callback, { once: true });
+    }
+
+    function numericArray(values) {
+        return (Array.isArray(values) ? values : []).map(value => {
+            if (typeof value === "number") return value;
+            if (value && typeof value === "object") {
+                return Number(
+                    value.value ?? value.weight ?? value.waste ?? 0
+                ) || 0;
+            }
+            return Number(value) || 0;
+        });
+    }
+
+    function labelsFor(values, prefix = "Day") {
+        return values.map((_, index) => `${prefix} ${index + 1}`);
+    }
+
+    function commonOptions(yCallback) {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: "index"
+            },
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    border: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: "rgba(15,23,42,.055)"
+                    },
+                    border: { display: false },
+                    ticks: {
+                        callback: yCallback
+                    }
+                }
+            }
+        };
+    }
 
     function createWasteChart(days = 7) {
-
-        const canvas =
-            document.getElementById(
-                "wasteChart"
-            );
-
+        const canvas = document.getElementById("wasteChart");
         if (!canvas) return;
 
+        ensureChartJS(function () {
+            destroyChart("waste");
 
-        destroyChart("waste");
+            const source = numericArray(
+                getChartData().dailyWaste
+            );
 
+            const values = source.slice(
+                Math.max(0, source.length - Number(days || 7))
+            );
 
-        const analytics =
-            window.EKABADI_DATA?.analytics;
+            const safeValues = values.length
+                ? values
+                : [142, 168, 151, 205, 176, 198, 244];
 
-
-        let labels = [];
-        let values = [];
-
-
-        if (
-            analytics &&
-            analytics.dailyWaste
-        ) {
-
-            const source =
-                analytics.dailyWaste;
-
-            const selected =
-                source.slice(
-                    Math.max(
-                        0,
-                        source.length - days
-                    )
-                );
-
-            labels =
-                selected.map(item =>
-                    item.date || item.day
-                );
-
-            values =
-                selected.map(item =>
-                    Number(
-                        item.value ||
-                        item.weight ||
-                        item.waste ||
-                        0
-                    )
-                );
-
-        }
-
-
-        if (!values.length) {
-
-            labels = [
-                "Mon",
-                "Tue",
-                "Wed",
-                "Thu",
-                "Fri",
-                "Sat",
-                "Sun"
-            ];
-
-            values = [
-                142,
-                168,
-                151,
-                205,
-                176,
-                198,
-                244
-            ];
-        }
-
-
-        chartInstances.waste =
-            new Chart(
-                canvas,
-                {
-                    type: "line",
-
-                    data: {
-                        labels,
-
-                        datasets: [
-                            {
-                                label:
-                                    "Waste collected",
-
-                                data: values,
-
-                                borderColor:
-                                    "#16a34a",
-
-                                backgroundColor:
-                                    "rgba(34,197,94,.09)",
-
-                                borderWidth: 2,
-
-                                pointRadius: 0,
-
-                                pointHoverRadius: 5,
-
-                                tension: .4,
-
-                                fill: true
+            chartInstances.waste = new Chart(canvas, {
+                type: "line",
+                data: {
+                    labels: labelsFor(safeValues),
+                    datasets: [{
+                        label: "Waste collected",
+                        data: safeValues,
+                        borderColor: "#16a34a",
+                        backgroundColor: "rgba(34,197,94,.09)",
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                        tension: .4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    ...commonOptions(value => `${value}kg`),
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            displayColors: false,
+                            callbacks: {
+                                label: context => `${context.raw} kg`
                             }
-                        ]
-                    },
-
-                    options: {
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        interaction: {
-                            intersect: false,
-                            mode: "index"
-                        },
-
-                        plugins: {
-
-                            legend: {
-                                display: false
-                            },
-
-                            tooltip: {
-                                backgroundColor:
-                                    "#0f172a",
-
-                                padding: 10,
-
-                                titleFont: {
-                                    size: 10
-                                },
-
-                                bodyFont: {
-                                    size: 11
-                                },
-
-                                displayColors: false,
-
-                                callbacks: {
-
-                                    label: context =>
-                                        `${context.raw} kg`
-                                }
-                            }
-
-                        },
-
-                        scales: {
-
-                            x: {
-
-                                grid: {
-                                    display: false
-                                },
-
-                                border: {
-                                    display: false
-                                },
-
-                                ticks: {
-                                    font: commonFont,
-                                    color: "#94a3b8"
-                                }
-                            },
-
-                            y: {
-
-                                beginAtZero: true,
-
-                                grid: {
-                                    color: gridColor
-                                },
-
-                                border: {
-                                    display: false
-                                },
-
-                                ticks: {
-
-                                    font: commonFont,
-
-                                    color: "#94a3b8",
-
-                                    callback: value =>
-                                        `${value}kg`
-                                }
-                            }
-
                         }
                     }
                 }
-            );
+            });
 
-
-        updateWasteSummary(values);
+            updateWasteSummary(safeValues);
+        });
     }
-
 
     function updateWasteSummary(values) {
+        const element = document.getElementById("chartWasteTotal");
+        if (!element) return;
 
-        const total =
-            values.reduce(
-                (sum, value) =>
-                    sum + Number(value || 0),
-                0
-            );
+        const total = values.reduce(
+            (sum, value) => sum + Number(value || 0),
+            0
+        );
 
-
-        const element =
-            document.getElementById(
-                "chartWasteTotal"
-            );
-
-
-        if (element) {
-
-            element.textContent =
-                `${formatNumber(total)} kg`;
-        }
+        element.textContent = `${total.toLocaleString("en-IN")} kg`;
     }
-
-
-    /* =========================================================
-       PICKUP DONUT
-       ========================================================= */
 
     function createPickupStatusChart() {
-
-        const canvas =
-            document.getElementById(
-                "pickupStatusChart"
-            );
-
+        const canvas = document.getElementById("pickupStatusChart");
         if (!canvas) return;
 
+        ensureChartJS(function () {
+            destroyChart("pickup");
 
-        destroyChart("pickup");
-
-
-        let counts = {
-
-            completed: 0,
-
-            in_progress: 0,
-
-            collector_assigned: 0,
-
-            pending: 0
-        };
-
-
-        if (
-            typeof getPickupStatusCounts ===
-            "function"
-        ) {
-
-            const result =
-                getPickupStatusCounts();
-
-            counts = {
-                ...counts,
-                ...result
+            let counts = {
+                pending: 0,
+                collector_assigned: 0,
+                in_progress: 0,
+                completed: 0,
+                cancelled: 0
             };
-        }
 
+            if (typeof getPickupStatusCounts === "function") {
+                counts = {
+                    ...counts,
+                    ...getPickupStatusCounts()
+                };
+            } else {
+                const pickups =
+                    typeof storageGetPickups === "function"
+                        ? storageGetPickups()
+                        : [];
 
-        const labels = [
-            "Completed",
-            "In Progress",
-            "Assigned",
-            "Pending"
-        ];
+                pickups.forEach(pickup => {
+                    if (counts[pickup.status] !== undefined) {
+                        counts[pickup.status]++;
+                    }
+                });
+            }
 
+            const labels = [
+                "Completed",
+                "In Progress",
+                "Assigned",
+                "Pending"
+            ];
 
-        const values = [
-            counts.completed || 0,
-            counts.in_progress || 0,
-            counts.collector_assigned || 0,
-            counts.pending || 0
-        ];
+            const values = [
+                Number(counts.completed) || 0,
+                Number(counts.in_progress) || 0,
+                Number(counts.collector_assigned) || 0,
+                Number(counts.pending) || 0
+            ];
 
+            const totalElement = document.getElementById("totalPickups");
+            if (totalElement) {
+                totalElement.textContent = values.reduce(
+                    (sum, value) => sum + value,
+                    0
+                );
+            }
 
-        const total =
-            values.reduce(
-                (sum, value) =>
-                    sum + value,
-                0
-            );
-
-
-        const totalElement =
-            document.getElementById(
-                "totalPickups"
-            );
-
-
-        if (totalElement) {
-            totalElement.textContent =
-                total;
-        }
-
-
-        chartInstances.pickup =
-            new Chart(
-                canvas,
-                {
-                    type: "doughnut",
-
-                    data: {
-
-                        labels,
-
-                        datasets: [
-                            {
-                                data: values,
-
-                                backgroundColor: [
-                                    "#16a34a",
-                                    "#f59e0b",
-                                    "#3b82f6",
-                                    "#cbd5e1"
-                                ],
-
-                                borderWidth: 0,
-
-                                hoverOffset: 4
-                            }
-                        ]
-
-                    },
-
-                    options: {
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        cutout: "73%",
-
-                        plugins: {
-
-                            legend: {
-                                display: false
-                            },
-
-                            tooltip: {
-                                backgroundColor:
-                                    "#0f172a",
-
-                                displayColors: false,
-
-                                callbacks: {
-
-                                    label: context =>
-                                        `${context.label}: ${context.raw}`
-                                }
-                            }
-                        }
+            chartInstances.pickup = new Chart(canvas, {
+                type: "doughnut",
+                data: {
+                    labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            "#16a34a",
+                            "#f59e0b",
+                            "#3b82f6",
+                            "#cbd5e1"
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "73%",
+                    plugins: {
+                        legend: { display: false }
                     }
                 }
-            );
+            });
 
-
-        renderPickupLegend(
-            labels,
-            values
-        );
+            renderPickupLegend(labels, values);
+        });
     }
 
-
-    function renderPickupLegend(
-        labels,
-        values
-    ) {
-
-        const container =
-            document.getElementById(
-                "pickupLegend"
-            );
-
+    function renderPickupLegend(labels, values) {
+        const container = document.getElementById("pickupLegend");
         if (!container) return;
-
-
-        const classes = [
-            "completed",
-            "progress",
-            "assigned",
-            "pending"
-        ];
-
 
         const colors = [
             "#16a34a",
@@ -486,245 +252,103 @@
             "#cbd5e1"
         ];
 
-
-        container.innerHTML =
-            labels.map(
-                (label, index) => `
-
-                    <div class="legend-item">
-
-                        <span
-                            class="legend-dot"
-                            style="
-                                background:${colors[index]};
-                            ">
-                        </span>
-
-                        <span class="legend-label">
-                            ${label}
-                        </span>
-
-                        <strong class="legend-value">
-                            ${values[index]}
-                        </strong>
-
-                    </div>
-                `
-            ).join("");
+        container.innerHTML = labels.map((label, index) => `
+            <div class="legend-item">
+                <span class="legend-dot" style="background:${colors[index]}"></span>
+                <span class="legend-label">${label}</span>
+                <strong class="legend-value">${values[index]}</strong>
+            </div>
+        `).join("");
     }
 
-
-    /* =========================================================
-       MATERIAL DOUGHNUT
-       ========================================================= */
-
     function createMaterialChart() {
-
-        const canvas =
-            document.getElementById(
-                "materialChart"
-            );
-
+        const canvas = document.getElementById("materialChart");
         if (!canvas) return;
 
+        ensureChartJS(function () {
+            destroyChart("material");
 
-        destroyChart("material");
+            let totals = {};
 
+            const pickups =
+                typeof storageGetPickups === "function"
+                    ? storageGetPickups()
+                    : [];
 
-        let materialData = [];
-
-
-        if (
-            typeof getMaterialTotals ===
-            "function"
-        ) {
-
-            materialData =
-                getMaterialTotals() || [];
-        }
-
-
-        if (
-            !Array.isArray(materialData) ||
-            !materialData.length
-        ) {
-
-            materialData = [
-
-                {
-                    name: "Plastic",
-                    value: 32
-                },
-
-                {
-                    name: "Paper",
-                    value: 24
-                },
-
-                {
-                    name: "Metal",
-                    value: 19
-                },
-
-                {
-                    name: "Glass",
-                    value: 13
-                },
-
-                {
-                    name: "E-Waste",
-                    value: 12
-                }
-
-            ];
-        }
-
-
-        const labels =
-            materialData.map(
-                item =>
-                    item.name ||
-                    item.material ||
-                    "Other"
-            );
-
-
-        const values =
-            materialData.map(
-                item =>
-                    Number(
-                        item.value ||
-                        item.total ||
-                        item.weight ||
+            pickups.forEach(pickup => {
+                (pickup.items || []).forEach(item => {
+                    const category = item.category || "Other";
+                    const weight = Number(
+                        item.verifiedWeight ??
+                        item.estimatedWeight ??
                         0
-                    )
-            );
+                    ) || 0;
+                    totals[category] =
+                        (totals[category] || 0) + weight;
+                });
+            });
 
+            if (!Object.keys(totals).length) {
+                totals = getChartData().materialDistribution || {
+                    Plastic: 34,
+                    Paper: 27,
+                    Metal: 16,
+                    Glass: 10,
+                    "E-Waste": 8,
+                    Other: 5
+                };
+            }
 
-        chartInstances.material =
-            new Chart(
-                canvas,
-                {
-                    type: "doughnut",
+            const labels = Object.keys(totals);
+            const values = Object.values(totals).map(Number);
 
-                    data: {
-
-                        labels,
-
-                        datasets: [
-                            {
-                                data: values,
-
-                                backgroundColor: [
-                                    "#16a34a",
-                                    "#3b82f6",
-                                    "#f59e0b",
-                                    "#8b5cf6",
-                                    "#06b6d4",
-                                    "#f43f5e",
-                                    "#64748b"
-                                ],
-
-                                borderWidth: 2,
-
-                                borderColor:
-                                    "#ffffff",
-
-                                hoverOffset: 5
-                            }
-                        ]
-                    },
-
-                    options: {
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        cutout: "58%",
-
-                        plugins: {
-
-                            legend: {
-
-                                position: "bottom",
-
-                                labels: {
-
-                                    usePointStyle: true,
-
-                                    pointStyle: "circle",
-
-                                    padding: 13,
-
-                                    font: {
-                                        size: 9
-                                    }
-                                }
-                            },
-
-                            tooltip: {
-
-                                backgroundColor:
-                                    "#0f172a",
-
-                                callbacks: {
-
-                                    label: context => {
-
-                                        const total =
-                                            values.reduce(
-                                                (a,b) =>
-                                                    a + b,
-                                                0
-                                            );
-
-                                        const percentage =
-                                            total
-                                                ? (
-                                                    context.raw /
-                                                    total *
-                                                    100
-                                                ).toFixed(1)
-                                                : 0;
-
-                                        return `${context.label}: ${percentage}%`;
-                                    }
-
-                                }
+            chartInstances.material = new Chart(canvas, {
+                type: "doughnut",
+                data: {
+                    labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            "#16a34a",
+                            "#3b82f6",
+                            "#f59e0b",
+                            "#8b5cf6",
+                            "#06b6d4",
+                            "#f43f5e",
+                            "#64748b"
+                        ],
+                        borderWidth: 2,
+                        borderColor: "#ffffff",
+                        hoverOffset: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "58%",
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                padding: 13,
+                                font: { size: 9 }
                             }
                         }
                     }
                 }
-            );
+            });
+        });
     }
 
-
-    /* =========================================================
-       PUBLIC API
-       ========================================================= */
-
     window.EKABADI_CHARTS = {
-
         createWasteChart,
-
         createPickupStatusChart,
-
         createMaterialChart,
-
         destroyChart
-
     };
 
-
-    window.createWasteChart =
-        createWasteChart;
-
-    window.createPickupStatusChart =
-        createPickupStatusChart;
-
-    window.createMaterialChart =
-        createMaterialChart;
-
-
+    window.createWasteChart = createWasteChart;
+    window.createPickupStatusChart = createPickupStatusChart;
+    window.createMaterialChart = createMaterialChart;
 })();
