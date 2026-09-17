@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Scrap Materials | E-Kabadi Command Center</title>
+    <meta name="description" content="Manage scrap categories, recycling rates and material status.">
+
+    <link rel="icon" href="assets/favicon.svg">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside id="appSidebar" class="sidebar"></aside>
+
+    <!-- MAIN -->
+    <main class="main-wrapper">
+
+        <!-- TOPBAR -->
+        <header id="appTopbar" class="topbar"></header>
+
+        <section class="page-content">
+
+            <!-- HEADER -->
+            <div class="page-header">
+
+                <div>
+
+                    <div class="breadcrumb">
+                        <span>Operations</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Scrap Materials</span>
+                    </div>
+
+                    <h1>Scrap Materials</h1>
+
+                    <p class="page-description">
+                        Manage recyclable materials, market rates and availability.
+                    </p>
+
+                </div>
+
+                <div class="page-header-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="refreshScrapBtn"
+                        type="button"
+                    >
+                        <span>↻</span>
+                        Refresh
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        id="exportScrapBtn"
+                        type="button"
+                    >
+                        <span>↓</span>
+                        Export CSV
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="addMaterialBtn"
+                        type="button"
+                    >
+                        <span>+</span>
+                        Add Material
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="stats-grid scrap-stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-green">
+                        <span>♻</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Total Materials
+                        </span>
+
+                        <strong id="totalMaterialsStat">
+                            0
+                        </strong>
+
+                        <small class="stat-meta">
+                            In catalogue
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-blue">
+                        <span>✓</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Active
+                        </span>
+
+                        <strong id="activeMaterialsStat">
+                            0
+                        </strong>
+
+                        <small class="stat-meta">
+                            Available for pickup
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-orange">
+                        <span>₹</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Avg. Rate
+                        </span>
+
+                        <strong id="averageRateStat">
+                            ₹0
+                        </strong>
+
+                        <small class="stat-meta">
+                            Per kilogram
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-icon-purple">
+                        <span>↗</span>
+                    </div>
+
+                    <div class="stat-content">
+
+                        <span class="stat-label">
+                            Rate Changes
+                        </span>
+
+                        <strong id="rateChangesStat">
+                            0
+                        </strong>
+
+                        <small class="stat-meta">
+                            From previous rates
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MARKET RATE NOTICE -->
+
+            <div class="scrap-rate-banner">
+
+                <div class="scrap-rate-banner-icon">
+                    ₹
+                </div>
+
+                <div>
+
+                    <strong>
+                        Material rates control citizen earnings
+                    </strong>
+
+                    <span>
+                        Update rates carefully. Changes are reflected
+                        in estimated pickup payouts.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- FILTERS -->
+
+            <div class="card filters-card">
+
+                <div class="filters-header">
+
+                    <div>
+
+                        <h3>
+                            Material Catalogue
+                        </h3>
+
+                        <span id="scrapResultCount">
+                            0 materials
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-ghost btn-sm"
+                        id="clearScrapFiltersBtn"
+                        type="button"
+                    >
+                        Clear filters
+                    </button>
+
+                </div>
+
+
+                <div class="filters-grid">
+
+                    <div class="filter-group search-filter">
+
+                        <label for="scrapSearch">
+                            Search
+                        </label>
+
+                        <div class="search-box">
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                            <input
+                                type="text"
+                                id="scrapSearch"
+                                placeholder="Search material..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="materialTypeFilter">
+                            Type
+                        </label>
+
+                        <select id="materialTypeFilter">
+
+                            <option value="all">
+                                All Types
+                            </option>
+
+                            <option value="plastic">
+                                Plastic
+                            </option>
+
+                            <option value="paper">
+                                Paper
+                            </option>
+
+                            <option value="metal">
+                                Metal
+                            </option>
+
+                            <option value="glass">
+                                Glass
+                            </option>
+
+                            <option value="ewaste">
+                                E-Waste
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="materialStatusFilter">
+                            Status
+                        </label>
+
+                        <select id="materialStatusFilter">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-group">
+
+                        <label for="materialSortFilter">
+                            Sort By
+                        </label>
+
+                        <select id="materialSortFilter">
+
+                            <option value="name">
+                                Name
+                            </option>
+
+                            <option value="rate_high">
+                                Rate: High → Low
+                            </option>
+
+                            <option value="rate_low">
+                                Rate: Low → High
+                            </option>
+
+                            <option value="change">
+                                Biggest Rate Change
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MATERIAL TABLE -->
+
+            <div class="card table-card">
+
+                <div class="table-wrapper">
+
+                    <table class="data-table scrap-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Material</th>
+
+                                <th>Category</th>
+
+                                <th>Current Rate</th>
+
+                                <th>Previous Rate</th>
+
+                                <th>Change</th>
+
+                                <th>Recyclable</th>
+
+                                <th>Environmental Impact</th>
+
+                                <th>Status</th>
+
+                                <th class="text-right">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="scrapTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div
+                    id="scrapEmptyState"
+                    class="empty-state hidden"
+                >
+
+                    <div class="empty-state-icon">
+                        ♻
+                    </div>
+
+                    <h3>
+                        No materials found
+                    </h3>
+
+                    <p>
+                        Try changing your filters or add a new material.
+                    </p>
+
+                    <button
+                        class="btn btn-primary"
+                        id="emptyAddMaterialBtn"
+                        type="button"
+                    >
+                        Add Material
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="scrapPagination"
+                    class="pagination"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div id="toastRoot"></div>
+<div id="modalRoot"></div>
+
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+
+<script src="js/scrap.js"></script>
+
+</body>
+</html>
