@@ -9,8 +9,20 @@
     const chartInstances = {};
 
     function getChartData() {
-        const analytics = window.EKABADI_DATA?.analytics || {};
-        return analytics;
+        return window.EKABADI_DATA?.analytics || {};
+    }
+
+    function getLiveCollection(name) {
+        if (typeof getCollection === "function") {
+            return getCollection(name) || [];
+        }
+        if (typeof getDatabase === "function") {
+            const db = getDatabase();
+            return Array.isArray(db?.[name]) ? db[name] : [];
+        }
+        return Array.isArray(window.EKABADI_DATA?.[name])
+            ? window.EKABADI_DATA[name]
+            : [];
     }
 
     function destroyChart(name) {
@@ -35,9 +47,8 @@
             loader.src = "https://cdn.jsdelivr.net/npm/chart.js";
             loader.dataset.ekabadiChartjs = "true";
             loader.onload = callback;
-            loader.onerror = function () {
+            loader.onerror = () =>
                 console.warn("E-Kabadi: Chart.js could not be loaded.");
-            };
             document.head.appendChild(loader);
             return;
         }
@@ -79,16 +90,73 @@
                 },
                 y: {
                     beginAtZero: true,
-                    grid: {
-                        color: "rgba(15,23,42,.055)"
-                    },
+                    grid: { color: "rgba(15,23,42,.055)" },
                     border: { display: false },
-                    ticks: {
-                        callback: yCallback
-                    }
+                    ticks: { callback: yCallback }
                 }
             }
         };
+    }
+
+    function syncDashboardStats() {
+        const dashboard = document.getElementById("statWaste");
+        if (!dashboard) return;
+
+        const citizens = getLiveCollection("citizens");
+        const collectors = getLiveCollection("collectors");
+        const pickups = getLiveCollection("pickups");
+        const payments = getLiveCollection("payments");
+
+        const activeCitizens = citizens.filter(
+            item => item.status === "active"
+        ).length;
+
+        const activeCollectors = collectors.filter(
+            item => item.status === "active"
+        ).length;
+
+        const completed = pickups.filter(
+            item => item.status === "completed"
+        );
+
+        const waste = completed.reduce((sum, pickup) => {
+            return sum + (pickup.items || []).reduce((itemSum, item) => {
+                return itemSum + Number(
+                    item.verifiedWeight ??
+                    item.estimatedWeight ??
+                    0
+                );
+            }, 0);
+        }, 0);
+
+        const revenue = payments
+            .filter(item => item.status === "completed")
+            .reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+
+        const formatNumber = value =>
+            Number(value || 0).toLocaleString("en-IN");
+
+        const formatCurrency = value => {
+            const number = Number(value || 0);
+            if (number >= 100000) return `₹${(number / 100000).toFixed(1)}L`;
+            if (number >= 1000) return `₹${(number / 1000).toFixed(1)}K`;
+            return `₹${number}`;
+        };
+
+        dashboard.textContent = `${formatNumber(waste)} kg`;
+
+        const citizensEl = document.getElementById("statCitizens");
+        const collectorsEl = document.getElementById("statCollectors");
+        const revenueEl = document.getElementById("statRevenue");
+
+        if (citizensEl) citizensEl.textContent = formatNumber(activeCitizens);
+        if (collectorsEl) collectorsEl.textContent = formatNumber(activeCollectors);
+        if (revenueEl) revenueEl.textContent = formatCurrency(revenue);
+
+        const progress = document.getElementById("wasteProgress");
+        if (progress) {
+            progress.style.width = `${Math.min(100, (waste / 20000) * 100)}%`;
+        }
     }
 
     function createWasteChart(days = 7) {
@@ -96,16 +164,13 @@
         if (!canvas) return;
 
         ensureChartJS(function () {
+            syncDashboardStats();
             destroyChart("waste");
 
-            const source = numericArray(
-                getChartData().dailyWaste
-            );
-
+            const source = numericArray(getChartData().dailyWaste);
             const values = source.slice(
                 Math.max(0, source.length - Number(days || 7))
             );
-
             const safeValues = values.length
                 ? values
                 : [142, 168, 151, 205, 176, 198, 244];
@@ -172,17 +237,9 @@
             };
 
             if (typeof getPickupStatusCounts === "function") {
-                counts = {
-                    ...counts,
-                    ...getPickupStatusCounts()
-                };
+                counts = { ...counts, ...getPickupStatusCounts() };
             } else {
-                const pickups =
-                    typeof storageGetPickups === "function"
-                        ? storageGetPickups()
-                        : [];
-
-                pickups.forEach(pickup => {
+                getLiveCollection("pickups").forEach(pickup => {
                     if (counts[pickup.status] !== undefined) {
                         counts[pickup.status]++;
                     }
@@ -231,9 +288,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     cutout: "73%",
-                    plugins: {
-                        legend: { display: false }
-                    }
+                    plugins: { legend: { display: false } }
                 }
             });
 
@@ -270,12 +325,7 @@
 
             let totals = {};
 
-            const pickups =
-                typeof storageGetPickups === "function"
-                    ? storageGetPickups()
-                    : [];
-
-            pickups.forEach(pickup => {
+            getLiveCollection("pickups").forEach(pickup => {
                 (pickup.items || []).forEach(item => {
                     const category = item.category || "Other";
                     const weight = Number(
