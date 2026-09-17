@@ -1,0 +1,1179 @@
+/* =========================================================
+   E-KABADI COMMAND CENTER
+   RESPONSIVE SYSTEM
+   ========================================================= */
+
+/*
+   NOTE:
+   style.css contains the core responsive rules.
+   This file adds stronger layout handling for:
+   - Desktop
+   - Laptop
+   - Tablet
+   - Mobile
+   - Small mobile
+   - Tables
+   - Modals
+   - Sidebar
+   - Dashboard cards
+*/
+
+
+/* =========================================================
+   1. LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1600px) {
+
+    .page-content {
+        padding: 32px 38px;
+    }
+
+    .stats-grid {
+        gap: 18px;
+    }
+
+    .stat-card {
+        padding: 21px;
+    }
+
+    .stat-value {
+        font-size: 28px;
+    }
+
+    .card-header {
+        padding: 20px 22px;
+    }
+
+    .card-body {
+        padding: 22px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+}
+
+
+/* =========================================================
+   2. LAPTOP
+   ========================================================= */
+
+@media (max-width: 1300px) {
+
+    .page-content {
+        padding: 24px;
+    }
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+    }
+
+    .stat-card {
+        padding: 16px;
+    }
+
+    .stat-value {
+        font-size: 23px;
+    }
+
+    .grid-main {
+        grid-template-columns:
+            minmax(0, 1.4fr)
+            minmax(270px, 1fr);
+    }
+
+    .topbar {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+
+    .topbar-search input {
+        width: 200px;
+    }
+}
+
+
+/* =========================================================
+   3. SMALL LAPTOP / TABLET LANDSCAPE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    :root {
+        --sidebar-width: 225px;
+    }
+
+    .page-content {
+        padding: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-main {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-sidebar {
+        grid-template-columns:
+            minmax(220px, 0.8fr)
+            minmax(0, 1.4fr);
+    }
+
+    .topbar-search {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 18px;
+    }
+
+    .page-header-content h1 {
+        font-size: 23px;
+    }
+}
+
+
+/* =========================================================
+   4. TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    /* ---------- Sidebar ---------- */
+
+    .sidebar {
+        width: 245px;
+
+        transform: translateX(-100%);
+
+        box-shadow:
+            12px 0 35px rgba(0, 0, 0, 0.12);
+
+        transition:
+            transform 280ms cubic-bezier(
+                0.4,
+                0,
+                0.2,
+                1
+            );
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        display: block;
+    }
+
+    /* ---------- Main ---------- */
+
+    .main-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .mobile-menu-btn {
+        display: inline-flex;
+    }
+
+    /* ---------- Header ---------- */
+
+    .topbar {
+        padding: 0 18px;
+
+        height: 68px;
+    }
+
+    .topbar-left {
+        gap: 10px;
+    }
+
+    .page-title {
+        font-size: 17px;
+    }
+
+    .page-breadcrumb {
+        display: none;
+    }
+
+    /* ---------- Dashboard ---------- */
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-4 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    /* ---------- Header ---------- */
+
+    .page-header {
+        gap: 15px;
+    }
+
+    .page-header-actions {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* =========================================================
+   5. TABLET PORTRAIT
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .page-content {
+        padding: 18px;
+    }
+
+    /* ---------- Stats ---------- */
+
+    .stats-grid {
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-top {
+        margin-bottom: 13px;
+    }
+
+    .stat-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    /* ---------- Cards ---------- */
+
+    .card-header {
+        padding: 15px 16px;
+    }
+
+    .card-body {
+        padding: 16px;
+    }
+
+    .card-footer {
+        padding: 13px 16px;
+    }
+
+    /* ---------- Forms ---------- */
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* ---------- Filters ---------- */
+
+    .filter-bar {
+        align-items: stretch;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+
+    /* ---------- Modal ---------- */
+
+    .modal {
+        max-width: 600px;
+    }
+
+    /* ---------- Table ---------- */
+
+    .data-table {
+        min-width: 650px;
+    }
+}
+
+
+/* =========================================================
+   6. MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    :root {
+        --header-height: 62px;
+    }
+
+    /* ---------- Body ---------- */
+
+    body {
+        font-size: 14px;
+    }
+
+    /* ---------- Sidebar ---------- */
+
+    .sidebar {
+        width: min(285px, 85vw);
+    }
+
+    /* ---------- Topbar ---------- */
+
+    .topbar {
+        height: 62px;
+
+        padding:
+            0 14px;
+    }
+
+    .mobile-menu-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .topbar-right {
+        gap: 6px;
+    }
+
+    .topbar-right .icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .page-title {
+        font-size: 15px;
+    }
+
+    /* ---------- Content ---------- */
+
+    .page-content {
+        padding: 15px;
+    }
+
+    .page-header {
+        margin-bottom: 17px;
+    }
+
+    .page-header-content h1 {
+        font-size: 20px;
+        letter-spacing: -0.4px;
+    }
+
+    .page-header-content p {
+        font-size: 10px;
+    }
+
+    .page-header-actions {
+        width: 100%;
+    }
+
+    .page-header-actions .btn {
+        flex: 1;
+    }
+
+    /* ---------- Stats ---------- */
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    /* ---------- Grid ---------- */
+
+    .grid-2,
+    .grid-3,
+    .grid-4,
+    .grid-main,
+    .grid-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    /* ---------- Cards ---------- */
+
+    .card {
+        border-radius: 13px;
+    }
+
+    .card-header {
+        padding: 14px;
+    }
+
+    .card-body {
+        padding: 14px;
+    }
+
+    .card-footer {
+        padding: 12px 14px;
+    }
+
+    .card-title {
+        font-size: 13px;
+    }
+
+    /* ---------- Filter ---------- */
+
+    .filter-bar {
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    /* ---------- Forms ---------- */
+
+    .form-group {
+        margin-bottom: 14px;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 42px;
+    }
+
+    /* ---------- Tables ---------- */
+
+    .table-container {
+        margin-left: -1px;
+        margin-right: -1px;
+
+        width: calc(100% + 2px);
+    }
+
+    .data-table {
+        min-width: 680px;
+    }
+
+    .data-table th {
+        font-size: 8px;
+    }
+
+    .data-table td {
+        font-size: 10px;
+    }
+
+    /* ---------- Pagination ---------- */
+
+    .pagination {
+        padding: 12px 14px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    /* ---------- Modal ---------- */
+
+    .modal-overlay {
+        padding: 8px;
+    }
+
+    .modal {
+        width: 100%;
+        max-height: 95vh;
+
+        border-radius: 15px;
+    }
+
+    .modal-header {
+        padding: 15px;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+
+    .modal-footer {
+        padding: 13px 15px;
+    }
+
+    /* ---------- Toast ---------- */
+
+    .toast-container {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .toast {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   7. SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .page-content {
+        padding: 12px;
+    }
+
+    .topbar {
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    .topbar-left {
+        min-width: 0;
+    }
+
+    .page-title {
+        max-width: 150px;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .topbar-right .icon-btn:nth-child(n + 2) {
+        display: none;
+    }
+
+    .page-header-content h1 {
+        font-size: 19px;
+    }
+
+    .page-header-actions {
+        flex-direction: column;
+    }
+
+    .page-header-actions .btn {
+        width: 100%;
+    }
+
+    .stat-card {
+        padding: 14px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .stat-label {
+        font-size: 9px;
+    }
+
+    .stat-change {
+        font-size: 9px;
+    }
+
+    .card-header {
+        padding: 13px;
+    }
+
+    .card-body {
+        padding: 13px;
+    }
+
+    .card-footer {
+        padding: 11px 13px;
+    }
+
+    .btn {
+        min-height: 37px;
+    }
+
+    .btn-lg {
+        min-height: 43px;
+    }
+
+    .modal-footer {
+        flex-direction: column-reverse;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   8. VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 350px) {
+
+    .page-content {
+        padding: 9px;
+    }
+
+    .topbar {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .mobile-menu-btn,
+    .topbar-right .icon-btn {
+        width: 33px;
+        height: 33px;
+    }
+
+    .page-title {
+        font-size: 14px;
+        max-width: 125px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .card-title {
+        font-size: 12px;
+    }
+
+    .btn {
+        font-size: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+
+/* =========================================================
+   9. RESPONSIVE TABLE HELPERS
+   ========================================================= */
+
+/*
+   Add class="responsive-table" to a table wrapper
+   when you want horizontal scrolling.
+*/
+
+.responsive-table {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+}
+
+
+/*
+   Prevent ugly text wrapping inside operational tables.
+*/
+
+.responsive-table .data-table th,
+.responsive-table .data-table td {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   10. RESPONSIVE DETAIL GRID
+   ========================================================= */
+
+.detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.detail-item {
+    min-width: 0;
+}
+
+.detail-label {
+    margin-bottom: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 9px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+}
+
+.detail-value {
+    color: var(--text-primary);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    word-break: break-word;
+}
+
+
+@media (max-width: 600px) {
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 11px;
+    }
+}
+
+
+/* =========================================================
+   11. RESPONSIVE TWO-COLUMN PANELS
+   ========================================================= */
+
+.panel-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(280px, 0.65fr);
+
+    gap: 18px;
+}
+
+
+@media (max-width: 1000px) {
+
+    .panel-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   12. RESPONSIVE ACTION GROUP
+   ========================================================= */
+
+.action-group {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    flex-wrap: wrap;
+}
+
+
+@media (max-width: 600px) {
+
+    .action-group {
+        width: 100%;
+    }
+
+    .action-group .btn {
+        flex: 1;
+    }
+}
+
+
+/* =========================================================
+   13. MOBILE USER MENU
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .sidebar-user {
+        padding: 9px;
+    }
+
+    .user-name {
+        font-size: 11px;
+    }
+
+    .user-role {
+        font-size: 9px;
+    }
+}
+
+
+/* =========================================================
+   14. MOBILE SEARCH
+   ========================================================= */
+
+.mobile-search {
+    display: none;
+}
+
+
+@media (max-width: 600px) {
+
+    .mobile-search {
+        display: block;
+
+        width: 100%;
+
+        margin-bottom: 14px;
+    }
+
+    .mobile-search .form-control {
+        height: 40px;
+    }
+}
+
+
+/* =========================================================
+   15. RESPONSIVE CHART CONTAINERS
+   ========================================================= */
+
+.chart-container {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 260px;
+}
+
+
+@media (max-width: 768px) {
+
+    .chart-container {
+        min-height: 220px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .chart-container {
+        min-height: 190px;
+    }
+}
+
+
+/* =========================================================
+   16. RESPONSIVE MAP
+   ========================================================= */
+
+.map-container {
+    width: 100%;
+
+    min-height: 350px;
+
+    overflow: hidden;
+
+    border-radius: var(--radius-lg);
+}
+
+
+@media (max-width: 768px) {
+
+    .map-container {
+        min-height: 280px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .map-container {
+        min-height: 230px;
+
+        border-radius: 12px;
+    }
+}
+
+
+/* =========================================================
+   17. MOBILE PICKUP TIMELINE
+   ========================================================= */
+
+.timeline {
+    position: relative;
+
+    padding-left: 25px;
+}
+
+
+.timeline-item {
+    position: relative;
+
+    padding-bottom: 20px;
+}
+
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+
+.timeline-item::before {
+    content: "";
+
+    position: absolute;
+
+    left: -20px;
+    top: 5px;
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    box-shadow:
+        0 0 0 4px var(--primary-light);
+}
+
+
+.timeline-item:not(:last-child)::after {
+    content: "";
+
+    position: absolute;
+
+    left: -16px;
+    top: 17px;
+
+    width: 1px;
+
+    height: calc(100% - 5px);
+
+    background: #dce5df;
+}
+
+
+@media (max-width: 500px) {
+
+    .timeline {
+        padding-left: 21px;
+    }
+
+    .timeline-item::before {
+        left: -17px;
+
+        width: 8px;
+        height: 8px;
+    }
+
+    .timeline-item:not(:last-child)::after {
+        left: -13px;
+    }
+}
+
+
+/* =========================================================
+   18. MOBILE STAT ROW
+   ========================================================= */
+
+.stat-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+@media (max-width: 500px) {
+
+    .stat-row {
+        gap: 10px;
+    }
+}
+
+
+/* =========================================================
+   19. RESPONSIVE IMAGE GRID
+   ========================================================= */
+
+.image-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+
+@media (max-width: 900px) {
+
+    .image-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .image-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   20. PREVENT HORIZONTAL OVERFLOW
+   ========================================================= */
+
+html,
+body {
+    max-width: 100%;
+}
+
+
+/*
+   Important for cards containing long IDs,
+   transaction IDs, addresses, etc.
+*/
+
+.card,
+.card-body,
+.page-header,
+.page-header-content,
+.table-user,
+.detail-item {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   21. TOUCH DEVICES
+   ========================================================= */
+
+@media (hover: none) {
+
+    .card:hover {
+        box-shadow: var(--shadow-xs);
+    }
+
+    .nav-link:hover {
+        background: transparent;
+        color: #aeb9b2;
+    }
+
+    .nav-link.active:hover {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(24, 165, 88, 0.18),
+                rgba(24, 165, 88, 0.07)
+            );
+
+        color: #ffffff;
+    }
+
+    .btn:hover {
+        transform: none;
+    }
+}
+
+
+/* =========================================================
+   22. LANDSCAPE MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+    .sidebar {
+        overflow-y: auto;
+    }
+
+    .sidebar-nav {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .sidebar-footer {
+        padding-top: 9px;
+        padding-bottom: 9px;
+    }
+
+    .page-content {
+        padding-top: 15px;
+    }
+}
+
+
+/* =========================================================
+   23. ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sidebar,
+    .modal,
+    .modal-overlay,
+    .toast,
+    .progress-bar,
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* =========================================================
+   24. PRINT RESPONSIVE
+   ========================================================= */
+
+@media print {
+
+    .sidebar,
+    .topbar,
+    .mobile-menu-btn,
+    .sidebar-overlay,
+    .page-header-actions,
+    .filter-bar,
+    .pagination {
+        display: none !important;
+    }
+
+    .main-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .page-content {
+        padding: 0 !important;
+        max-width: none !important;
+    }
+
+    .grid,
+    .stats-grid,
+    .panel-row {
+        display: block !important;
+    }
+
+    .card {
+        margin-bottom: 15px;
+
+        break-inside: avoid;
+
+        box-shadow: none !important;
+    }
+}

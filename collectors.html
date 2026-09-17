@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>E-Kabadi Command Center — Collectors</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <!-- Shared Sidebar -->
+    <div id="appSidebar"></div>
+
+    <div class="main-wrapper">
+
+        <!-- Shared Topbar -->
+        <div id="appTopbar"></div>
+
+        <main class="page-content">
+
+            <!-- ==========================================
+                 PAGE HEADER
+                 ========================================== -->
+
+            <section class="page-header">
+
+                <div>
+
+                    <div class="page-header-eyebrow">
+                        MANAGEMENT
+                    </div>
+
+                    <h1>Collectors</h1>
+
+                    <p>
+                        Manage collection partners, verification,
+                        vehicles and operational performance.
+                    </p>
+
+                </div>
+
+
+                <div class="page-header-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="exportCollectorsBtn">
+                        ↓ Export
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="addCollectorBtn">
+                        + Add Collector
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================================
+                 KPI CARDS
+                 ========================================== -->
+
+            <section class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon orange">
+                            🚚
+                        </div>
+
+                        <span class="stat-trend positive">
+                            Network
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="collectorTotal">
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Total Collectors
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            ●
+                        </div>
+
+                        <span class="stat-trend positive">
+                            Live
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="collectorActive">
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Active Collectors
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon orange">
+                            ⏳
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="collectorPending">
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Pending Verification
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon purple">
+                            ★
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="collectorRating">
+                        0.0
+                    </div>
+
+                    <div class="stat-label">
+                        Average Rating
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================================
+                 VERIFICATION ALERT
+                 ========================================== -->
+
+            <div
+                class="collector-alert"
+                id="verificationAlert">
+
+                <div class="collector-alert-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        Verification required
+                    </strong>
+
+                    <span id="verificationAlertText">
+                        Some collectors are waiting
+                        for document verification.
+                    </span>
+
+                </div>
+
+                <button
+                    class="btn btn-sm btn-secondary"
+                    id="showPendingBtn">
+                    Review Pending
+                </button>
+
+            </div>
+
+
+            <!-- ==========================================
+                 FILTER BAR
+                 ========================================== -->
+
+            <section class="card table-card">
+
+                <div class="table-toolbar">
+
+                    <div class="table-search">
+
+                        <span>⌕</span>
+
+                        <input
+                            type="search"
+                            id="collectorSearch"
+                            placeholder="Search collectors, ID, company or area..."
+                        >
+
+                    </div>
+
+
+                    <div class="table-filters">
+
+                        <select
+                            id="collectorStatusFilter"
+                            class="filter-select">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="suspended">
+                                Suspended
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            id="collectorVerificationFilter"
+                            class="filter-select">
+
+                            <option value="all">
+                                All Verification
+                            </option>
+
+                            <option value="verified">
+                                Verified
+                            </option>
+
+                            <option value="unverified">
+                                Unverified
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            id="collectorSortFilter"
+                            class="filter-select">
+
+                            <option value="performance">
+                                Performance
+                            </option>
+
+                            <option value="name">
+                                Name A-Z
+                            </option>
+
+                            <option value="rating">
+                                Highest Rating
+                            </option>
+
+                            <option value="pickups">
+                                Most Pickups
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ======================================
+                     COLLECTORS TABLE
+                     ====================================== -->
+
+                <div class="table-wrapper">
+
+                    <table class="data-table collector-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Collector</th>
+
+                                <th>Company</th>
+
+                                <th>Vehicle</th>
+
+                                <th>Pickups</th>
+
+                                <th>Completion</th>
+
+                                <th>Rating</th>
+
+                                <th>Verification</th>
+
+                                <th>Status</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody
+                            id="collectorsTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- ======================================
+                     FOOTER
+                     ====================================== -->
+
+                <div class="table-footer">
+
+                    <span id="collectorResults">
+                        Showing 0 collectors
+                    </span>
+
+                    <div id="collectorPagination"></div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- Shared UI -->
+
+    <div id="toastRoot"></div>
+
+    <div id="modalRoot"></div>
+
+
+    <!-- Scripts -->
+
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
+    <script src="js/collectors.js"></script>
+
+</body>
+
+</html>

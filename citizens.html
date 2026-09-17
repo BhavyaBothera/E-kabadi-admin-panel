@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>E-Kabadi Command Center — Citizens</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <div id="appSidebar"></div>
+
+    <div class="main-wrapper">
+
+        <div id="appTopbar"></div>
+
+        <main class="page-content">
+
+            <!-- ==========================================
+                 PAGE HEADER
+                 ========================================== -->
+
+            <section class="page-header">
+
+                <div>
+                    <div class="page-header-eyebrow">
+                        MANAGEMENT
+                    </div>
+
+                    <h1>Citizens</h1>
+
+                    <p>
+                        Manage registered citizens, activity,
+                        verification and account status.
+                    </p>
+                </div>
+
+                <div class="page-header-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="exportCitizensBtn">
+                        ↓ Export
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="addCitizenBtn">
+                        + Add Citizen
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================================
+                 CITIZEN STATS
+                 ========================================== -->
+
+            <section class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+                        <div class="stat-icon">
+                            ♟
+                        </div>
+
+                        <span class="stat-trend positive">
+                            Active
+                        </span>
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="citizenTotal">
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Total Citizens
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon blue">
+                            ✓
+                        </div>
+
+                        <span class="stat-trend positive">
+                            Verified
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="citizenVerified">
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Verified Citizens
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon orange">
+                            ⏳
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="citizenPending">
+                        0
+                    </div>
+
+                    <div class="stat-label">
+                        Pending Verification
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon purple">
+                            ♻
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="citizenWaste">
+                        0 kg
+                    </div>
+
+                    <div class="stat-label">
+                        Waste Recycled
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==========================================
+                 FILTER BAR
+                 ========================================== -->
+
+            <section class="card table-card">
+
+                <div class="table-toolbar">
+
+                    <div class="table-search">
+
+                        <span>⌕</span>
+
+                        <input
+                            type="search"
+                            id="citizenSearch"
+                            placeholder="Search citizens, ID or area..."
+                        >
+
+                    </div>
+
+
+                    <div class="table-filters">
+
+                        <select
+                            id="statusFilter"
+                            class="filter-select">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="suspended">
+                                Suspended
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            id="verificationFilter"
+                            class="filter-select">
+
+                            <option value="all">
+                                All Verification
+                            </option>
+
+                            <option value="verified">
+                                Verified
+                            </option>
+
+                            <option value="unverified">
+                                Unverified
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            id="sortFilter"
+                            class="filter-select">
+
+                            <option value="newest">
+                                Newest
+                            </option>
+
+                            <option value="name">
+                                Name A-Z
+                            </option>
+
+                            <option value="waste">
+                                Most Waste
+                            </option>
+
+                            <option value="earnings">
+                                Highest Earnings
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ======================================
+                     TABLE
+                     ====================================== -->
+
+                <div class="table-wrapper">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Citizen
+                                </th>
+
+                                <th>
+                                    Location
+                                </th>
+
+                                <th>
+                                    Pickups
+                                </th>
+
+                                <th>
+                                    Waste Recycled
+                                </th>
+
+                                <th>
+                                    Earnings
+                                </th>
+
+                                <th>
+                                    Verification
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="citizensTableBody">
+
+                            <!-- Generated by JS -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- ======================================
+                     TABLE FOOTER
+                     ====================================== -->
+
+                <div class="table-footer">
+
+                    <span id="citizenResults">
+                        Showing 0 citizens
+                    </span>
+
+                    <div id="citizenPagination"></div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <div id="toastRoot"></div>
+    <div id="modalRoot"></div>
+
+
+    <!-- Scripts -->
+
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/citizens.js"></script>
+
+</body>
+</html>

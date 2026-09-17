@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>E-Kabadi Command Center — Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <!-- Shared Sidebar -->
+    <div id="appSidebar"></div>
+
+    <div class="main-wrapper">
+
+        <!-- Shared Topbar -->
+        <div id="appTopbar"></div>
+
+        <main class="page-content dashboard-content">
+
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
+
+            <section class="dashboard-welcome">
+
+                <div>
+
+                    <span class="dashboard-eyebrow">
+                        E-KABADI COMMAND CENTER
+                    </span>
+
+                    <h1>
+                        Good evening, Bhavya
+                        <span class="wave">👋</span>
+                    </h1>
+
+                    <p>
+                        Here's what's happening across your
+                        waste recovery network today.
+                    </p>
+
+                </div>
+
+                <div class="dashboard-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="refreshDashboard">
+
+                        <span>↻</span>
+                        Refresh
+
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                        id="quickActionBtn">
+
+                        <span>+</span>
+                        Quick Action
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 LIVE STATUS BAR
+                 ================================================= -->
+
+            <section class="live-status-card">
+
+                <div class="live-status-main">
+
+                    <span class="live-pulse"></span>
+
+                    <div>
+
+                        <strong>
+                            Platform is operating normally
+                        </strong>
+
+                        <span>
+                            All core services are online
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="live-status-time">
+
+                    <span>Last updated</span>
+
+                    <strong id="lastUpdated">
+                        Just now
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 KPI CARDS
+                 ================================================= -->
+
+            <section class="stats-grid dashboard-stats">
+
+                <div class="stat-card dashboard-stat waste-stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            ♻
+                        </div>
+
+                        <span class="stat-trend positive">
+                            ↑ 12.8%
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value"
+                         id="statWaste">
+                        18,420 kg
+                    </div>
+
+                    <div class="stat-label">
+                        Total Waste Processed
+                    </div>
+
+                    <div class="stat-footer">
+                        <span>This month</span>
+                        <span>Target: 20,000 kg</span>
+                    </div>
+
+                    <div class="mini-progress">
+                        <span id="wasteProgress"></span>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card dashboard-stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon blue">
+                            ♟
+                        </div>
+
+                        <span class="stat-trend positive">
+                            ↑ 8.4%
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value"
+                         id="statCitizens">
+                        1,248
+                    </div>
+
+                    <div class="stat-label">
+                        Active Citizens
+                    </div>
+
+                    <div class="stat-footer">
+                        <span>Registered users</span>
+                        <span class="highlight">
+                            +86 this month
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card dashboard-stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon orange">
+                            🚚
+                        </div>
+
+                        <span class="stat-trend positive">
+                            ↑ 5.2%
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value"
+                         id="statCollectors">
+                        86
+                    </div>
+
+                    <div class="stat-label">
+                        Active Collectors
+                    </div>
+
+                    <div class="stat-footer">
+                        <span>Collection partners</span>
+                        <span class="highlight">
+                            <i class="tiny-dot"></i>
+                            78 online
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card dashboard-stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon purple">
+                            ₹
+                        </div>
+
+                        <span class="stat-trend positive">
+                            ↑ 14.6%
+                        </span>
+
+                    </div>
+
+                    <div class="stat-value"
+                         id="statRevenue">
+                        ₹48.6K
+                    </div>
+
+                    <div class="stat-label">
+                        Platform Revenue
+                    </div>
+
+                    <div class="stat-footer">
+                        <span>This month</span>
+                        <span>5% platform fee</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 CHART ROW
+                 ================================================= -->
+
+            <section class="dashboard-grid">
+
+                <!-- Waste Recovery Chart -->
+
+                <div class="card chart-card large-chart">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="card-eyebrow">
+                                PERFORMANCE
+                            </span>
+
+                            <h2>
+                                Waste Recovery
+                            </h2>
+
+                            <p>
+                                Daily waste collected across
+                                the network
+                            </p>
+
+                        </div>
+
+                        <select
+                            id="wasteChartPeriod"
+                            class="chart-select">
+
+                            <option value="7">
+                                Last 7 days
+                            </option>
+
+                            <option value="14">
+                                Last 14 days
+                            </option>
+
+                            <option value="30">
+                                Last 30 days
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="chart-summary">
+
+                        <div>
+
+                            <strong id="chartWasteTotal">
+                                1,284 kg
+                            </strong>
+
+                            <span>
+                                collected
+                            </span>
+
+                        </div>
+
+                        <div class="chart-change">
+                            <span>↑</span>
+                            18.4% vs last week
+                        </div>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+
+                        <canvas
+                            id="wasteChart">
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Pickup Distribution -->
+
+                <div class="card chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="card-eyebrow">
+                                OPERATIONS
+                            </span>
+
+                            <h2>
+                                Pickup Status
+                            </h2>
+
+                            <p>
+                                Current operational pipeline
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="donut-container">
+
+                        <div class="donut-chart-wrapper">
+
+                            <canvas
+                                id="pickupStatusChart">
+                            </canvas>
+
+                            <div class="donut-center">
+
+                                <strong id="totalPickups">
+                                    126
+                                </strong>
+
+                                <span>
+                                    Total
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="chart-legend"
+                        id="pickupLegend">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SECOND CHART ROW
+                 ================================================= -->
+
+            <section class="dashboard-grid">
+
+                <!-- Material Distribution -->
+
+                <div class="card chart-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="card-eyebrow">
+                                MATERIALS
+                            </span>
+
+                            <h2>
+                                Material Mix
+                            </h2>
+
+                            <p>
+                                Waste composition this month
+                            </p>
+
+                        </div>
+
+                        <a
+                            href="scrap.html"
+                            class="card-link">
+                            Manage rates →
+                        </a>
+
+                    </div>
+
+                    <div class="material-chart">
+
+                        <canvas
+                            id="materialChart">
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Area Performance -->
+
+                <div class="card area-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="card-eyebrow">
+                                NETWORK
+                            </span>
+
+                            <h2>
+                                Area Performance
+                            </h2>
+
+                            <p>
+                                Collection efficiency by area
+                            </p>
+
+                        </div>
+
+                        <a
+                            href="analytics.html"
+                            class="card-link">
+                            View analytics →
+                        </a>
+
+                    </div>
+
+                    <div
+                        class="area-list"
+                        id="areaPerformance">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 BOTTOM GRID
+                 ================================================= -->
+
+            <section class="dashboard-grid bottom-grid">
+
+                <!-- Recent Pickups -->
+
+                <div class="card recent-pickups-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="card-eyebrow">
+                                LIVE OPERATIONS
+                            </span>
+
+                            <h2>
+                                Recent Pickups
+                            </h2>
+
+                        </div>
+
+                        <a
+                            href="pickups.html"
+                            class="card-link">
+                            View all →
+                        </a>
+
+                    </div>
+
+                    <div
+                        class="recent-pickups"
+                        id="recentPickups">
+                    </div>
+
+                </div>
+
+
+                <!-- Pending Actions -->
+
+                <div class="card pending-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="card-eyebrow">
+                                ATTENTION
+                            </span>
+
+                            <h2>
+                                Pending Actions
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="pending-list"
+                        id="pendingActions">
+                    </div>
+
+                </div>
+
+
+                <!-- Environmental Impact -->
+
+                <div class="card impact-card">
+
+                    <div class="impact-header">
+
+                        <div class="impact-icon">
+                            🌱
+                        </div>
+
+                        <div>
+
+                            <span class="card-eyebrow">
+                                ENVIRONMENTAL IMPACT
+                            </span>
+
+                            <h2>
+                                E-Kabadi Impact
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                    <div class="impact-stats">
+
+                        <div>
+
+                            <strong id="co2Saved">
+                                42.9K
+                            </strong>
+
+                            <span>
+                                kg CO₂ saved
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong id="waterSaved">
+                                72.6K
+                            </strong>
+
+                            <span>
+                                L water saved
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="impact-message">
+
+                        <span>♻</span>
+
+                        <p>
+                            Every kilogram recycled is one
+                            kilogram kept away from landfill.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- Toast + Modal -->
+    <div id="toastRoot"></div>
+    <div id="modalRoot"></div>
+
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="js/charts.js"></script>
+    <script src="js/dashboard.js"></script>
+
+</body>
+</html>
