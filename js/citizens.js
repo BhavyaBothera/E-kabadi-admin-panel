@@ -1546,7 +1546,7 @@
 
             title: "Add Citizen",
             eyebrow: "NEW CITIZEN ACCOUNT",
-            description: "Enter the citizen's complete profile and payment details.",
+            description: "Create a complete citizen profile for pickups, rewards and payouts.",
             size: "large",
 
             content: `
@@ -1556,74 +1556,109 @@
                         <span class="form-section-icon">01</span>
                         <div>
                             <strong>Personal information</strong>
-                            <small>Basic details used for the citizen profile.</small>
+                            <small>Identity and contact details for the citizen account.</small>
                         </div>
                     </div>
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="newCitizenName">Full Name <span>*</span></label>
-                            <input type="text" id="newCitizenName" required maxlength="80" autocomplete="name" placeholder="e.g. Rahul Sharma">
+                            <label for="newCitizenFirstName">First Name <span>*</span></label>
+                            <input type="text" id="newCitizenFirstName" required maxlength="40" autocomplete="given-name" placeholder="e.g. Rahul">
                         </div>
 
                         <div class="form-group">
-                            <label for="newCitizenEmail">Email <span>*</span></label>
+                            <label for="newCitizenSurname">Surname <span>*</span></label>
+                            <input type="text" id="newCitizenSurname" required maxlength="40" autocomplete="family-name" placeholder="e.g. Sharma">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCitizenEmail">Email Address <span>*</span></label>
                             <input type="email" id="newCitizenEmail" required maxlength="120" autocomplete="email" placeholder="citizen@email.com">
                         </div>
 
                         <div class="form-group">
-                            <label for="newCitizenPhone">Phone Number <span>*</span></label>
-                            <input type="tel" id="newCitizenPhone" required maxlength="16" autocomplete="tel" placeholder="+91 98765 43210">
+                            <label for="newCitizenPhone">10-Digit Mobile Number <span>*</span></label>
+                            <div class="phone-input">
+                                <span>+91</span>
+                                <input type="tel" id="newCitizenPhone" required inputmode="numeric" maxlength="10" pattern="[0-9]{10}" autocomplete="tel-national" placeholder="9876543210">
+                            </div>
+                            <small class="field-hint">Enter exactly 10 digits, without +91.</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="newCitizenAddress">Address / Area <span>*</span></label>
-                            <input type="text" id="newCitizenAddress" required maxlength="120" autocomplete="street-address" placeholder="e.g. Sector 62">
+                            <label for="newCitizenDob">Date of Birth <span>*</span></label>
+                            <input type="date" id="newCitizenDob" required autocomplete="bday">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCitizenGender">Gender <span>*</span></label>
+                            <select id="newCitizenGender" required>
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-section-title">
                         <span class="form-section-icon">02</span>
                         <div>
-                            <strong>Location</strong>
-                            <small>Used for pickup routing and area-based search.</small>
+                            <strong>Location & address</strong>
+                            <small>Required for pickup routing and service-area management.</small>
                         </div>
                     </div>
 
-                    <div class="form-grid form-grid-3">
+                    <div class="form-grid">
+                        <div class="form-group form-span-2">
+                            <label for="newCitizenAddress">Address / Area <span>*</span></label>
+                            <input type="text" id="newCitizenAddress" required maxlength="160" autocomplete="street-address" placeholder="House/Flat, Street, Sector or Area">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCitizenLandmark">Landmark</label>
+                            <input type="text" id="newCitizenLandmark" maxlength="100" placeholder="Nearby landmark">
+                        </div>
+
                         <div class="form-group">
                             <label for="newCitizenCity">City <span>*</span></label>
-                            <input type="text" id="newCitizenCity" required value="Noida" placeholder="e.g. Noida">
+                            <input type="text" id="newCitizenCity" required maxlength="60" autocomplete="address-level2" placeholder="e.g. Noida">
                         </div>
 
                         <div class="form-group">
                             <label for="newCitizenState">State <span>*</span></label>
-                            <input type="text" id="newCitizenState" required value="Uttar Pradesh" placeholder="e.g. Uttar Pradesh">
+                            <input type="text" id="newCitizenState" required maxlength="60" autocomplete="address-level1" placeholder="e.g. Uttar Pradesh">
                         </div>
 
                         <div class="form-group">
                             <label for="newCitizenPincode">Pincode <span>*</span></label>
-                            <input type="text" id="newCitizenPincode" required inputmode="numeric" maxlength="6" pattern="\\d{6}" placeholder="201309">
+                            <input type="text" id="newCitizenPincode" required inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="postal-code" placeholder="6-digit pincode">
                         </div>
                     </div>
 
                     <div class="form-section-title">
                         <span class="form-section-icon">03</span>
                         <div>
-                            <strong>Account & payment</strong>
-                            <small>Set the initial account state and preferred payout method.</small>
+                            <strong>Payment & account</strong>
+                            <small>Configure how the citizen receives recycling payouts.</small>
                         </div>
                     </div>
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="newCitizenPayment">Preferred Payment <span>*</span></label>
+                            <label for="newCitizenPayment">Preferred Payment Method <span>*</span></label>
                             <select id="newCitizenPayment" required>
                                 <option value="">Select payment method</option>
                                 <option value="UPI">UPI</option>
                                 <option value="Bank Transfer">Bank Transfer</option>
                                 <option value="Cash">Cash</option>
                             </select>
+                        </div>
+
+                        <div class="form-group" id="citizenUpiGroup">
+                            <label for="newCitizenUpi">UPI ID</label>
+                            <input type="text" id="newCitizenUpi" maxlength="100" placeholder="name@upi">
                         </div>
 
                         <div class="form-group">
@@ -1636,8 +1671,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="newCitizenVerified">Verification</label>
-                            <select id="newCitizenVerified">
+                            <label for="newCitizenVerified">Verification <span>*</span></label>
+                            <select id="newCitizenVerified" required>
                                 <option value="unverified">Not Verified</option>
                                 <option value="verified">Verified</option>
                             </select>
@@ -1645,35 +1680,62 @@
                     </div>
 
                     <div class="form-note">
-                        <strong>Prototype note:</strong>
-                        Citizen ID and activity metrics are generated automatically. Pickup, waste, earnings and EcoCoin values start at zero.
+                        <strong>Automatically generated:</strong>
+                        Citizen ID, join date, avatar, pickup history, waste total, earnings, EcoCoins and rating.
                     </div>
 
                 </form>
             `,
 
             footer: `
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="saveCitizenBtn">Create Citizen</button>
+                <button type="button" class="btn btn-secondary" id="cancelAddCitizen">Cancel</button>
+                <button type="submit" form="addCitizenForm" class="btn btn-primary" id="saveCitizenBtn">Create Citizen</button>
             `,
 
             onOpen: () => {
                 const form = document.getElementById("addCitizenForm");
                 const button = document.getElementById("saveCitizenBtn");
+                const cancel = document.getElementById("cancelAddCitizen");
+                const payment = document.getElementById("newCitizenPayment");
+                const upi = document.getElementById("newCitizenUpi");
 
-                if (button) {
-                    button.addEventListener("click", () => {
-                        if (form && !form.reportValidity()) return;
-                        createCitizen();
-                    });
-                }
+                const togglePaymentFields = () => {
+                    const isUpi = payment?.value === "UPI";
+                    const group = document.getElementById("citizenUpiGroup");
+                    if (group) group.style.display = isUpi ? "" : "none";
+                    if (upi) {
+                        upi.required = isUpi;
+                        if (!isUpi) upi.value = "";
+                    }
+                };
 
-                if (form) {
-                    form.addEventListener("submit", event => {
-                        event.preventDefault();
-                        if (form.reportValidity()) createCitizen();
-                    });
-                }
+                payment?.addEventListener("change", togglePaymentFields);
+                togglePaymentFields();
+
+                document.getElementById("newCitizenPhone")?.addEventListener("input", event => {
+                    event.target.value = event.target.value.replace(/\\D/g, "").slice(0, 10);
+                });
+
+                document.getElementById("newCitizenPincode")?.addEventListener("input", event => {
+                    event.target.value = event.target.value.replace(/\\D/g, "").slice(0, 6);
+                });
+
+                const today = new Date().toISOString().split("T")[0];
+                const dob = document.getElementById("newCitizenDob");
+                if (dob) dob.max = today;
+
+                cancel?.addEventListener("click", closeModal);
+
+                form?.addEventListener("submit", event => {
+                    event.preventDefault();
+                    if (!form.reportValidity()) return;
+                    createCitizen();
+                });
+
+                button?.addEventListener("click", () => {
+                    if (form && !form.reportValidity()) return;
+                    if (form) form.requestSubmit();
+                });
             }
         });
     }
@@ -1683,18 +1745,24 @@
 
         const get = id => document.getElementById(id)?.value.trim() || "";
 
-        const name = get("newCitizenName");
+        const firstName = get("newCitizenFirstName");
+        const surname = get("newCitizenSurname");
+        const name = \`${firstName} ${surname}\`.trim();
         const email = get("newCitizenEmail");
         const phone = get("newCitizenPhone");
+        const dob = get("newCitizenDob");
+        const gender = get("newCitizenGender");
         const address = get("newCitizenAddress");
+        const landmark = get("newCitizenLandmark");
         const city = get("newCitizenCity");
         const stateName = get("newCitizenState");
         const pincode = get("newCitizenPincode");
         const preferredPayment = get("newCitizenPayment");
+        const upiId = get("newCitizenUpi");
         const status = get("newCitizenStatus") || "active";
         const verified = get("newCitizenVerified") === "verified";
 
-        if (!name || !email || !phone || !address || !city || !stateName || !pincode || !preferredPayment) {
+        if (!firstName || !surname || !email || !phone || !dob || !gender || !address || !city || !stateName || !pincode || !preferredPayment) {
             showToast("Please complete all required fields.", "warning", "Missing Information");
             return;
         }
@@ -1704,27 +1772,61 @@
             return;
         }
 
-        if (!/^\\d{6}$/.test(pincode)) {
+        if (!/^[0-9]{10}$/.test(phone)) {
+            showToast("Mobile number must contain exactly 10 digits.", "warning", "Invalid Phone Number");
+            return;
+        }
+
+        if (!/^[0-9]{6}$/.test(pincode)) {
             showToast("Pincode must contain exactly 6 digits.", "warning", "Invalid Pincode");
             return;
         }
 
-        const duplicate = state.citizens.some(
+        if (new Date(dob) > new Date()) {
+            showToast("Date of birth cannot be in the future.", "warning", "Invalid Date of Birth");
+            return;
+        }
+
+        if (preferredPayment === "UPI" && !upiId) {
+            showToast("Please enter the UPI ID for UPI payments.", "warning", "UPI Required");
+            return;
+        }
+
+        if (preferredPayment === "UPI" && !/^[^\\s@]+@[^\\s@]+$/.test(upiId)) {
+            showToast("Please enter a valid UPI ID.", "warning", "Invalid UPI ID");
+            return;
+        }
+
+        const duplicateEmail = state.citizens.some(
             citizen => String(citizen.email || "").toLowerCase() === email.toLowerCase()
         );
 
-        if (duplicate) {
+        const duplicatePhone = state.citizens.some(
+            citizen => String(citizen.phone || "").replace(/\\D/g, "").slice(-10) === phone
+        );
+
+        if (duplicateEmail) {
             showToast("A citizen with this email already exists.", "warning", "Duplicate Email");
+            return;
+        }
+
+        if (duplicatePhone) {
+            showToast("A citizen with this phone number already exists.", "warning", "Duplicate Phone");
             return;
         }
 
         const newCitizen = {
             id: generateCitizenId(),
             name,
-            phone,
+            firstName,
+            surname,
+            phone: \`+91 ${phone}\`,
             email,
+            dateOfBirth: dob,
+            gender,
             location: {
                 address,
+                landmark,
                 city,
                 state: stateName,
                 pincode
@@ -1746,6 +1848,7 @@
             rating: 0,
             lastActive: new Date().toISOString(),
             preferredPayment,
+            upiId: preferredPayment === "UPI" ? upiId : "",
             avatar: getInitials(name)
         };
 
@@ -1771,7 +1874,7 @@
     }
 
 
-    function generateCitizenId() {
+        function generateCitizenId() {
 
         const numbers =
             state.citizens
