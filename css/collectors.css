@@ -172,3 +172,75 @@
         width:70px;
     }
 }
+
+
+/* Phone field — country code and number must stay on one line */
+.collector-form .phone-input,
+#addCollectorForm .phone-input{
+    display:flex;
+    align-items:stretch;
+    width:100%;
+    min-height:40px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    overflow:hidden;
+    transition:border-color .18s,box-shadow .18s;
+}
+
+.collector-form .phone-input:focus-within,
+#addCollectorForm .phone-input:focus-within{
+    border-color:rgba(24,165,88,.55);
+    box-shadow:0 0 0 3px rgba(24,165,88,.09);
+}
+
+.collector-form .phone-input > span,
+#addCollectorForm .phone-input > span{
+    flex:0 0 52px;
+    width:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-right:1px solid var(--border-light);
+    background:#f7f9f8;
+    color:var(--text-secondary);
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.collector-form .phone-input input,
+#addCollectorForm .phone-input input{
+    flex:1 1 auto;
+    width:0;
+    min-width:0;
+    min-height:38px;
+    height:38px;
+    border:0;
+    border-radius:0;
+    outline:none;
+    box-shadow:none!important;
+    padding:0 11px;
+}
+
+.collector-form .phone-input input:focus,
+#addCollectorForm .phone-input input:focus{
+    border:0;
+    box-shadow:none!important;
+}
+
+#addCollectorForm .field-hint,
+.collector-form .field-hint{
+    display:block;
+    margin-top:4px;
+    color:var(--text-muted);
+    font-size:8px;
+}
+
+@media(max-width:600px){
+    .collector-form .phone-input > span,
+    #addCollectorForm .phone-input > span{
+        flex-basis:50px;
+        width:50px;
+    }
+}
