@@ -686,3 +686,28 @@
         max-height:58vh;
     }
 }
+
+.table-search-icon{
+    width:16px;
+    height:16px;
+    display:grid;
+    place-items:center;
+}
+.table-search-icon svg{
+    width:15px;
+    height:15px;
+    display:block;
+}
+@media(max-width:600px){
+    .table-search input{
+        height:42px;
+        font-size:11px;
+    }
+    .table-filters{
+        grid-template-columns:1fr 1fr;
+        gap:7px;
+    }
+    .filter-reset{
+        height:36px;
+    }
+}
