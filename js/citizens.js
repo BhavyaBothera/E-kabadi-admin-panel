@@ -461,11 +461,13 @@
 
                         <span>
                             ${
-                                citizen.city
+                                citizen.city ||
+                                citizen.location?.city
                                     ? escapeHTML(
-                                        citizen.city
+                                        citizen.city ||
+                                        citizen.location?.city
                                     )
-                                    : "Noida"
+                                    : "No city provided"
                             }
                         </span>
 
@@ -1076,8 +1078,7 @@
                             <strong>
                                 ${
                                     escapeHTML(
-                                        citizen.area ||
-                                        citizen.location ||
+                                        getCitizenLocation(citizen) ||
                                         "Not provided"
                                     )
                                 }
@@ -1153,8 +1154,9 @@
 
                             closeModal();
 
-                            openCitizenActions(
-                                citizen.id
+                            setTimeout(
+                                () => openEditCitizenModal(citizen.id),
+                                220
                             );
 
                         }
@@ -1164,6 +1166,325 @@
             }
 
         });
+    }
+
+
+    /* =========================================================
+       EDIT CITIZEN PROFILE
+       ========================================================= */
+
+    function openEditCitizenModal(id) {
+
+        const citizen = findCitizen(id);
+
+        if (!citizen) {
+            showToast("Citizen could not be found.", "error", "Error");
+            return;
+        }
+
+        const location = citizen.location && typeof citizen.location === "object"
+            ? citizen.location
+            : {};
+
+        const firstName = citizen.firstName || String(citizen.name || "").trim().split(/\s+/)[0] || "";
+        const surname = citizen.surname || String(citizen.name || "").trim().split(/\s+/).slice(1).join(" ") || "";
+        const rawPhone = String(citizen.phone || "").replace(/\D/g, "").slice(-10);
+        const city = citizen.city || location.city || "";
+        const stateName = citizen.state || location.state || "";
+        const address = citizen.area || location.address || "";
+        const landmark = citizen.landmark || location.landmark || "";
+        const pincode = citizen.pincode || location.pincode || "";
+        const payment = citizen.preferredPayment || "";
+        const upiId = citizen.upiId || "";
+
+        openModal({
+            title: "Manage Account",
+            eyebrow: citizen.id || "CITIZEN PROFILE",
+            description: "Update the citizen's personal, contact, location and payout details.",
+            size: "large",
+
+            content: `
+                <form id="editCitizenForm" class="admin-form citizen-form">
+                    <div class="form-section-title">
+                        <span class="form-section-icon">01</span>
+                        <div>
+                            <strong>Personal information</strong>
+                            <small>Update identity and contact details.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editCitizenFirstName">First Name <span>*</span></label>
+                            <input type="text" id="editCitizenFirstName" required maxlength="40" value="${escapeAttribute(firstName)}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenSurname">Surname <span>*</span></label>
+                            <input type="text" id="editCitizenSurname" required maxlength="40" value="${escapeAttribute(surname)}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenEmail">Email Address <span>*</span></label>
+                            <input type="email" id="editCitizenEmail" required maxlength="120" value="${escapeAttribute(citizen.email || "")}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenPhone">10-Digit Mobile Number <span>*</span></label>
+                            <div class="phone-input">
+                                <span>+91</span>
+                                <input type="tel" id="editCitizenPhone" required inputmode="numeric" maxlength="10" pattern="[0-9]{10}" value="${escapeAttribute(rawPhone)}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenDob">Date of Birth</label>
+                            <input type="date" id="editCitizenDob" value="${escapeAttribute(citizen.dateOfBirth || "")}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenGender">Gender</label>
+                            <select id="editCitizenGender">
+                                <option value="">Select gender</option>
+                                <option value="Male" ${citizen.gender === "Male" ? "selected" : ""}>Male</option>
+                                <option value="Female" ${citizen.gender === "Female" ? "selected" : ""}>Female</option>
+                                <option value="Other" ${citizen.gender === "Other" ? "selected" : ""}>Other</option>
+                                <option value="Prefer not to say" ${citizen.gender === "Prefer not to say" ? "selected" : ""}>Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <span class="form-section-icon">02</span>
+                        <div>
+                            <strong>Location & address</strong>
+                            <small>Keep pickup and service-area information up to date.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group form-span-2">
+                            <label for="editCitizenAddress">Address / Area <span>*</span></label>
+                            <input type="text" id="editCitizenAddress" required maxlength="160" value="${escapeAttribute(address)}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenLandmark">Landmark</label>
+                            <input type="text" id="editCitizenLandmark" maxlength="100" value="${escapeAttribute(landmark)}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenCity">City <span>*</span></label>
+                            <input type="text" id="editCitizenCity" required maxlength="60" value="${escapeAttribute(city)}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenState">State <span>*</span></label>
+                            <input type="text" id="editCitizenState" required maxlength="60" value="${escapeAttribute(stateName)}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenPincode">Pincode <span>*</span></label>
+                            <input type="text" id="editCitizenPincode" required inputmode="numeric" maxlength="6" pattern="[0-9]{6}" value="${escapeAttribute(pincode)}">
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <span class="form-section-icon">03</span>
+                        <div>
+                            <strong>Payment & account</strong>
+                            <small>Manage payout preference, status and verification.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editCitizenPayment">Preferred Payment Method <span>*</span></label>
+                            <select id="editCitizenPayment" required>
+                                <option value="">Select payment method</option>
+                                <option value="UPI" ${payment === "UPI" ? "selected" : ""}>UPI</option>
+                                <option value="Bank Transfer" ${payment === "Bank Transfer" ? "selected" : ""}>Bank Transfer</option>
+                                <option value="Cash" ${payment === "Cash" ? "selected" : ""}>Cash</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="editCitizenUpiGroup">
+                            <label for="editCitizenUpi">UPI ID</label>
+                            <input type="text" id="editCitizenUpi" maxlength="100" value="${escapeAttribute(upiId)}" placeholder="name@upi">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenStatus">Account Status <span>*</span></label>
+                            <select id="editCitizenStatus" required>
+                                <option value="active" ${citizen.status === "active" ? "selected" : ""}>Active</option>
+                                <option value="pending" ${citizen.status === "pending" ? "selected" : ""}>Pending</option>
+                                <option value="suspended" ${citizen.status === "suspended" ? "selected" : ""}>Suspended</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCitizenVerified">Verification <span>*</span></label>
+                            <select id="editCitizenVerified" required>
+                                <option value="verified" ${citizen.verified === true || citizen.verificationStatus === "verified" ? "selected" : ""}>Verified</option>
+                                <option value="unverified" ${!(citizen.verified === true || citizen.verificationStatus === "verified") ? "selected" : ""}>Not Verified</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            `,
+
+            footer: `
+                <button type="button" class="btn btn-secondary" id="cancelEditCitizen">Cancel</button>
+                <button type="submit" form="editCitizenForm" class="btn btn-primary" id="saveEditCitizen">Save Changes</button>
+            `,
+
+            onOpen: () => {
+                const form = document.getElementById("editCitizenForm");
+                const paymentSelect = document.getElementById("editCitizenPayment");
+                const upi = document.getElementById("editCitizenUpi");
+                const phoneInput = document.getElementById("editCitizenPhone");
+                const pincodeInput = document.getElementById("editCitizenPincode");
+                const dob = document.getElementById("editCitizenDob");
+
+                const toggleUpi = () => {
+                    const isUpi = paymentSelect?.value === "UPI";
+                    const group = document.getElementById("editCitizenUpiGroup");
+                    if (group) group.style.display = isUpi ? "" : "none";
+                    if (upi) upi.required = isUpi;
+                };
+
+                paymentSelect?.addEventListener("change", toggleUpi);
+                toggleUpi();
+
+                phoneInput?.addEventListener("input", event => {
+                    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 10);
+                });
+
+                pincodeInput?.addEventListener("input", event => {
+                    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
+                });
+
+                if (dob) dob.max = new Date().toISOString().split("T")[0];
+
+                document.getElementById("cancelEditCitizen")?.addEventListener("click", closeModal);
+
+                form?.addEventListener("submit", event => {
+                    event.preventDefault();
+                    if (!form.reportValidity()) return;
+                    saveCitizenProfile(id);
+                });
+            }
+        });
+    }
+
+
+    function saveCitizenProfile(id) {
+
+        const citizen = findCitizen(id);
+        if (!citizen) return;
+
+        const get = fieldId => document.getElementById(fieldId)?.value.trim() || "";
+        const firstName = get("editCitizenFirstName");
+        const surname = get("editCitizenSurname");
+        const name = (firstName + " " + surname).trim();
+        const email = get("editCitizenEmail");
+        const phone = get("editCitizenPhone");
+        const dob = get("editCitizenDob");
+        const gender = get("editCitizenGender");
+        const address = get("editCitizenAddress");
+        const landmark = get("editCitizenLandmark");
+        const city = get("editCitizenCity");
+        const stateName = get("editCitizenState");
+        const pincode = get("editCitizenPincode");
+        const preferredPayment = get("editCitizenPayment");
+        const upiId = get("editCitizenUpi");
+        const status = get("editCitizenStatus");
+        const verified = get("editCitizenVerified") === "verified";
+
+        if (!firstName || !surname || !email || !phone || !address || !city || !stateName || !pincode || !preferredPayment || !status) {
+            showToast("Please complete all required fields.", "warning", "Missing Information");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showToast("Please enter a valid email address.", "warning", "Invalid Email");
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            showToast("Mobile number must contain exactly 10 digits.", "warning", "Invalid Phone Number");
+            return;
+        }
+
+        if (!/^[0-9]{6}$/.test(pincode)) {
+            showToast("Pincode must contain exactly 6 digits.", "warning", "Invalid Pincode");
+            return;
+        }
+
+        if (dob && new Date(dob) > new Date()) {
+            showToast("Date of birth cannot be in the future.", "warning", "Invalid Date of Birth");
+            return;
+        }
+
+        if (preferredPayment === "UPI" && !/^[^\s@]+@[^\s@]+$/.test(upiId)) {
+            showToast("Please enter a valid UPI ID.", "warning", "Invalid UPI ID");
+            return;
+        }
+
+        const duplicateEmail = state.citizens.some(
+            item => item.id !== id && String(item.email || "").toLowerCase() === email.toLowerCase()
+        );
+
+        const duplicatePhone = state.citizens.some(
+            item => item.id !== id && String(item.phone || "").replace(/\D/g, "").slice(-10) === phone
+        );
+
+        if (duplicateEmail) {
+            showToast("Another citizen already uses this email.", "warning", "Duplicate Email");
+            return;
+        }
+
+        if (duplicatePhone) {
+            showToast("Another citizen already uses this phone number.", "warning", "Duplicate Phone");
+            return;
+        }
+
+        const updates = {
+            name,
+            firstName,
+            surname,
+            email,
+            phone: "+91 " + phone,
+            dateOfBirth: dob,
+            gender,
+            location: {
+                address,
+                landmark,
+                city,
+                state: stateName,
+                pincode
+            },
+            area: address,
+            landmark,
+            city,
+            state: stateName,
+            pincode,
+            preferredPayment,
+            upiId: preferredPayment === "UPI" ? upiId : "",
+            status,
+            verified,
+            verificationStatus: verified ? "verified" : "unverified",
+            updatedAt: new Date().toISOString()
+        };
+
+        let updated = null;
+
+        if (typeof storageUpdateCitizen === "function") {
+            updated = storageUpdateCitizen(id, updates);
+        }
+
+        if (!updated) {
+            Object.assign(citizen, updates);
+            saveLocalFallback();
+            updated = citizen;
+        }
+
+        closeModal();
+
+        setTimeout(() => {
+            loadCitizens();
+            updateStats();
+            renderTable();
+            showToast(`${name}'s profile has been updated successfully.`, "success", "Account Updated");
+        }, 220);
     }
 
 
@@ -1198,6 +1519,24 @@
             content: `
 
                 <div class="action-menu">
+
+                    <button
+                        class="action-menu-item"
+                        id="actionEdit">
+
+                        <span>✎</span>
+
+                        <div>
+                            <strong>
+                                Edit Profile
+                            </strong>
+                            <small>
+                                Update personal and account details
+                            </small>
+                        </div>
+
+                    </button>
+
 
                     <button
                         class="action-menu-item"
@@ -1275,6 +1614,26 @@
             `,
 
             onOpen: () => {
+
+                const edit =
+                    document.getElementById(
+                        "actionEdit"
+                    );
+
+                if (edit) {
+                    edit.addEventListener(
+                        "click",
+                        () => {
+                            closeModal();
+
+                            setTimeout(
+                                () => openEditCitizenModal(id),
+                                220
+                            );
+                        }
+                    );
+                }
+
 
                 const view =
                     document.getElementById(
