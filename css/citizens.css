@@ -545,3 +545,144 @@
         grid-template-columns:1fr;
     }
 }
+
+
+/* Search enhancement */
+.table-search{
+    min-width:280px;
+}
+.table-search input{
+    padding-right:38px;
+}
+.search-clear{
+    position:absolute;
+    right:8px;
+    top:50%;
+    width:25px;
+    height:25px;
+    transform:translateY(-50%);
+    display:grid;
+    place-items:center;
+    border:0;
+    border-radius:7px;
+    background:transparent;
+    color:var(--text-muted);
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    opacity:0;
+    pointer-events:none;
+    transition:.15s ease;
+}
+.table-search:focus-within .search-clear,
+.table-search input:not(:placeholder-shown) + .search-clear{
+    opacity:1;
+    pointer-events:auto;
+}
+.search-clear:hover{
+    background:var(--primary-light);
+    color:var(--primary);
+}
+
+/* Add citizen form */
+.citizen-form{
+    max-height:min(62vh,620px);
+    overflow-y:auto;
+    padding-right:3px;
+}
+.citizen-form::-webkit-scrollbar{
+    width:5px;
+}
+.citizen-form::-webkit-scrollbar-thumb{
+    background:#d6e1da;
+    border-radius:99px;
+}
+.form-section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:5px 0 11px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--border-light);
+}
+.form-section-icon{
+    width:29px;
+    height:29px;
+    flex:0 0 29px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    background:var(--primary-light);
+    color:var(--primary);
+    font-size:8px;
+    font-weight:900;
+}
+.form-section-title strong{
+    display:block;
+    font-size:11px;
+}
+.form-section-title small{
+    display:block;
+    margin-top:2px;
+    color:var(--text-muted);
+    font-size:9px;
+}
+.form-section-title:not(:first-child){
+    margin-top:17px;
+}
+.admin-form .form-group{
+    min-width:0;
+}
+.admin-form .form-group label{
+    display:block;
+    margin-bottom:5px;
+    color:var(--text-secondary);
+    font-size:10px;
+    font-weight:700;
+}
+.admin-form .form-group label span{
+    color:var(--danger);
+}
+.admin-form select{
+    width:100%;
+    min-height:40px;
+    padding:0 10px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    outline:none;
+    background:#fff;
+    color:var(--text-primary);
+    font-size:11px;
+    cursor:pointer;
+}
+.admin-form select:focus{
+    border-color:rgba(24,165,88,.55);
+    box-shadow:0 0 0 3px rgba(24,165,88,.09);
+}
+.form-grid-3{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.form-note{
+    margin-top:15px;
+    padding:10px 12px;
+    border:1px solid #dceee3;
+    border-radius:9px;
+    background:#f5fbf7;
+    color:var(--text-secondary);
+    font-size:9px;
+    line-height:1.5;
+}
+.form-note strong{
+    color:var(--primary-dark);
+}
+@media(max-width:700px){
+    .table-search{
+        min-width:0;
+    }
+    .form-grid-3{
+        grid-template-columns:1fr;
+    }
+    .citizen-form{
+        max-height:58vh;
+    }
+}
