@@ -1394,6 +1394,216 @@
 
 
     /* =========================================================
+       EDIT COLLECTOR PROFILE
+       ========================================================= */
+
+    function openEditCollectorModal(id) {
+
+        const collector = findCollector(id);
+
+        if (!collector) {
+            showToast("Collector could not be found.", "error", "Error");
+            return;
+        }
+
+        const rawPhone = String(collector.phone || "").replace(/\D/g, "").slice(-10);
+
+        openModal({
+            title: "Manage Account",
+            eyebrow: collector.id || "COLLECTOR PROFILE",
+            description: "Update collector contact, business, vehicle and operational account details.",
+            size: "large",
+
+            content: `
+                <form id="editCollectorForm" class="admin-form collector-form">
+                    <div class="form-section-title">
+                        <span class="form-section-icon">01</span>
+                        <div>
+                            <strong>Personal & business</strong>
+                            <small>Keep the collector's contact and company information current.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editCollectorName">Full Name <span>*</span></label>
+                            <input id="editCollectorName" required maxlength="80" value="${escapeAttribute(collector.name || "")}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCollectorCompany">Company / Business</label>
+                            <input id="editCollectorCompany" maxlength="100" value="${escapeAttribute(collector.company || collector.businessName || "")}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCollectorPhone">10-Digit Mobile Number <span>*</span></label>
+                            <div class="phone-input">
+                                <span>+91</span>
+                                <input id="editCollectorPhone" type="tel" required inputmode="numeric" maxlength="10" pattern="[0-9]{10}" value="${escapeAttribute(rawPhone)}">
+                            </div>
+                            <small class="field-hint">Enter exactly 10 digits.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCollectorEmail">Email</label>
+                            <input id="editCollectorEmail" type="email" maxlength="120" value="${escapeAttribute(collector.email || "")}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCollectorArea">Service Area <span>*</span></label>
+                            <input id="editCollectorArea" required maxlength="120" value="${escapeAttribute(collector.area || "")}">
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <span class="form-section-icon">02</span>
+                        <div>
+                            <strong>Vehicle & operations</strong>
+                            <small>Update the vehicle assigned to this collection partner.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editCollectorVehicle">Vehicle Type <span>*</span></label>
+                            <input id="editCollectorVehicle" required maxlength="60" value="${escapeAttribute(collector.vehicle || collector.vehicleType || "")}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCollectorRegistration">Registration Number</label>
+                            <input id="editCollectorRegistration" maxlength="30" value="${escapeAttribute(collector.vehicleNumber || collector.registrationNumber || "")}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCollectorStatus">Account Status <span>*</span></label>
+                            <select id="editCollectorStatus" required>
+                                <option value="active" ${collector.status === "active" ? "selected" : ""}>Active</option>
+                                <option value="pending" ${collector.status === "pending" ? "selected" : ""}>Pending</option>
+                                <option value="suspended" ${collector.status === "suspended" ? "selected" : ""}>Suspended</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCollectorVerified">Verification <span>*</span></label>
+                            <select id="editCollectorVerified" required>
+                                <option value="verified" ${collector.verified === true || collector.verificationStatus === "verified" ? "selected" : ""}>Verified</option>
+                                <option value="unverified" ${!(collector.verified === true || collector.verificationStatus === "verified") ? "selected" : ""}>Not Verified</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            `,
+
+            footer: `
+                <button type="button" class="btn btn-secondary" id="cancelEditCollector">Cancel</button>
+                <button type="submit" form="editCollectorForm" class="btn btn-primary" id="saveEditCollector">Save Changes</button>
+            `,
+
+            onOpen: () => {
+                const form = document.getElementById("editCollectorForm");
+                const phone = document.getElementById("editCollectorPhone");
+
+                phone?.addEventListener("input", event => {
+                    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 10);
+                });
+
+                document.getElementById("cancelEditCollector")?.addEventListener("click", closeModal);
+
+                form?.addEventListener("submit", event => {
+                    event.preventDefault();
+                    if (!form.reportValidity()) return;
+                    saveCollectorProfile(id);
+                });
+            }
+        });
+    }
+
+
+    function saveCollectorProfile(id) {
+
+        const collector = findCollector(id);
+        if (!collector) return;
+
+        const get = fieldId => document.getElementById(fieldId)?.value.trim() || "";
+
+        const name = get("editCollectorName");
+        const company = get("editCollectorCompany");
+        const phone = get("editCollectorPhone");
+        const email = get("editCollectorEmail");
+        const area = get("editCollectorArea");
+        const vehicle = get("editCollectorVehicle");
+        const registration = get("editCollectorRegistration");
+        const status = get("editCollectorStatus");
+        const verified = get("editCollectorVerified") === "verified";
+
+        if (!name || !phone || !area || !vehicle || !status) {
+            showToast("Please complete all required fields.", "warning", "Missing Information");
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            showToast("Mobile number must contain exactly 10 digits.", "warning", "Invalid Phone Number");
+            return;
+        }
+
+        if (email && typeof isValidEmail === "function" && !isValidEmail(email)) {
+            showToast("Please enter a valid email address.", "warning", "Invalid Email");
+            return;
+        }
+
+        const duplicatePhone = state.collectors.some(item =>
+            item.id !== id &&
+            String(item.phone || "").replace(/\D/g, "").slice(-10) === phone
+        );
+
+        const duplicateEmail = email && state.collectors.some(item =>
+            item.id !== id &&
+            String(item.email || "").toLowerCase() === email.toLowerCase()
+        );
+
+        if (duplicatePhone) {
+            showToast("Another collector already uses this phone number.", "warning", "Duplicate Phone");
+            return;
+        }
+
+        if (duplicateEmail) {
+            showToast("Another collector already uses this email.", "warning", "Duplicate Email");
+            return;
+        }
+
+        const updates = {
+            name,
+            company: company || "Independent Collector",
+            businessName: company || "Independent Collector",
+            phone: "+91 " + phone,
+            email,
+            area,
+            vehicle,
+            vehicleType: vehicle,
+            vehicleNumber: registration || "Not assigned",
+            registrationNumber: registration || "Not assigned",
+            status,
+            verified,
+            verificationStatus: verified ? "verified" : "unverified",
+            updatedAt: new Date().toISOString()
+        };
+
+        let updated = null;
+
+        if (typeof storageUpdateCollector === "function") {
+            updated = storageUpdateCollector(id, updates);
+        }
+
+        if (!updated) {
+            Object.assign(collector, updates);
+        }
+
+        closeModal();
+
+        setTimeout(() => {
+            loadCollectors();
+            updateStats();
+            renderTable();
+            updateVerificationAlert();
+            showToast(`${name}'s profile has been updated successfully.`, "success", "Account Updated");
+        }, 220);
+    }
+
+
+    /* =========================================================
        COLLECTOR ACTIONS
        ========================================================= */
 
@@ -1430,6 +1640,24 @@
             content: `
 
                 <div class="action-menu">
+
+                    <button
+                        class="action-menu-item"
+                        id="editCollectorAction">
+
+                        <span>✎</span>
+
+                        <div>
+                            <strong>
+                                Edit Profile
+                            </strong>
+                            <small>
+                                Update contact, vehicle and account details
+                            </small>
+                        </div>
+
+                    </button>
+
 
                     <button
                         class="action-menu-item"
@@ -1549,6 +1777,26 @@
             `,
 
             onOpen: () => {
+
+                const edit =
+                    document.getElementById(
+                        "editCollectorAction"
+                    );
+
+                if (edit) {
+                    edit.addEventListener(
+                        "click",
+                        () => {
+                            closeModal();
+
+                            setTimeout(
+                                () => openEditCollectorModal(id),
+                                220
+                            );
+                        }
+                    );
+                }
+
 
                 const view =
                     document.getElementById(
@@ -1951,11 +2199,18 @@
                                 Phone
                             </label>
 
-                            <input
-                                id="newCollectorPhone"
-                                type="tel"
-                                placeholder="+91 XXXXX XXXXX"
-                            >
+                            <div class="phone-input">
+                                <span>+91</span>
+                                <input
+                                    id="newCollectorPhone"
+                                    type="tel"
+                                    inputmode="numeric"
+                                    maxlength="10"
+                                    pattern="[0-9]{10}"
+                                    placeholder="9876543210"
+                                >
+                            </div>
+                            <small class="field-hint">Enter exactly 10 digits.</small>
 
                         </div>
 
@@ -2047,13 +2302,16 @@
 
 
                 if (button) {
-
-                    button.addEventListener(
-                        "click",
-                        createCollector
-                    );
-
+                    button.addEventListener("click", () => {
+                        const form = document.getElementById("addCollectorForm");
+                        if (form && !form.reportValidity()) return;
+                        createCollector();
+                    });
                 }
+
+                document.getElementById("newCollectorPhone")?.addEventListener("input", event => {
+                    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 10);
+                });
 
             }
 
@@ -2113,6 +2371,42 @@
                 "Missing Information"
             );
 
+            return;
+        }
+
+        if (phone && !/^[0-9]{10}$/.test(phone)) {
+            showToast(
+                "Mobile number must contain exactly 10 digits.",
+                "warning",
+                "Invalid Phone Number"
+            );
+            return;
+        }
+
+        if (email && typeof isValidEmail === "function" && !isValidEmail(email)) {
+            showToast(
+                "Please enter a valid email address.",
+                "warning",
+                "Invalid Email"
+            );
+            return;
+        }
+
+        const duplicatePhone = phone && state.collectors.some(item =>
+            String(item.phone || "").replace(/\D/g, "").slice(-10) === phone
+        );
+
+        const duplicateEmail = email && state.collectors.some(item =>
+            String(item.email || "").toLowerCase() === email.toLowerCase()
+        );
+
+        if (duplicatePhone) {
+            showToast("A collector with this phone number already exists.", "warning", "Duplicate Phone");
+            return;
+        }
+
+        if (duplicateEmail) {
+            showToast("A collector with this email already exists.", "warning", "Duplicate Email");
             return;
         }
 
@@ -2508,6 +2802,48 @@
 
         }
 
+
+        const clearSearch =
+            document.getElementById(
+                "clearCollectorSearch"
+            );
+
+        if (clearSearch) {
+            clearSearch.addEventListener("click", () => {
+                const search = document.getElementById("collectorSearch");
+                if (search) search.value = "";
+                state.search = "";
+                state.currentPage = 1;
+                renderTable();
+            });
+        }
+
+        const resetFilters =
+            document.getElementById(
+                "resetCollectorFilters"
+            );
+
+        if (resetFilters) {
+            resetFilters.addEventListener("click", () => {
+                state.search = "";
+                state.status = "all";
+                state.verification = "all";
+                state.sort = "performance";
+                state.currentPage = 1;
+
+                const search = document.getElementById("collectorSearch");
+                const status = document.getElementById("collectorStatusFilter");
+                const verification = document.getElementById("collectorVerificationFilter");
+                const sort = document.getElementById("collectorSortFilter");
+
+                if (search) search.value = "";
+                if (status) status.value = "all";
+                if (verification) verification.value = "all";
+                if (sort) sort.value = "performance";
+
+                renderTable();
+            });
+        }
 
         const sort =
             document.getElementById(
