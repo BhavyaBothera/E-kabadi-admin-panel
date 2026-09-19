@@ -1747,7 +1747,7 @@
 
         const firstName = get("newCitizenFirstName");
         const surname = get("newCitizenSurname");
-        const name = \`${firstName} ${surname}\`.trim();
+        const name = (firstName + " " + surname).trim();
         const email = get("newCitizenEmail");
         const phone = get("newCitizenPhone");
         const dob = get("newCitizenDob");
@@ -1792,7 +1792,7 @@
             return;
         }
 
-        if (preferredPayment === "UPI" && !/^[^\\s@]+@[^\\s@]+$/.test(upiId)) {
+        if (preferredPayment === "UPI" && !/^[^\s@]+@[^\s@]+$/.test(upiId)) {
             showToast("Please enter a valid UPI ID.", "warning", "Invalid UPI ID");
             return;
         }
@@ -1820,7 +1820,7 @@
             name,
             firstName,
             surname,
-            phone: \`+91 ${phone}\`,
+            phone: "+91 " + phone,
             email,
             dateOfBirth: dob,
             gender,
