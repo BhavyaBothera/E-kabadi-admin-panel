@@ -182,8 +182,12 @@
                         <input
                             type="search"
                             id="citizenSearch"
-                            placeholder="Search citizens, ID or area..."
+                            autocomplete="off"
+                            spellcheck="false"
+                            placeholder="Search name, Citizen ID, email, phone or area..."
+                            aria-label="Search citizens by name, ID, email, phone or area"
                         >
+                        <button type="button" class="search-clear" id="clearCitizenSearch" aria-label="Clear citizen search" title="Clear search">×</button>
 
                     </div>
 
