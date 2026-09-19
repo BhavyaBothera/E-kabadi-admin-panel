@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/tables.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/collectors.css">
 </head>
 
 <body>
@@ -228,7 +229,17 @@
                             type="search"
                             id="collectorSearch"
                             placeholder="Search collectors, ID, company or area..."
+                            autocomplete="off"
+                            aria-label="Search collectors"
                         >
+                        <button
+                            type="button"
+                            class="search-clear"
+                            id="clearCollectorSearch"
+                            aria-label="Clear collector search"
+                            title="Clear search">
+                            ×
+                        </button>
 
                     </div>
 
@@ -276,6 +287,14 @@
 
                         </select>
 
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-sm filter-reset"
+                            id="resetCollectorFilters"
+                            title="Clear search and filters">
+                            Reset
+                        </button>
 
                         <select
                             id="collectorSortFilter"
