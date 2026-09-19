@@ -711,3 +711,50 @@
         height:36px;
     }
 }
+
+/* Expanded citizen registration form */
+.phone-input{
+    display:flex;
+    align-items:stretch;
+    min-height:40px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    overflow:hidden;
+    transition:border-color .18s,box-shadow .18s;
+}
+.phone-input:focus-within{
+    border-color:rgba(24,165,88,.55);
+    box-shadow:0 0 0 3px rgba(24,165,88,.09);
+}
+.phone-input > span{
+    min-width:47px;
+    display:grid;
+    place-items:center;
+    border-right:1px solid var(--border-light);
+    background:#f7f9f8;
+    color:var(--text-secondary);
+    font-size:10px;
+    font-weight:800;
+}
+.phone-input input{
+    min-height:38px;
+    border:0;
+    border-radius:0;
+    box-shadow:none!important;
+    padding-left:10px;
+}
+.field-hint{
+    display:block;
+    margin-top:4px;
+    color:var(--text-muted);
+    font-size:8px;
+}
+.form-span-2{
+    grid-column:span 2;
+}
+@media(max-width:600px){
+    .form-span-2{
+        grid-column:auto;
+    }
+}
