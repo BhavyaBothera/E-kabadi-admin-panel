@@ -105,7 +105,21 @@
 
                     citizen.city,
 
-                    citizen.address
+                    citizen.address,
+
+                    citizen.pincode,
+
+                    citizen.state,
+
+                    citizen.preferredPayment,
+
+                    citizen.location?.address,
+
+                    citizen.location?.city,
+
+                    citizen.location?.state,
+
+                    citizen.location?.pincode
 
                 ]
                     .filter(Boolean)
@@ -1531,281 +1545,228 @@
         openModal({
 
             title: "Add Citizen",
-
-            eyebrow: "NEW ACCOUNT",
-
-            description:
-                "Create a citizen account for the E-Kabadi platform.",
-
-            size: "medium",
+            eyebrow: "NEW CITIZEN ACCOUNT",
+            description: "Enter the citizen's complete profile and payment details.",
+            size: "large",
 
             content: `
+                <form id="addCitizenForm" class="admin-form citizen-form">
 
-                <form
-                    id="addCitizenForm"
-                    class="admin-form">
+                    <div class="form-section-title">
+                        <span class="form-section-icon">01</span>
+                        <div>
+                            <strong>Personal information</strong>
+                            <small>Basic details used for the citizen profile.</small>
+                        </div>
+                    </div>
 
                     <div class="form-grid">
-
                         <div class="form-group">
-
-                            <label>
-                                Full Name
-                            </label>
-
-                            <input
-                                type="text"
-                                id="newCitizenName"
-                                required
-                                placeholder="Enter full name"
-                            >
-
+                            <label for="newCitizenName">Full Name <span>*</span></label>
+                            <input type="text" id="newCitizenName" required maxlength="80" autocomplete="name" placeholder="e.g. Rahul Sharma">
                         </div>
 
-
                         <div class="form-group">
-
-                            <label>
-                                Email
-                            </label>
-
-                            <input
-                                type="email"
-                                id="newCitizenEmail"
-                                required
-                                placeholder="citizen@email.com"
-                            >
-
+                            <label for="newCitizenEmail">Email <span>*</span></label>
+                            <input type="email" id="newCitizenEmail" required maxlength="120" autocomplete="email" placeholder="citizen@email.com">
                         </div>
 
-
                         <div class="form-group">
-
-                            <label>
-                                Phone
-                            </label>
-
-                            <input
-                                type="tel"
-                                id="newCitizenPhone"
-                                placeholder="+91 XXXXX XXXXX"
-                            >
-
+                            <label for="newCitizenPhone">Phone Number <span>*</span></label>
+                            <input type="tel" id="newCitizenPhone" required maxlength="16" autocomplete="tel" placeholder="+91 98765 43210">
                         </div>
 
-
                         <div class="form-group">
+                            <label for="newCitizenAddress">Address / Area <span>*</span></label>
+                            <input type="text" id="newCitizenAddress" required maxlength="120" autocomplete="street-address" placeholder="e.g. Sector 62">
+                        </div>
+                    </div>
 
-                            <label>
-                                Area
-                            </label>
+                    <div class="form-section-title">
+                        <span class="form-section-icon">02</span>
+                        <div>
+                            <strong>Location</strong>
+                            <small>Used for pickup routing and area-based search.</small>
+                        </div>
+                    </div>
 
-                            <input
-                                type="text"
-                                id="newCitizenArea"
-                                placeholder="e.g. Sector 62"
-                            >
-
+                    <div class="form-grid form-grid-3">
+                        <div class="form-group">
+                            <label for="newCitizenCity">City <span>*</span></label>
+                            <input type="text" id="newCitizenCity" required value="Noida" placeholder="e.g. Noida">
                         </div>
 
+                        <div class="form-group">
+                            <label for="newCitizenState">State <span>*</span></label>
+                            <input type="text" id="newCitizenState" required value="Uttar Pradesh" placeholder="e.g. Uttar Pradesh">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCitizenPincode">Pincode <span>*</span></label>
+                            <input type="text" id="newCitizenPincode" required inputmode="numeric" maxlength="6" pattern="\\d{6}" placeholder="201309">
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <span class="form-section-icon">03</span>
+                        <div>
+                            <strong>Account & payment</strong>
+                            <small>Set the initial account state and preferred payout method.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="newCitizenPayment">Preferred Payment <span>*</span></label>
+                            <select id="newCitizenPayment" required>
+                                <option value="">Select payment method</option>
+                                <option value="UPI">UPI</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCitizenStatus">Initial Status <span>*</span></label>
+                            <select id="newCitizenStatus" required>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending Verification</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCitizenVerified">Verification</label>
+                            <select id="newCitizenVerified">
+                                <option value="unverified">Not Verified</option>
+                                <option value="verified">Verified</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-note">
+                        <strong>Prototype note:</strong>
+                        Citizen ID and activity metrics are generated automatically. Pickup, waste, earnings and EcoCoin values start at zero.
                     </div>
 
                 </form>
-
             `,
 
             footer: `
-
-                <button
-                    class="btn btn-secondary"
-                    onclick="closeModal()">
-                    Cancel
-                </button>
-
-                <button
-                    class="btn btn-primary"
-                    id="saveCitizenBtn">
-                    Create Citizen
-                </button>
-
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveCitizenBtn">Create Citizen</button>
             `,
 
             onOpen: () => {
-
-                const button =
-                    document.getElementById(
-                        "saveCitizenBtn"
-                    );
-
+                const form = document.getElementById("addCitizenForm");
+                const button = document.getElementById("saveCitizenBtn");
 
                 if (button) {
-
-                    button.addEventListener(
-                        "click",
-                        createCitizen
-                    );
-
+                    button.addEventListener("click", () => {
+                        if (form && !form.reportValidity()) return;
+                        createCitizen();
+                    });
                 }
 
+                if (form) {
+                    form.addEventListener("submit", event => {
+                        event.preventDefault();
+                        if (form.reportValidity()) createCitizen();
+                    });
+                }
             }
-
         });
     }
 
 
     function createCitizen() {
 
-        const name =
-            document.getElementById(
-                "newCitizenName"
-            )?.value.trim();
+        const get = id => document.getElementById(id)?.value.trim() || "";
 
+        const name = get("newCitizenName");
+        const email = get("newCitizenEmail");
+        const phone = get("newCitizenPhone");
+        const address = get("newCitizenAddress");
+        const city = get("newCitizenCity");
+        const stateName = get("newCitizenState");
+        const pincode = get("newCitizenPincode");
+        const preferredPayment = get("newCitizenPayment");
+        const status = get("newCitizenStatus") || "active";
+        const verified = get("newCitizenVerified") === "verified";
 
-        const email =
-            document.getElementById(
-                "newCitizenEmail"
-            )?.value.trim();
-
-
-        const phone =
-            document.getElementById(
-                "newCitizenPhone"
-            )?.value.trim();
-
-
-        const area =
-            document.getElementById(
-                "newCitizenArea"
-            )?.value.trim();
-
-
-        if (!name || !email) {
-
-            showToast(
-                "Name and email are required.",
-                "warning",
-                "Missing Information"
-            );
-
+        if (!name || !email || !phone || !address || !city || !stateName || !pincode || !preferredPayment) {
+            showToast("Please complete all required fields.", "warning", "Missing Information");
             return;
         }
 
-
         if (!isValidEmail(email)) {
-            showToast(
-                "Please enter a valid email address.",
-                "warning",
-                "Invalid Email"
-            );
+            showToast("Please enter a valid email address.", "warning", "Invalid Email");
+            return;
+        }
+
+        if (!/^\\d{6}$/.test(pincode)) {
+            showToast("Pincode must contain exactly 6 digits.", "warning", "Invalid Pincode");
             return;
         }
 
         const duplicate = state.citizens.some(
-            citizen =>
-                String(citizen.email || "").toLowerCase() ===
-                email.toLowerCase()
+            citizen => String(citizen.email || "").toLowerCase() === email.toLowerCase()
         );
 
         if (duplicate) {
-            showToast(
-                "A citizen with this email already exists.",
-                "warning",
-                "Duplicate Email"
-            );
+            showToast("A citizen with this email already exists.", "warning", "Duplicate Email");
             return;
         }
 
         const newCitizen = {
-
-            id:
-                generateCitizenId(),
-
+            id: generateCitizenId(),
             name,
-
-            email,
-
             phone,
-
-            area:
-                area ||
-                "Not assigned",
-
-            city: "Noida",
-
-            status: "active",
-
-            verified: false,
-
-            verificationStatus:
-                "unverified",
-
+            email,
+            location: {
+                address,
+                city,
+                state: stateName,
+                pincode
+            },
+            area: address,
+            city,
+            state: stateName,
+            pincode,
+            joinedDate: new Date().toISOString().slice(0, 10),
+            createdAt: new Date().toISOString(),
+            status,
+            verified,
+            verificationStatus: verified ? "verified" : "unverified",
             totalPickups: 0,
-
             completedPickups: 0,
-
             totalWasteSold: 0,
-
             totalEarnings: 0,
-
             ecoCoins: 0,
-
             rating: 0,
-
-            createdAt:
-                new Date().toISOString()
-
+            lastActive: new Date().toISOString(),
+            preferredPayment,
+            avatar: getInitials(name)
         };
-
 
         let saved = false;
 
-
-        if (
-            typeof storageAdd ===
-            "function"
-        ) {
-
-            const result =
-                storageAdd(
-                    "citizens",
-                    newCitizen
-                );
-
-            saved =
-                Boolean(result);
-
+        if (typeof storageAdd === "function") {
+            saved = Boolean(storageAdd("citizens", newCitizen));
         }
-
 
         if (!saved) {
-
-            state.citizens.push(
-                newCitizen
-            );
-
+            state.citizens.push(newCitizen);
             saveLocalFallback();
-
         }
-
 
         closeModal();
 
-
         setTimeout(() => {
-
             loadCitizens();
-
             updateStats();
-
             renderTable();
-
-
-            showToast(
-                `${name} has been added successfully.`,
-                "success",
-                "Citizen Created"
-            );
-
+            showToast(`${name} has been added successfully.`, "success", "Citizen Created");
         }, 220);
     }
 
@@ -2020,6 +1981,22 @@
             );
         }
 
+
+        const clearSearch =
+            document.getElementById("clearCitizenSearch");
+
+        if (clearSearch) {
+            clearSearch.addEventListener("click", () => {
+                state.search = "";
+                state.currentPage = 1;
+                const input = document.getElementById("citizenSearch");
+                if (input) {
+                    input.value = "";
+                    input.focus();
+                }
+                renderTable();
+            });
+        }
 
         const status =
             document.getElementById(
