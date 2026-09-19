@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/tables.css">
+    <link rel="stylesheet" href="css/citizens.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 
@@ -176,7 +177,7 @@
 
                     <div class="table-search">
 
-                        <span>⌕</span>
+                        <span class="table-search-icon" aria-hidden="true">⌕</span>
 
                         <input
                             type="search"
@@ -230,6 +231,14 @@
 
                         </select>
 
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-sm filter-reset"
+                            id="resetCitizenFilters"
+                            title="Clear search and filters">
+                            Reset
+                        </button>
 
                         <select
                             id="sortFilter"
