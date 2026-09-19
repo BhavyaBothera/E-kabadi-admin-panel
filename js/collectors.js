@@ -1377,9 +1377,7 @@
 
                             setTimeout(
                                 () =>
-                                    openCollectorActions(
-                                        id
-                                    ),
+                                    openEditCollectorModal(id),
                                 220
                             );
 
