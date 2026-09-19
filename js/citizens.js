@@ -369,11 +369,7 @@
                     .toUpperCase();
 
 
-        const location =
-            citizen.area ||
-            citizen.location ||
-            citizen.city ||
-            "—";
+        const location = getCitizenLocation(citizen);
 
 
         const pickups =
@@ -537,7 +533,7 @@
                     <div class="table-actions">
 
                         <button
-                            class="icon-action view-citizen"
+                            type="button" class="icon-action view-citizen"
                             data-id="${escapeAttribute(
                                 citizen.id
                             )}"
@@ -548,7 +544,7 @@
                         </button>
 
                         <button
-                            class="icon-action more-citizen"
+                            type="button" class="icon-action more-citizen"
                             data-id="${escapeAttribute(
                                 citizen.id
                             )}"
@@ -1695,6 +1691,30 @@
         }
 
 
+        if (!isValidEmail(email)) {
+            showToast(
+                "Please enter a valid email address.",
+                "warning",
+                "Invalid Email"
+            );
+            return;
+        }
+
+        const duplicate = state.citizens.some(
+            citizen =>
+                String(citizen.email || "").toLowerCase() ===
+                email.toLowerCase()
+        );
+
+        if (duplicate) {
+            showToast(
+                "A citizen with this email already exists.",
+                "warning",
+                "Duplicate Email"
+            );
+            return;
+        }
+
         const newCitizen = {
 
             id:
@@ -2051,6 +2071,31 @@
         }
 
 
+        const resetFilters =
+            document.getElementById("resetCitizenFilters");
+
+        if (resetFilters) {
+            resetFilters.addEventListener("click", () => {
+                state.search = "";
+                state.status = "all";
+                state.verification = "all";
+                state.sort = "newest";
+                state.currentPage = 1;
+
+                const searchInput = document.getElementById("citizenSearch");
+                const statusInput = document.getElementById("statusFilter");
+                const verificationInput = document.getElementById("verificationFilter");
+                const sortInput = document.getElementById("sortFilter");
+
+                if (searchInput) searchInput.value = "";
+                if (statusInput) statusInput.value = "all";
+                if (verificationInput) verificationInput.value = "all";
+                if (sortInput) sortInput.value = "newest";
+
+                renderTable();
+            });
+        }
+
         const sort =
             document.getElementById(
                 "sortFilter"
@@ -2135,6 +2180,33 @@
                 String(id)
         );
     }
+
+    function getCitizenLocation(citizen) {
+        if (!citizen) return "—";
+
+        const location = citizen.location;
+
+        if (typeof location === "string" && location.trim()) {
+            return location.trim();
+        }
+
+        if (location && typeof location === "object") {
+            return location.area ||
+                location.name ||
+                location.address ||
+                location.city ||
+                citizen.area ||
+                citizen.city ||
+                "—";
+        }
+
+        return citizen.area || citizen.city || "—";
+    }
+
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
 
 
     function saveLocalFallback() {
