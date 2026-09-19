@@ -1713,11 +1713,11 @@
                 togglePaymentFields();
 
                 document.getElementById("newCitizenPhone")?.addEventListener("input", event => {
-                    event.target.value = event.target.value.replace(/\\D/g, "").slice(0, 10);
+                    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 10);
                 });
 
                 document.getElementById("newCitizenPincode")?.addEventListener("input", event => {
-                    event.target.value = event.target.value.replace(/\\D/g, "").slice(0, 6);
+                    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
                 });
 
                 const today = new Date().toISOString().split("T")[0];
@@ -1802,7 +1802,7 @@
         );
 
         const duplicatePhone = state.citizens.some(
-            citizen => String(citizen.phone || "").replace(/\\D/g, "").slice(-10) === phone
+            citizen => String(citizen.phone || "").replace(/\D/g, "").slice(-10) === phone
         );
 
         if (duplicateEmail) {
