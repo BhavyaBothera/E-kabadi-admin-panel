@@ -110,7 +110,7 @@
 
                         collector.area,
 
-                        collector.location,
+                        getCollectorLocation(collector),
 
                         collector.vehicle,
 
@@ -1255,7 +1255,7 @@
                                 ${
                                     escapeHTML(
                                         collector.area ||
-                                        collector.location ||
+                                        getCollectorLocation(collector) ||
                                         "Not assigned"
                                     )
                                 }
@@ -2165,13 +2165,14 @@
                         <div class="form-group">
 
                             <label>
-                                Full Name
+                                Full Name <span>*</span>
                             </label>
 
                             <input
                                 id="newCollectorName"
                                 required
                                 placeholder="Collector name"
+                                autocomplete="name"
                             >
 
                         </div>
@@ -2194,7 +2195,7 @@
                         <div class="form-group">
 
                             <label>
-                                Phone
+                                Phone <span>*</span>
                             </label>
 
                             <div class="phone-input">
@@ -2231,7 +2232,7 @@
                         <div class="form-group">
 
                             <label>
-                                Area
+                                Area <span>*</span>
                             </label>
 
                             <input
@@ -2245,7 +2246,7 @@
                         <div class="form-group">
 
                             <label>
-                                Vehicle
+                                Vehicle <span>*</span>
                             </label>
 
                             <input
@@ -2361,10 +2362,10 @@
             );
 
 
-        if (!name) {
+        if (!name || !phone || !area || !vehicle) {
 
             showToast(
-                "Collector name is required.",
+                "Please complete the required collector details.",
                 "warning",
                 "Missing Information"
             );
@@ -2372,7 +2373,7 @@
             return;
         }
 
-        if (phone && !/^[0-9]{10}$/.test(phone)) {
+        if (!/^[0-9]{10}$/.test(phone)) {
             showToast(
                 "Mobile number must contain exactly 10 digits.",
                 "warning",
@@ -2569,7 +2570,8 @@
                         collector.phone,
 
                     Area:
-                        collector.area,
+                        collector.area ||
+                        getCollectorLocation(collector),
 
                     Vehicle:
                         collector.vehicle,
@@ -3026,6 +3028,30 @@
                 ?.value ||
             ""
         ).trim();
+    }
+
+
+    function getCollectorLocation(collector) {
+
+        const location = collector?.location;
+
+        if (typeof location === "string") {
+            return location;
+        }
+
+        if (location && typeof location === "object") {
+            return [
+                location.address,
+                location.area,
+                location.city,
+                location.state,
+                location.pincode
+            ]
+                .filter(Boolean)
+                .join(", ");
+        }
+
+        return "";
     }
 
 
