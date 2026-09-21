@@ -244,3 +244,107 @@
         width:50px;
     }
 }
+
+
+/* Final collector UI polish */
+.collectors-page,
+.collector-table{
+    min-width:0;
+}
+
+.table-search > span:first-child{
+    position:absolute;
+    left:13px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:1;
+    color:var(--text-muted);
+    font-size:15px;
+    line-height:1;
+    pointer-events:none;
+}
+
+.table-search input{
+    padding-left:36px;
+}
+
+.admin-form .form-group label span{
+    color:var(--danger);
+    font-weight:800;
+}
+
+#addCollectorForm{
+    gap:10px;
+}
+
+#addCollectorForm .form-grid{
+    row-gap:14px;
+}
+
+#addCollectorForm .form-group{
+    min-width:0;
+}
+
+#addCollectorForm input,
+#addCollectorForm select{
+    box-sizing:border-box;
+}
+
+.collector-form{
+    scrollbar-width:thin;
+    scrollbar-color:#d6e1da transparent;
+}
+
+.collector-form .form-group:last-child{
+    margin-bottom:0;
+}
+
+/* Keep the collectors table usable instead of forcing an oversized
+   viewport on tablets and phones. */
+@media(max-width:900px){
+    .collector-table{
+        min-width:760px;
+    }
+}
+
+@media(max-width:600px){
+    .collector-table{
+        min-width:720px;
+    }
+
+    #addCollectorForm .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .collector-form{
+        max-height:58vh;
+    }
+
+    #addCollectorForm .phone-input{
+        width:100%;
+    }
+}
+
+@media(max-width:420px){
+    .collector-table{
+        min-width:700px;
+    }
+}
+
+/* Modal footer buttons should remain usable on narrow screens. */
+.modal-medium .modal-footer .btn,
+.modal-large .modal-footer .btn{
+    min-width:110px;
+}
+
+@media(max-width:600px){
+    .modal-medium .modal-footer,
+    .modal-large .modal-footer{
+        gap:7px;
+    }
+
+    .modal-medium .modal-footer .btn,
+    .modal-large .modal-footer .btn{
+        min-width:0;
+    }
+}
