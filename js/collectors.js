@@ -2158,7 +2158,7 @@
 
                 <form
                     id="addCollectorForm"
-                    class="admin-form">
+                    class="admin-form collector-form">
 
                     <div class="form-grid">
 
