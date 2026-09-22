@@ -1405,3 +1405,178 @@ body.modal-open{
         min-height: 40px;
     }
 }
+
+
+/* =========================================================
+   SECONDARY PAGE UI POLISH
+   Consistent layout for operations, finance, rewards,
+   analytics, issues and settings pages.
+   ========================================================= */
+
+.page-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.page-actions .btn {
+    min-height: 38px;
+}
+
+.filters-card {
+    margin-bottom: 18px;
+    padding: 0;
+}
+
+.filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.filters-header h3 {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.filters-header > div > span {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.7fr) repeat(3, minmax(135px, 1fr));
+    gap: 12px;
+    padding: 16px 18px;
+}
+
+.filters-grid .filter-group {
+    min-width: 0;
+}
+
+.filters-grid .filter-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.filters-grid input,
+.filters-grid select {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    box-sizing: border-box;
+}
+
+.search-box {
+    position: relative;
+    min-width: 0;
+}
+
+.search-box .search-icon,
+.search-box > span:first-child {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.search-box input {
+    padding-left: 35px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper .data-table {
+    min-width: 700px;
+}
+
+.empty-state {
+    width: 100%;
+}
+
+@media (max-width: 1000px) {
+    .filters-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filters-grid .search-filter {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 700px) {
+    .page-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .page-actions .btn {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .filters-header {
+        align-items: flex-start;
+        padding: 13px 14px;
+    }
+
+    .filters-grid {
+        grid-template-columns: 1fr;
+        padding: 13px 14px;
+        gap: 10px;
+    }
+
+    .filters-grid .search-filter {
+        grid-column: auto;
+    }
+
+    .filters-grid .filter-group {
+        width: 100%;
+    }
+
+    .filters-header .btn {
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 420px) {
+    .page-actions {
+        flex-direction: column;
+    }
+
+    .page-actions .btn {
+        width: 100%;
+        flex: none;
+    }
+
+    .filters-header {
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .filters-header .btn {
+        width: 100%;
+    }
+}
