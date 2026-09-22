@@ -1336,7 +1336,7 @@ body.modal-open{
     transform: translateY(-50%);
     width: 25px;
     height: 25px;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     border: 0;
@@ -1350,6 +1350,11 @@ body.modal-open{
 .search-clear:hover {
     background: var(--bg-secondary);
     color: var(--text-primary);
+}
+
+.table-search input:placeholder-shown + .search-clear {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .filter-reset {
