@@ -1111,3 +1111,172 @@ body.modal-open{
         width:100%;
     }
 }
+
+
+/* Compatibility aliases for page modules */
+:root {
+    --bg-primary: var(--bg-main);
+    --bg-secondary: #f8faf9;
+    --success-light: var(--success-bg);
+    --warning-light: var(--warning-bg);
+    --danger-light: var(--danger-bg);
+    --info-light: var(--info-bg);
+    --warning-border: #f4d28c;
+}
+
+/* Shared page-header action alias used by Analytics, Issues and Settings. */
+.page-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+/* Shared filter layout used by Pickups, Scrap, Payments and Rewards. */
+.filters-card {
+    margin-bottom: 20px;
+    overflow: visible;
+}
+
+.filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.filters-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.filters-header > div > span {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.filters-grid,
+.filter-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.45fr) repeat(3, minmax(145px, 1fr));
+    gap: 14px;
+    padding: 16px 18px 18px;
+}
+
+.filters-grid .filter-group,
+.filter-grid .filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    min-width: 0;
+}
+
+.filters-grid .filter-group label,
+.filter-grid .filter-group label {
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.filters-grid select,
+.filter-grid select,
+.filters-grid input,
+.filter-grid input {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    box-sizing: border-box;
+    padding: 0 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text-primary);
+    outline: none;
+    font-size: 11px;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.filters-grid select:focus,
+.filter-grid select:focus,
+.filters-grid input:focus,
+.filter-grid input:focus {
+    border-color: rgba(24,165,88,.55);
+    box-shadow: 0 0 0 3px rgba(24,165,88,.08);
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+}
+
+.search-box input {
+    padding-left: 36px;
+}
+
+.search-box .search-icon,
+.search-box > span:first-child {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+@media (max-width: 1100px) {
+    .filters-grid,
+    .filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filters-grid .search-filter,
+    .filter-grid .search-box {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 700px) {
+    .page-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .page-actions .btn {
+        flex: 1;
+    }
+
+    .filters-header {
+        align-items: flex-start;
+    }
+
+    .filters-grid,
+    .filter-grid {
+        grid-template-columns: 1fr;
+        padding: 14px;
+    }
+
+    .filters-grid .search-filter,
+    .filter-grid .search-box {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 420px) {
+    .filters-header {
+        flex-direction: column;
+    }
+
+    .filters-header .btn {
+        width: 100%;
+    }
+}
