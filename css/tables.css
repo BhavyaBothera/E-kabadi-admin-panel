@@ -3210,3 +3210,38 @@
 .settings-prototype-note{margin:14px 0 0;padding:10px 12px;border-radius:8px;background:var(--bg-muted);color:var(--text-secondary);font-size:10px;line-height:1.5}
 @media(max-width:900px){.settings-save-state{position:sticky;top:73px;z-index:5}}
 @media(max-width:600px){.settings-save-state{flex-wrap:wrap;margin-bottom:12px}.settings-save-hint{width:100%;margin-left:15px}.settings-security-actions{align-items:stretch;flex-direction:column}.settings-security-actions .btn{width:100%}.settings-toggle-row{gap:12px}}
+
+/* =========================================================
+   SETTINGS FINAL UX PASS
+   ========================================================= */
+.settings-layout,.settings-content,.settings-nav{min-width:0}
+.settings-card{overflow:hidden;border:1px solid var(--border);box-shadow:0 8px 26px rgba(16,32,24,.035)}
+.settings-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.settings-form-grid .form-group{min-width:0}
+.settings-form-grid .form-control{width:100%}
+.settings-toggle-row>div{flex:1 1 auto;min-width:0}
+.settings-toggle-row .toggle{flex:0 0 auto}
+.notification-preference{min-width:0;transition:border-color .18s ease,background .18s ease,transform .18s ease}
+.notification-preference:hover{border-color:#d4e0d8;transform:translateY(-1px)}
+.settings-security-actions{min-width:0}
+.settings-security-actions .btn{flex:0 0 auto;white-space:nowrap}
+.settings-save-state{transition:border-color .18s ease,background .18s ease,box-shadow .18s ease}
+.settings-save-state.is-dirty{box-shadow:0 4px 14px rgba(230,165,0,.08)}
+@media(max-width:900px){
+    .settings-card-header{flex-direction:column}
+}
+@media(max-width:700px){
+    .settings-status{gap:10px}
+    .settings-save-state{position:static}
+    .settings-toggle-row{padding:15px 0;gap:12px}
+    .notification-preference{padding:13px}
+    .settings-security-box{align-items:flex-start}
+}
+@media(max-width:480px){
+    .settings-form-grid{gap:13px}
+    .settings-card{border-radius:12px}
+    .settings-status{padding:13px}
+    .settings-status-icon{width:34px;height:34px;flex-basis:34px}
+    .settings-security-actions{padding:11px}
+    .settings-security-actions .btn{width:100%}
+}

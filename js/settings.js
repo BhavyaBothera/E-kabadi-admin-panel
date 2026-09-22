@@ -27,8 +27,10 @@
         setupTabs();
         setupActions();
         setupFieldListeners();
+        setupInputGuards();
         updateNotificationUI();
         updateSaveState(false);
+        window.addEventListener("beforeunload", handleBeforeUnload);
 
     }
 
@@ -159,6 +161,12 @@
                                 );
 
 
+                            if (JSON.stringify(collectSettings()) !== JSON.stringify(originalSettings)) {
+                                if (!window.confirm("You have unsaved settings changes. Switch sections without saving?")) {
+                                    return;
+                                }
+                            }
+
                             document
                                 .querySelectorAll(
                                     ".settings-section"
@@ -210,8 +218,33 @@
 
 
         document.getElementById("resetSettings")?.addEventListener("click", resetSettings);
-        document.getElementById("securityInfoButton")?.addEventListener("click", showSecurityInfo);
+        document.querySelectorAll("#securityInfoButton").forEach(button => {
+            button.addEventListener("click", showSecurityInfo);
+        });
 
+    }
+
+
+    function setupInputGuards() {
+        const phone = document.getElementById("supportPhone");
+        phone?.addEventListener("input", event => {
+            const digits = event.target.value.replace(/\D/g, "").replace(/^91/, "").slice(0, 10);
+            event.target.value = digits ? "+91 " + digits : "";
+        });
+
+        ["defaultPickupRadius", "maxPickupDistance", "minimumPickupWeight"].forEach(id => {
+            const field = document.getElementById(id);
+            field?.addEventListener("input", () => {
+                if (field.value !== "" && Number(field.value) < 0) field.value = "0";
+            });
+        });
+    }
+
+    function handleBeforeUnload(event) {
+        if (JSON.stringify(collectSettings()) !== JSON.stringify(originalSettings)) {
+            event.preventDefault();
+            event.returnValue = "";
+        }
     }
 
 
@@ -253,6 +286,10 @@
 
     function collectSettings() {
 
+        const radius = Number(getValue("defaultPickupRadius"));
+        const maxDistance = Number(getValue("maxPickupDistance"));
+        const minWeight = Number(getValue("minimumPickupWeight"));
+
         return {
 
             platformName:
@@ -271,28 +308,9 @@
                 ),
 
 
-            defaultPickupRadius:
-                Number(
-                    getValue(
-                        "defaultPickupRadius"
-                    )
-                ) || 1,
-
-
-            maxPickupDistance:
-                Number(
-                    getValue(
-                        "maxPickupDistance"
-                    )
-                ) || 1,
-
-
-            minimumPickupWeight:
-                Number(
-                    getValue(
-                        "minimumPickupWeight"
-                    )
-                ) || 0.1,
+            defaultPickupRadius: Number.isFinite(radius) ? radius : 0,
+            maxPickupDistance: Number.isFinite(maxDistance) ? maxDistance : 0,
+            minimumPickupWeight: Number.isFinite(minWeight) ? minWeight : 0,
 
 
             autoAssignCollectors:
@@ -349,6 +367,9 @@
         const settings = collectSettings();
         const email = String(settings.supportEmail || "").trim();
         const phoneDigits = String(settings.supportPhone || "").replace(/\D/g, "");
+        settings.platformName = settings.platformName.replace(/\s+/g, " ").trim();
+        settings.supportEmail = email;
+        settings.supportPhone = phoneDigits ? "+91 " + phoneDigits.slice(-10) : "";
 
         if (!settings.platformName || settings.platformName.length < 2) {
             showToast("Platform name must contain at least 2 characters.", "warning", "Check Settings");
@@ -360,8 +381,8 @@
             document.getElementById("supportEmail")?.focus();
             return;
         }
-        if (phoneDigits.length < 10 || phoneDigits.length > 15) {
-            showToast("Support phone must contain 10–15 digits.", "warning", "Check Settings");
+        if (phoneDigits.length !== 10) {
+            showToast("Support phone must contain exactly 10 digits.", "warning", "Check Settings");
             document.getElementById("supportPhone")?.focus();
             return;
         }
@@ -428,6 +449,10 @@
         }
 
 
+        setValue("platformName", settings.platformName);
+        setValue("supportEmail", settings.supportEmail);
+        setValue("supportPhone", settings.supportPhone);
+
         originalSettings = JSON.parse(JSON.stringify(settings));
         updateNotificationUI();
         updateSaveState(false);
@@ -450,17 +475,28 @@
                     {};
 
 
-                if (
-                    typeof storageUpdateSettings ===
-                    "function"
-                ) {
+                let success = false;
 
-                    storageUpdateSettings(
-                        defaults
-                    );
-
+                if (typeof storageUpdateSettings === "function") {
+                    success = storageUpdateSettings(JSON.parse(JSON.stringify(defaults)));
                 }
 
+                if (!success) {
+                    try {
+                        localStorage.setItem(
+                            "ekabadi_admin_settings_v1",
+                            JSON.stringify(defaults)
+                        );
+                        success = true;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+
+                if (!success) {
+                    showToast("Unable to reset settings.", "error", "Reset Failed");
+                    return;
+                }
 
                 loadSettings();
 
