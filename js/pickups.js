@@ -194,7 +194,7 @@
                 citizen?.name,
                 collector?.name,
                 pickup.address,
-                pickup.area
+                getPickupArea(pickup, citizen)
             ]
                 .filter(Boolean)
                 .join(" ")
@@ -432,23 +432,11 @@
             collector?.name || null;
 
 
-        const area =
-            pickup.area ||
-            citizen?.area ||
-            citizen?.location ||
-            "—";
+        const area = getPickupArea(pickup, citizen);
 
 
-        const weight =
-            pickup.weight ??
-            pickup.estimatedWeight ??
-            0;
-
-
-        const amount =
-            pickup.amount ??
-            pickup.estimatedAmount ??
-            0;
+        const weight = getPickupWeight(pickup);
+        const amount = getPickupAmount(pickup);
 
 
         const schedule =
@@ -661,10 +649,10 @@
 
 
         if (totalPages <= 1) {
-
-            container.innerHTML = "";
+            container.innerHTML = filteredPickups.length
+                ? `<div class="pagination-info">Showing 1–${filteredPickups.length} of ${filteredPickups.length}</div>`
+                : `<div class="pagination-info">No pickups to display</div>`;
             return;
-
         }
 
 
@@ -751,16 +739,9 @@
 
     window.pickupPage = function (page) {
 
-        const totalPages =
-            Math.ceil(
-                filteredPickups.length /
-                pageSize
-            );
+        const totalPages = Math.max(1, Math.ceil(filteredPickups.length / pageSize));
 
-        if (
-            page < 1 ||
-            page > totalPages
-        ) {
+        if (page < 1 || page > totalPages) {
             return;
         }
 
@@ -790,6 +771,7 @@
 
         if (!select) return;
 
+        select.innerHTML = '<option value="all">All Collectors</option>';
 
         const collectors =
             typeof storageGetCollectors === "function"
@@ -908,9 +890,7 @@
 
                         <strong>
                             ${escapeHTML(
-                                pickup.area ||
-                                citizen?.area ||
-                                "—"
+                                getPickupArea(pickup, citizen)
                             )}
                         </strong>
 
@@ -942,9 +922,7 @@
 
                         <strong>
                             ${formatWeight(
-                                pickup.weight ||
-                                pickup.estimatedWeight ||
-                                0
+                                getPickupWeight(pickup)
                             )}
                         </strong>
 
@@ -957,9 +935,7 @@
 
                         <strong class="amount-cell">
                             ${formatCurrency(
-                                pickup.amount ||
-                                pickup.estimatedAmount ||
-                                0
+                                getPickupAmount(pickup)
                             )}
                         </strong>
 
@@ -1183,9 +1159,7 @@
                             collector.name
                         )}
                         — ${escapeHTML(
-                            collector.area ||
-                            collector.location ||
-                            ""
+                            getCollectorLocation(collector)
                         )}
                     </option>
                 `
@@ -1599,31 +1573,56 @@
             )?.value;
 
 
-        const weight =
-            Number(
-                document.getElementById(
-                    "pickupWeightInput"
-                )?.value || 0
-            );
+        const weightInput = document.getElementById("pickupWeightInput");
+        const amountInput = document.getElementById("pickupAmountInput");
+        const weight = Number(weightInput?.value);
+        const amount = Number(amountInput?.value);
 
+        if (!status) {
+            showToast("Please select a pickup status.", "warning", "Missing Status");
+            return;
+        }
+        if (!Number.isFinite(weight) || weight < 0) {
+            showToast("Weight must be a valid non-negative number.", "warning", "Invalid Weight");
+            weightInput?.focus();
+            return;
+        }
+        if (!Number.isFinite(amount) || amount < 0) {
+            showToast("Amount must be a valid non-negative number.", "warning", "Invalid Amount");
+            amountInput?.focus();
+            return;
+        }
 
-        const amount =
-            Number(
-                document.getElementById(
-                    "pickupAmountInput"
-                )?.value || 0
-            );
+        const pickup = findPickup(id);
+        if (!pickup) {
+            showToast("Pickup could not be found.", "error", "Pickup Not Found");
+            closeModal();
+            return;
+        }
+        if ((status === "collector_assigned" || status === "in_progress" || status === "completed") && !pickup.collectorId) {
+            showToast("Assign a collector before moving this pickup to an active status.", "warning", "Collector Required");
+            return;
+        }
+        if (status === "completed" && weight <= 0) {
+            showToast("Enter the final collected weight before completing the pickup.", "warning", "Final Weight Required");
+            weightInput?.focus();
+            return;
+        }
 
-
+        const now = new Date().toISOString();
         const updates = {
-
-            status: status,
-            weight: weight,
-            amount: amount,
-            updatedAt:
-                new Date().toISOString()
-
+            status,
+            weight,
+            amount,
+            finalAmount: status === "completed" ? amount : (pickup.finalAmount ?? null),
+            updatedAt: now
         };
+        if (status === "completed") {
+            updates.completedAt = pickup.completedAt || now;
+            updates.paymentStatus = pickup.paymentStatus || "pending";
+        } else if (status === "cancelled") {
+            updates.cancelledAt = pickup.cancelledAt || now;
+        }
 
 
         let success = false;
@@ -1718,6 +1717,8 @@
             ).join("");
 
 
+        const today = new Date().toISOString().slice(0, 10);
+
         const html = `
 
             <div class="add-pickup-modal">
@@ -1756,6 +1757,7 @@
                             type="date"
                             id="newPickupDate"
                             class="form-control"
+                            min="${today}"
                         >
 
                     </div>
@@ -1925,16 +1927,33 @@
 
 
         if (!date) {
-
-            showToast(
-                "Please select a pickup date.",
-                "warning"
-            );
-
+            showToast("Please select a pickup date.", "warning", "Missing Date");
             return;
-
         }
-
+        if (!time) {
+            showToast("Please select a pickup time.", "warning", "Missing Time");
+            return;
+        }
+        if (!address) {
+            showToast("Please enter the pickup address.", "warning", "Missing Address");
+            document.getElementById("newPickupAddress")?.focus();
+            return;
+        }
+        if (!Number.isFinite(weight) || weight <= 0) {
+            showToast("Estimated weight must be greater than 0 kg.", "warning", "Invalid Weight");
+            document.getElementById("newPickupWeight")?.focus();
+            return;
+        }
+        if (!Number.isFinite(amount) || amount < 0) {
+            showToast("Estimated amount must be a valid non-negative number.", "warning", "Invalid Amount");
+            document.getElementById("newPickupAmount")?.focus();
+            return;
+        }
+        const selectedDate = new Date(date + "T" + time);
+        if (Number.isNaN(selectedDate.getTime()) || selectedDate.getTime() < Date.now() - 60000) {
+            showToast("Pickup date and time cannot be in the past.", "warning", "Invalid Schedule");
+            return;
+        }
 
         const citizen =
             getCitizen(citizenId);
@@ -1951,15 +1970,9 @@
 
             collectorId: null,
 
-            area:
-                citizen?.area ||
-                citizen?.location ||
-                "Unknown",
+            area: getPickupArea({}, citizen),
 
-            address:
-                address ||
-                citizen?.address ||
-                "",
+            address: address,
 
             scheduledAt:
                 `${date}T${time || "10:00"}:00`,
@@ -1969,9 +1982,8 @@
             estimatedWeight: weight,
 
             amount: amount,
-
             estimatedAmount: amount,
-
+            finalAmount: null,
             status: "pending",
 
             createdAt:
@@ -2101,29 +2113,24 @@
         };
 
 
-        document.getElementById(
-            "pickupSearch"
-        ).value = "";
+        const searchInput = document.getElementById("pickupSearch");
+        if (searchInput) searchInput.value = "";
 
 
-        document.getElementById(
-            "statusFilter"
-        ).value = "all";
+        const statusSelect = document.getElementById("statusFilter");
+        if (statusSelect) statusSelect.value = "all";
 
 
-        document.getElementById(
-            "collectorFilter"
-        ).value = "all";
+        const collectorSelect = document.getElementById("collectorFilter");
+        if (collectorSelect) collectorSelect.value = "all";
 
 
-        document.getElementById(
-            "areaFilter"
-        ).value = "all";
+        const areaSelect = document.getElementById("areaFilter");
+        if (areaSelect) areaSelect.value = "all";
 
 
-        document.getElementById(
-            "sortFilter"
-        ).value = "newest";
+        const sortSelect = document.getElementById("sortFilter");
+        if (sortSelect) sortSelect.value = "newest";
 
 
         currentPage = 1;
@@ -2206,12 +2213,9 @@
                     pickup.scheduledAt ||
                     "",
 
-                    pickup.weight ||
-                    0,
+                    getPickupWeight(pickup),
 
-                    pickup.amount ||
-                    pickup.estimatedAmount ||
-                    0,
+                    getPickupAmount(pickup),
 
                     pickup.status ||
                     ""
@@ -2283,6 +2287,46 @@
     /* =====================================================
        HELPERS
        ===================================================== */
+
+    function getPickupArea(pickup = {}, citizen = null) {
+        const location = citizen?.location;
+        const citizenArea = citizen?.area;
+        const locationText = typeof location === "string"
+            ? location
+            : location && typeof location === "object"
+                ? [location.address, location.area, location.city, location.state].filter(Boolean).join(", ")
+                : "";
+        return String(pickup.area || citizenArea || locationText || pickup.address || "—");
+    }
+
+    function getCollectorLocation(collector = {}) {
+        if (collector.area) return String(collector.area);
+        const location = collector.location;
+        if (typeof location === "string") return location;
+        if (location && typeof location === "object") {
+            return [location.address, location.area, location.city].filter(Boolean).join(", ");
+        }
+        return "";
+    }
+
+    function getPickupWeight(pickup = {}) {
+        if (Number.isFinite(Number(pickup.weight)) && Number(pickup.weight) > 0) return Number(pickup.weight);
+        const items = Array.isArray(pickup.items) ? pickup.items : [];
+        const finalWeight = items.reduce((sum, item) => sum + (Number(item.verifiedWeight) || 0), 0);
+        if (finalWeight > 0 && (pickup.status === "completed" || pickup.finalAmount != null)) return finalWeight;
+        const estimatedWeight = items.reduce((sum, item) => sum + (Number(item.estimatedWeight) || 0), 0);
+        return estimatedWeight || Number(pickup.estimatedWeight) || 0;
+    }
+
+    function getPickupAmount(pickup = {}) {
+        if (Number.isFinite(Number(pickup.amount)) && Number(pickup.amount) > 0) return Number(pickup.amount);
+        if (Number.isFinite(Number(pickup.finalAmount)) && Number(pickup.finalAmount) > 0) return Number(pickup.finalAmount);
+        if (Array.isArray(pickup.items) && pickup.items.length) {
+            const estimated = pickup.items.reduce((sum, item) => sum + ((Number(item.estimatedWeight) || 0) * (Number(item.rate) || 0)), 0);
+            if (estimated > 0) return estimated;
+        }
+        return Number(pickup.estimatedAmount) || 0;
+    }
 
     function findPickup(id) {
 

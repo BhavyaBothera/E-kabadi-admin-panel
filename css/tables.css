@@ -3143,3 +3143,50 @@
         flex-wrap: wrap;
     }
 }
+
+/* =========================================================
+   PICKUP UX POLISH — FINAL
+   ========================================================= */
+.pickup-pipeline-card { overflow: hidden; }
+.pickup-pipeline-card .card-header { padding-bottom: 14px; }
+.pickup-pipeline { gap: 0; min-width: 0; overflow: hidden; }
+.pipeline-step { flex: 0 1 140px; min-width: 110px; }
+.pipeline-number { box-shadow: 0 4px 14px rgba(15, 23, 42, .04); transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+.pipeline-step:hover .pipeline-number { transform: translateY(-2px); border-color: var(--primary); background: var(--primary-light); }
+.pickup-table td:first-child { min-width: 115px; }
+.pickup-table td:nth-child(2) { min-width: 180px; }
+.pickup-table td:nth-child(3) { min-width: 120px; }
+.pickup-table td:nth-child(4) { min-width: 175px; }
+.pickup-table td:nth-child(5) { min-width: 125px; }
+.pickup-table td:nth-child(6), .pickup-table td:nth-child(7) { min-width: 95px; }
+.pickup-table td:nth-child(8) { min-width: 125px; }
+.pickup-table td:last-child { min-width: 82px; }
+.pickup-table .table-actions { gap: 6px; }
+.pickup-table .icon-btn { width: 32px; height: 32px; min-width: 32px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-surface); }
+.pickup-table .icon-btn:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+.pickup-table .person-cell strong, .pickup-table .pickup-id-cell strong { overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.assign-inline-btn { min-height: 32px; white-space: nowrap; }
+.pickup-detail, .manage-pickup-modal, .assign-pickup-modal, .add-pickup-modal { width: 100%; }
+.pickup-detail .modal-actions, .manage-pickup-modal .modal-actions, .assign-pickup-modal .modal-actions, .add-pickup-modal .modal-actions { display: flex; justify-content: flex-end; gap: 9px; flex-wrap: wrap; margin-top: 22px; }
+.pickup-detail .detail-box, .manage-pickup-modal .manage-info > div { min-width: 0; }
+.pickup-address-box strong, .detail-box strong, .manage-info strong { overflow-wrap: anywhere; }
+.pickup-detail .status-badge, .manage-header .status-badge { flex-shrink: 0; }
+.add-pickup-modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.add-pickup-modal .form-group { margin-bottom: 14px; }
+.add-pickup-modal .form-control, .assign-pickup-modal .form-control, .manage-pickup-modal .form-control { min-height: 42px; }
+.pickup-detail .modal-actions .btn, .manage-pickup-modal .modal-actions .btn, .assign-pickup-modal .modal-actions .btn, .add-pickup-modal .modal-actions .btn { min-height: 40px; }
+@media (max-width: 900px) {
+    .pickup-pipeline { overflow-x: auto; padding-bottom: 14px; scrollbar-width: thin; }
+    .pipeline-step { flex: 0 0 120px; }
+    .pipeline-line { flex: 0 0 42px; }
+}
+@media (max-width: 640px) {
+    .pickup-pipeline-card .card-header { gap: 10px; flex-wrap: wrap; }
+    .pickup-pipeline { min-width: 570px; }
+    .pickup-detail-header, .manage-header { align-items: flex-start; flex-direction: column; }
+    .pickup-detail-header .status-badge, .manage-header .status-badge { align-self: flex-start; }
+    .add-pickup-modal .form-row { grid-template-columns: 1fr; gap: 0; }
+    .pickup-detail .modal-actions, .manage-pickup-modal .modal-actions, .assign-pickup-modal .modal-actions, .add-pickup-modal .modal-actions { flex-direction: column-reverse; }
+    .pickup-detail .modal-actions .btn, .manage-pickup-modal .modal-actions .btn, .assign-pickup-modal .modal-actions .btn, .add-pickup-modal .modal-actions .btn { width: 100%; }
+    .pickup-table .person-cell strong, .pickup-table .pickup-id-cell strong { max-width: 125px; }
+}
