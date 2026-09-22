@@ -2991,3 +2991,155 @@
     }
 
 }
+
+/* =========================================================
+   SECONDARY PAGE RESPONSIVE POLISH
+   ========================================================= */
+
+.table-wrapper {
+    max-width: 100%;
+    scrollbar-width: thin;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+
+.analytics-filter-card,
+.settings-card,
+.issues-filter-card,
+.issues-table-card,
+.table-card {
+    min-width: 0;
+}
+
+.analytics-filter-header > div,
+.reward-hero-content,
+.scrap-rate-banner > div:last-child,
+.payment-alert > div:nth-child(2),
+.issue-alert > div:nth-child(2),
+.settings-status > div:nth-child(2) {
+    min-width: 0;
+}
+
+.analytics-filter-header span,
+.reward-hero-content span,
+.scrap-rate-banner span,
+.payment-alert span,
+.issue-alert p,
+.settings-status span {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+    .analytics-filter-card,
+    .issues-filter-card,
+    .settings-status,
+    .scrap-rate-banner,
+    .reward-hero-banner,
+    .payment-alert {
+        border-radius: 11px;
+    }
+
+    .analytics-filter-card .card-header {
+        padding: 14px;
+    }
+
+    .analytics-filter-header {
+        margin-bottom: 13px;
+    }
+
+    .analytics-filters {
+        width: 100%;
+    }
+
+    .analytics-live {
+        align-self: stretch;
+        justify-content: center;
+    }
+
+    .settings-nav {
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .settings-tab {
+        flex: 0 0 auto;
+        min-height: 40px;
+    }
+
+    .settings-status {
+        padding: 13px 14px;
+    }
+
+    .settings-status-icon {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    .issue-alert {
+        padding: 13px 14px;
+    }
+
+    .issue-alert-icon {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    .scrap-rate-banner,
+    .reward-hero-banner,
+    .payment-alert {
+        padding: 13px 14px;
+    }
+
+    .scrap-rate-banner strong,
+    .payment-alert strong,
+    .issue-alert strong {
+        line-height: 1.35;
+    }
+
+    .table-footer {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .analytics-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-range {
+        width: 100%;
+    }
+
+    .analytics-filters .form-control {
+        grid-column: auto;
+    }
+
+    .reward-hero-banner {
+        gap: 11px;
+    }
+
+    .reward-hero-icon,
+    .scrap-rate-banner-icon {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .ecoin-rate {
+        margin-top: 2px;
+    }
+
+    .payment-detail-header,
+    .material-detail-header,
+    .reward-detail-header,
+    .pickup-detail-header,
+    .manage-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
