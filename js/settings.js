@@ -24,10 +24,11 @@
     function initializeSettings() {
 
         loadSettings();
-
         setupTabs();
-
         setupActions();
+        setupFieldListeners();
+        updateNotificationUI();
+        updateSaveState(false);
 
     }
 
@@ -208,17 +209,43 @@
             );
 
 
-        document
-            .getElementById(
-                "resetSettings"
-            )
-            ?.addEventListener(
-                "click",
-                resetSettings
-            );
+        document.getElementById("resetSettings")?.addEventListener("click", resetSettings);
+        document.getElementById("securityInfoButton")?.addEventListener("click", showSecurityInfo);
 
     }
 
+
+    function setupFieldListeners() {
+        document.querySelectorAll(".settings-section input, .settings-section select, .settings-section textarea").forEach(field => {
+            field.addEventListener("input", () => { updateNotificationUI(); updateSaveState(true); });
+            field.addEventListener("change", () => { updateNotificationUI(); updateSaveState(true); });
+        });
+    }
+
+    function updateSaveState(dirty) {
+        const root = document.getElementById("settingsSaveState");
+        const text = document.getElementById("settingsSaveStateText");
+        if (!root || !text) return;
+        const current = collectSettings();
+        const isDirty = dirty || JSON.stringify(current) !== JSON.stringify(originalSettings);
+        root.classList.toggle("is-dirty", isDirty);
+        text.textContent = isDirty ? "Unsaved changes" : "All changes saved";
+        document.getElementById("saveSettings")?.classList.toggle("settings-save-pulse", isDirty);
+    }
+
+    function updateNotificationUI() {
+        const enabled = getChecked("enableNotifications");
+        document.querySelectorAll("[data-notification-status=\"enabled\"]").forEach(badge => {
+            badge.className = "status-badge " + (enabled ? "status-active" : "status-pending");
+            badge.textContent = enabled ? "Enabled" : "Paused";
+        });
+    }
+
+    function showSecurityInfo() {
+        const admin = typeof getCurrentAdmin === "function" ? getCurrentAdmin() : {name:"Demo Administrator",email:"admin@ekabadi.demo",role:"Super Admin"};
+        const content = `<div class="security-detail-list"><div><span>Administrator</span><strong>${escapeHTML(admin?.name || "Demo Administrator")}</strong></div><div><span>Login email</span><strong>${escapeHTML(admin?.email || "admin@ekabadi.demo")}</strong></div><div><span>Role</span><strong>${escapeHTML(admin?.role || "Super Admin")}</strong></div><div><span>Session</span><strong>Local browser session · 24 hours</strong></div><div><span>Storage</span><strong>Browser localStorage</strong></div></div><p class="settings-prototype-note">This is a frontend prototype. Use production authentication before deployment.</p>`;
+        if (typeof openModal === "function") openModal({title:"Login & Security Details",description:"Current authentication configuration.",size:"small",content});
+    }
 
     /* =====================================================
        COLLECT FORM DATA
@@ -319,9 +346,34 @@
        ===================================================== */
 
     function saveSettings() {
+        const settings = collectSettings();
+        const email = String(settings.supportEmail || "").trim();
+        const phoneDigits = String(settings.supportPhone || "").replace(/\D/g, "");
 
-        const settings =
-            collectSettings();
+        if (!settings.platformName || settings.platformName.length < 2) {
+            showToast("Platform name must contain at least 2 characters.", "warning", "Check Settings");
+            document.getElementById("platformName")?.focus();
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast("Enter a valid support email address.", "warning", "Check Settings");
+            document.getElementById("supportEmail")?.focus();
+            return;
+        }
+        if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+            showToast("Support phone must contain 10–15 digits.", "warning", "Check Settings");
+            document.getElementById("supportPhone")?.focus();
+            return;
+        }
+        if (settings.maxPickupDistance < settings.defaultPickupRadius) {
+            showToast("Maximum pickup distance cannot be smaller than the default pickup radius.", "warning", "Check Pickup Rules");
+            document.getElementById("maxPickupDistance")?.focus();
+            return;
+        }
+        if (settings.defaultPickupRadius <= 0 || settings.maxPickupDistance <= 0 || settings.minimumPickupWeight <= 0) {
+            showToast("Pickup limits must all be greater than zero.", "warning", "Check Pickup Rules");
+            return;
+        }
 
 
         let success = false;
@@ -376,18 +428,10 @@
         }
 
 
-        originalSettings =
-            JSON.parse(
-                JSON.stringify(
-                    settings
-                )
-            );
-
-
-        showToast(
-            "Settings saved successfully.",
-            "success"
-        );
+        originalSettings = JSON.parse(JSON.stringify(settings));
+        updateNotificationUI();
+        updateSaveState(false);
+        showToast("Settings saved successfully.", "success", "Settings Updated");
 
     }
 
@@ -421,10 +465,9 @@
                 loadSettings();
 
 
-                showToast(
-                    "Settings reset to defaults.",
-                    "success"
-                );
+                updateNotificationUI();
+                updateSaveState(false);
+                showToast("Settings reset to defaults.", "success", "Defaults Restored");
 
             };
 

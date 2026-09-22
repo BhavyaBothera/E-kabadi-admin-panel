@@ -88,6 +88,8 @@
             </section>
 
 
+            <div class="settings-save-state" id="settingsSaveState" role="status" aria-live="polite"><span class="settings-save-dot"></span><span id="settingsSaveStateText">All changes saved</span><span class="settings-save-hint">Stored locally in this prototype.</span></div>
+
             <div class="settings-layout">
 
                 <!-- SETTINGS NAV -->
@@ -201,7 +203,9 @@
                                     <input
                                         type="text"
                                         id="platformName"
-                                        class="form-control">
+                                        class="form-control"
+                                        maxlength="60"
+                                        autocomplete="organization">
 
                                 </div>
 
@@ -230,7 +234,9 @@
                                     <input
                                         type="email"
                                         id="supportEmail"
-                                        class="form-control">
+                                        class="form-control"
+                                        maxlength="120"
+                                        autocomplete="email">
 
                                 </div>
 
@@ -244,7 +250,10 @@
                                     <input
                                         type="text"
                                         id="supportPhone"
-                                        class="form-control">
+                                        class="form-control"
+                                        inputmode="tel"
+                                        maxlength="17"
+                                        autocomplete="tel">
 
                                 </div>
 
@@ -272,6 +281,8 @@
 
                             </div>
 
+
+                            <div class="settings-security-actions"><span class="security-action-note">Authentication is simulated by the prototype login flow.</span><button type="button" class="btn btn-secondary btn-sm" id="securityInfoButton">View Login Details</button></div>
 
                             <div class="settings-info-grid">
 
@@ -370,7 +381,8 @@
                                         type="number"
                                         min="1"
                                         id="defaultPickupRadius"
-                                        class="form-control">
+                                        class="form-control"
+                                        step="0.5">
 
                                     <small>
                                         Search for collectors within
@@ -390,7 +402,8 @@
                                         type="number"
                                         min="1"
                                         id="maxPickupDistance"
-                                        class="form-control">
+                                        class="form-control"
+                                        step="0.5">
 
                                 </div>
 
@@ -673,7 +686,7 @@
                                         </span>
                                     </div>
 
-                                    <span class="status-badge status-active">
+                                    <span class="status-badge status-active" data-notification-status="enabled">
                                         Enabled
                                     </span>
 

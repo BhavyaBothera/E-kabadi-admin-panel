@@ -3190,3 +3190,23 @@
     .pickup-detail .modal-actions .btn, .manage-pickup-modal .modal-actions .btn, .assign-pickup-modal .modal-actions .btn, .add-pickup-modal .modal-actions .btn { width: 100%; }
     .pickup-table .person-cell strong, .pickup-table .pickup-id-cell strong { max-width: 125px; }
 }
+
+/* SETTINGS FINAL UI/UX */
+.settings-save-state{display:flex;align-items:center;gap:8px;min-height:38px;margin:0 0 18px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg-surface);color:var(--text-secondary);font-size:11px}
+.settings-save-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:var(--success);box-shadow:0 0 0 4px var(--success-bg)}
+.settings-save-state.is-dirty{border-color:var(--warning);background:var(--warning-bg)}
+.settings-save-state.is-dirty .settings-save-dot{background:var(--warning);box-shadow:0 0 0 4px var(--warning-bg)}
+.settings-save-hint{margin-left:auto;color:var(--text-muted)}
+.settings-save-pulse{box-shadow:0 0 0 3px rgba(24,165,88,.12)}
+.settings-card{border:1px solid var(--border);box-shadow:0 8px 26px rgba(16,32,24,.035);transition:border-color .18s ease,box-shadow .18s ease}
+.settings-card:hover{border-color:#d8e1db;box-shadow:0 10px 30px rgba(16,32,24,.055)}
+.settings-tab{min-height:42px;user-select:none}
+.settings-tab:focus-visible,.settings-card input:focus-visible,.settings-card button:focus-visible{outline:3px solid rgba(24,165,88,.18);outline-offset:2px}
+.settings-toggle-row{min-height:66px}.settings-toggle-row>div{min-width:0}.settings-toggle-row>div span{display:block;max-width:680px;line-height:1.5}.settings-toggle-row .toggle{flex:0 0 auto}
+.notification-preference{min-width:0;transition:border-color .18s ease,background .18s ease,transform .18s ease}.notification-preference:hover{border-color:#d4e0d8;transform:translateY(-1px)}.notification-preference>div{min-width:0}
+.settings-security-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 18px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg-muted)}
+.security-action-note{color:var(--text-secondary);font-size:11px;line-height:1.45}
+.security-detail-list{display:grid}.security-detail-list>div{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--border)}.security-detail-list>div:last-child{border-bottom:0}.security-detail-list span{color:var(--text-secondary);font-size:11px}.security-detail-list strong{text-align:right;font-size:12px;overflow-wrap:anywhere}
+.settings-prototype-note{margin:14px 0 0;padding:10px 12px;border-radius:8px;background:var(--bg-muted);color:var(--text-secondary);font-size:10px;line-height:1.5}
+@media(max-width:900px){.settings-save-state{position:sticky;top:73px;z-index:5}}
+@media(max-width:600px){.settings-save-state{flex-wrap:wrap;margin-bottom:12px}.settings-save-hint{width:100%;margin-left:15px}.settings-security-actions{align-items:stretch;flex-direction:column}.settings-security-actions .btn{width:100%}.settings-toggle-row{gap:12px}}
