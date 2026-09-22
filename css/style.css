@@ -1280,3 +1280,123 @@ body.modal-open{
         width: 100%;
     }
 }
+
+
+/* Global visual compatibility for legacy page markup */
+
+.page-header-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: var(--primary);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.table-search-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.table-search {
+    position: relative;
+}
+
+.table-search input {
+    width: 100%;
+    min-height: 40px;
+    box-sizing: border-box;
+    padding: 0 38px 0 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text-primary);
+    outline: none;
+    font-size: 11px;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.table-search input:focus {
+    border-color: rgba(24,165,88,.55);
+    box-shadow: 0 0 0 3px rgba(24,165,88,.08);
+}
+
+.search-clear {
+    position: absolute;
+    right: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 25px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.search-clear:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.filter-reset {
+    min-height: 34px;
+}
+
+.stat-icon-green {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.stat-icon-blue {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.stat-icon-orange {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.stat-icon-purple {
+    background: rgba(139,92,246,.10);
+    color: #8b5cf6;
+}
+
+.stat-icon.red {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.stat-icon.green {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status-active {
+    color: #13834d;
+    background: var(--success-bg);
+}
+
+@media (max-width: 600px) {
+    .page-header-eyebrow {
+        font-size: 8px;
+    }
+
+    .table-search input {
+        min-height: 40px;
+    }
+}
