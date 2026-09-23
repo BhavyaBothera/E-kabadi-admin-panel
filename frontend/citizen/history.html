@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Pickup Order History</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Pickup Order History</h1>
+                <p class="page-subtitle">View past scrap pickup records, certified weighment details, and re-order trusted collectors.</p>
+            </div>
+            <div class="header-actions">
+                <a href="sell-scrap.html" class="btn-primary">
+                    <span>+ Book New Pickup</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 4 Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Completed</span>
+                    <div class="stat-icon-wrapper stat-icon-green">📦</div>
+                </div>
+                <div class="stat-value">7 Pickups</div>
+                <div class="stat-subtext">100% Fulfilled</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Mass Diverted</span>
+                    <div class="stat-icon-wrapper stat-icon-lime">♻️</div>
+                </div>
+                <div class="stat-value">42.6 kg</div>
+                <div class="stat-subtext">Certified circular recovery</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Revenue</span>
+                    <div class="stat-icon-wrapper stat-icon-gold">₹</div>
+                </div>
+                <div class="stat-value">₹3,240</div>
+                <div class="stat-subtext">Paid via UPI / Cash</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Repeat Collector</span>
+                    <div class="stat-icon-wrapper stat-icon-blue">⭐</div>
+                </div>
+                <div class="stat-value" style="font-size:18px;margin-top:4px;">Ramesh K.</div>
+                <div class="stat-subtext">5 out of 7 pickups</div>
+            </div>
+        </div>
+
+        <!-- Order Records Table -->
+        <div class="ui-card">
+            <div class="ui-card-header">
+                <div class="ui-card-title">All Scrap Operations Archive</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button type="button" class="chip active" onclick="filterHistory('all', this)">All</button>
+                    <button type="button" class="chip" onclick="filterHistory('completed', this)">Completed</button>
+                    <button type="button" class="chip" onclick="filterHistory('active', this)">Active</button>
+                    <button type="button" class="chip" onclick="filterHistory('cancelled', this)">Cancelled</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ui-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Collector Partner</th>
+                            <th>Scrap Categories</th>
+                            <th>Weight</th>
+                            <th>Total Payout</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-status="active">
+                            <td><strong style="color:var(--forest-deep);">#PKP-9024</strong></td>
+                            <td>Today, Sep 23</td>
+                            <td>Ramesh Kumar (UP 16 AB 1234)</td>
+                            <td>Paper & Cartons</td>
+                            <td>~25.5 kg (Est.)</td>
+                            <td><strong>₹330.75</strong></td>
+                            <td><span class="status-pill warning">En Route</span></td>
+                            <td><a href="tracking.html" style="color:var(--forest);font-weight:700;">Live Track →</a></td>
+                        </tr>
+                        <tr data-status="completed">
+                            <td><strong style="color:var(--forest-deep);">#PKP-8812</strong></td>
+                            <td>Sep 21, 2026</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Old Newspapers</td>
+                            <td>14.5 kg</td>
+                            <td><strong>₹235.00</strong></td>
+                            <td><span class="status-pill success">Completed</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">Receipt 📄</a></td>
+                        </tr>
+                        <tr data-status="completed">
+                            <td><strong style="color:var(--forest-deep);">#PKP-8671</strong></td>
+                            <td>Sep 14, 2026</td>
+                            <td>Vikram Singh</td>
+                            <td>Iron & Steel Scrap</td>
+                            <td>18.0 kg</td>
+                            <td><strong>₹576.00</strong></td>
+                            <td><span class="status-pill success">Completed</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">Receipt 📄</a></td>
+                        </tr>
+                        <tr data-status="completed">
+                            <td><strong style="color:var(--forest-deep);">#PKP-8450</strong></td>
+                            <td>Aug 29, 2026</td>
+                            <td>Suresh Kabadiwala</td>
+                            <td>E-Waste & Appliances</td>
+                            <td>10.1 kg</td>
+                            <td><strong>₹454.00</strong></td>
+                            <td><span class="status-pill success">Completed</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">Receipt 📄</a></td>
+                        </tr>
+                        <tr data-status="completed">
+                            <td><strong style="color:var(--forest-deep);">#PKP-8201</strong></td>
+                            <td>Aug 19, 2026</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Cardboard & Packaging</td>
+                            <td>12.0 kg</td>
+                            <td><strong>₹138.00</strong></td>
+                            <td><span class="status-pill success">Completed</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">Receipt 📄</a></td>
+                        </tr>
+                        <tr data-status="completed">
+                            <td><strong style="color:var(--forest-deep);">#PKP-8120</strong></td>
+                            <td>Aug 12, 2026</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Heavy Cardboard Boxes</td>
+                            <td>35.0 kg</td>
+                            <td><strong>₹402.50</strong></td>
+                            <td><span class="status-pill success">Completed</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">Receipt 📄</a></td>
+                        </tr>
+                        <tr data-status="cancelled">
+                            <td><strong style="color:var(--forest-deep);">#PKP-7400</strong></td>
+                            <td>Jun 22, 2026</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Old Textbooks</td>
+                            <td>15.0 kg</td>
+                            <td>—</td>
+                            <td><span class="status-pill neutral">Cancelled</span></td>
+                            <td><a href="sell-scrap.html" style="color:var(--forest);font-weight:600;">Re-book ↻</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-pickups.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/history.js"></script>
+</body>
+</html>

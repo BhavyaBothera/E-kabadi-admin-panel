@@ -1,0 +1,70 @@
+/* =========================================================
+   E-KABAADI PLATFORM
+   Universal Responsive Breakpoints & Layout Adaptations
+   File: frontend/shared/css/responsive.css
+   Breakpoints: 1440px | 1024px | 768px | 390px
+   ========================================================= */
+
+/* Desktop Large (<= 1440px) */
+@media (max-width: 1440px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+
+/* Tablet Landscape & Small Desktop (<= 1024px) */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 220px;
+    }
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Tablet Portrait (<= 768px) */
+@media (max-width: 768px) {
+    .grid-4, .grid-3, .grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+    .hide-on-mobile {
+        display: none !important;
+    }
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1050;
+        transition: transform var(--transition-normal);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 16px !important;
+    }
+}
+
+/* Mobile Devices (<= 390px) */
+@media (max-width: 390px) {
+    html {
+        font-size: 15px;
+    }
+    .card {
+        padding: 16px !important;
+    }
+    .btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    .page-title {
+        font-size: 22px !important;
+    }
+}

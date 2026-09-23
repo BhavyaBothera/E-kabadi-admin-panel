@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Citizen Profile & Settings</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 28px;
+            margin-bottom: 36px;
+        }
+        .profile-sidebar-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 28px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .profile-avatar-big {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--forest-deep), var(--forest));
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 24px rgba(18,55,42,0.18);
+        }
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(31,111,67,0.06);
+        }
+        .toggle-row:last-child { border-bottom: 0; }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #e4e9e6;
+            transition: .3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--forest); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        @media (max-width: 900px) {
+            .profile-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Profile & Preferences</h1>
+                <p class="page-subtitle">Manage personal contact information, verified pickup addresses, and instant UPI payout settings.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-primary" onclick="saveProfileChanges()">
+                    <span>Save Changes</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <!-- Left: Profile Summary Card -->
+            <div>
+                <div class="profile-sidebar-card">
+                    <div class="profile-avatar-big">AS</div>
+                    <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);" id="profileDisplayName">Aarav Sharma</h2>
+                    <span style="font-size:13px;color:var(--text-muted);display:block;margin-top:2px;">Member since July 2026</span>
+                    <span class="status-pill success" style="margin-top:10px;">Verified Citizen ✓</span>
+
+                    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border-subtle);text-align:left;">
+                        <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-bottom:8px;">Account Details</div>
+                        <div style="font-size:13px;margin-bottom:6px;"><strong>Citizen ID:</strong> <span style="font-family:monospace;">USR-CIT-001</span></div>
+                        <div style="font-size:13px;margin-bottom:6px;"><strong>Eco Coins:</strong> 860 (Silver Tier)</div>
+                        <div style="font-size:13px;margin-bottom:6px;"><strong>Completed Pickups:</strong> 7</div>
+                        <div style="font-size:13px;"><strong>CO₂ Diverted:</strong> 14.2 kg</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Editable Details -->
+            <div style="display:flex;flex-direction:column;gap:24px;">
+                <!-- 1. Personal Info -->
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:18px;">Personal Information</div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Full Name</label>
+                            <input type="text" id="inputName" value="Aarav Sharma" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Mobile Phone</label>
+                            <input type="tel" id="inputPhone" value="+91 98765 43210" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Email Address</label>
+                        <input type="email" id="inputEmail" value="citizen@ekabadi.demo" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                    </div>
+                </div>
+
+                <!-- 2. Saved Addresses -->
+                <div class="ui-card">
+                    <div class="ui-card-header">
+                        <div class="ui-card-title">Saved Pickup Addresses</div>
+                        <button type="button" class="btn-secondary" onclick="showToast('Address added to your account.', 'success')" style="font-size:12px;padding:6px 12px;">+ Add Address</button>
+                    </div>
+
+                    <div style="border:1.5px solid var(--forest);border-radius:12px;padding:14px;background:rgba(31,111,67,0.02);margin-bottom:12px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                            <strong style="color:var(--forest-deep);font-size:14px;">Home (Primary Address)</strong>
+                            <span class="status-pill success" style="font-size:11px;">Default</span>
+                        </div>
+                        <p style="font-size:13px;color:var(--text-muted);line-height:1.4;">
+                            Flat B-402, Green Valley Apartments, Sector 62, Noida, Uttar Pradesh - 201309
+                        </p>
+                    </div>
+
+                    <div style="border:1px solid var(--border-subtle);border-radius:12px;padding:14px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                            <strong style="color:var(--forest-deep);font-size:14px;">Office / Co-Working</strong>
+                        </div>
+                        <p style="font-size:13px;color:var(--text-muted);line-height:1.4;">
+                            Tech Park Phase 2, C-Block Tower 3, Sector 62, Noida - 201309
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3. Payout UPI Settings -->
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:18px;">Direct Payout Settings</div>
+
+                    <div style="margin-bottom:16px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Instant UPI ID for Scrap Proceeds</label>
+                        <div style="display:flex;gap:10px;">
+                            <input type="text" id="inputUpi" value="aarav@okhdfcbank" style="flex:1;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                            <button type="button" class="btn-secondary" onclick="showToast('UPI handle verified with National Payments Corp (NPCI).', 'success')">Verify UPI</button>
+                        </div>
+                        <div style="font-size:12px;color:var(--forest);margin-top:6px;">✓ Verified bank account: HDFC Bank (Aarav Sharma)</div>
+                    </div>
+                </div>
+
+                <!-- 4. Notification Preferences -->
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:14px;">Notification & Alert Preferences</div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <strong style="font-size:14px;color:var(--forest-deep);display:block;">WhatsApp & SMS Pickup Arrival Alerts</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">Receive live collector driver arrival and dispatch updates.</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <strong style="font-size:14px;color:var(--forest-deep);display:block;">Daily Scrap Price Spike Alerts</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">Notifications when scrap metal or paper rates rise by >5%.</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <strong style="font-size:14px;color:var(--forest-deep);display:block;">Eco Coins & Rewards Expiry Alerts</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">Alerts when new high-value coupons become redeemable.</span>
+                        </div>
+                        <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

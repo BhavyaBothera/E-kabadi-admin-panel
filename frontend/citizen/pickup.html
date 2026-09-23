@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Book Scrap Pickup</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .booking-layout {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 28px;
+            margin-bottom: 36px;
+        }
+        .form-section {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--forest-deep);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .address-card {
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .address-card:hover {
+            border-color: var(--forest);
+        }
+        .address-card.selected {
+            border-color: var(--forest);
+            background: rgba(31, 111, 67, 0.03);
+        }
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .slot-btn {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border-subtle);
+            background: #fff;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .slot-btn:hover { border-color: var(--forest); }
+        .slot-btn.selected {
+            border-color: var(--forest);
+            background: rgba(31, 111, 67, 0.05);
+            color: var(--forest-deep);
+            font-weight: 700;
+        }
+        .order-summary-box {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 90px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--charcoal);
+        }
+        @media (max-width: 900px) {
+            .booking-layout { grid-template-columns: 1fr; }
+            .slot-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Schedule Scrap Pickup</h1>
+                <p class="page-subtitle">Confirm your pickup address, slot, and review your assigned collector before dispatch.</p>
+            </div>
+            <div class="header-actions">
+                <a href="collectors.html" class="btn-secondary">
+                    <span>← Switch Collector</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="booking-layout">
+            <!-- Left Form Flow -->
+            <div>
+                <!-- 1. Assigned Collector Preview -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span>👤</span> 1. Assigned Collector Partner
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:rgba(247,244,234,0.6);padding:14px 18px;border-radius:12px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div class="sidebar-avatar" id="bookColAvatar" style="width:48px;height:48px;">RK</div>
+                            <div>
+                                <strong id="bookColName" style="font-size:16px;color:var(--forest-deep);display:block;">Ramesh Kumar</strong>
+                                <span id="bookColMeta" style="font-size:13px;color:var(--text-muted);">Three-Wheeler Tempo (UP 16 AB 1234) • ⭐ 4.8 (342 Pickups)</span>
+                            </div>
+                        </div>
+                        <a href="collectors.html" style="font-size:13px;color:var(--forest);font-weight:700;">Change Partner →</a>
+                    </div>
+                </div>
+
+                <!-- 2. Pickup Address -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span>📍</span> 2. Pickup Address
+                    </div>
+                    <div class="address-card selected" onclick="selectAddress(this)">
+                        <input type="radio" name="pickupAddr" checked style="margin-top:3px;">
+                        <div>
+                            <strong style="color:var(--forest-deep);font-size:14px;display:block;">Home (Default)</strong>
+                            <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
+                                Flat B-402, Green Valley Apartments, Sector 62, Noida, Uttar Pradesh - 201309
+                            </div>
+                        </div>
+                    </div>
+                    <div class="address-card" onclick="selectAddress(this)">
+                        <input type="radio" name="pickupAddr" style="margin-top:3px;">
+                        <div>
+                            <strong style="color:var(--forest-deep);font-size:14px;display:block;">Secondary / Office</strong>
+                            <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
+                                Tech Park Phase 2, C-Block Tower 3, Sector 62, Noida - 201309
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Preferred Date & Time Slot -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span>🕒</span> 3. Pickup Date & Time Slot
+                    </div>
+                    <div style="display:flex;gap:10px;margin-bottom:14px;">
+                        <button type="button" class="chip active" id="dateToday" onclick="setDate(this, 'Today')">Today (Fastest)</button>
+                        <button type="button" class="chip" id="dateTmrw" onclick="setDate(this, 'Tomorrow')">Tomorrow</button>
+                        <button type="button" class="chip" onclick="setDate(this, 'Saturday')">This Weekend</button>
+                    </div>
+
+                    <div class="slot-grid">
+                        <div class="slot-btn selected" onclick="selectSlot(this, '08:00 AM - 11:30 AM')">
+                            <strong style="display:block;font-size:14px;">Morning</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">8:00 AM - 11:30 AM</span>
+                        </div>
+                        <div class="slot-btn" onclick="selectSlot(this, '12:00 PM - 03:30 PM')">
+                            <strong style="display:block;font-size:14px;">Afternoon</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">12:00 PM - 3:30 PM</span>
+                        </div>
+                        <div class="slot-btn" onclick="selectSlot(this, '04:00 PM - 07:00 PM')">
+                            <strong style="display:block;font-size:14px;">Evening</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">4:00 PM - 7:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Notes / Instructions -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <span>📝</span> 4. Instructions for Collector
+                    </div>
+                    <textarea id="pickupNotes" placeholder="e.g. Ring flat bell twice, scrap is kept stacked in balcony box. Please bring large gunny bags." style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;min-height:70px;"></textarea>
+                </div>
+            </div>
+
+            <!-- Right Column: Booking Summary & Confirmation -->
+            <div>
+                <div class="order-summary-box">
+                    <h2 style="font-size:17px;font-weight:800;color:var(--forest-deep);margin-bottom:16px;">
+                        Pickup Summary & Guarantees
+                    </h2>
+
+                    <div class="summary-row">
+                        <span style="color:var(--text-muted);">Estimated Scrap Lot</span>
+                        <strong id="summaryLotWeight">~25.5 kg</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span style="color:var(--text-muted);">Estimated Cash Payout</span>
+                        <strong style="color:var(--forest);font-size:16px;" id="summaryLotCash">₹330.75</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span style="color:var(--text-muted);">Selected Slot</span>
+                        <strong id="summarySlotText">Today • Morning</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span style="color:var(--text-muted);">Payment Mode</span>
+                        <strong style="color:var(--forest-deep);">Instant UPI / Cash</strong>
+                    </div>
+
+                    <div style="border-top:1px dashed var(--border-subtle);margin:16px 0;padding-top:14px;">
+                        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--forest-deep);margin-bottom:8px;">
+                            <span>⚖️</span> <strong>Certified Scale Guarantee:</strong> Zero error or free bonus coins.
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--forest-deep);">
+                            <span>🛡️</span> <strong>Zero Cancellation Fees:</strong> Cancel anytime before arrival.
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-primary" id="confirmBookingBtn" onclick="confirmBooking()" style="width:100%;justify-content:center;padding:14px;font-size:15px;margin-top:10px;">
+                        Confirm & Dispatch Collector →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-collectors.js"></script>
+<script src="../data/mock-scrap.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/pickup.js"></script>
+</body>
+</html>

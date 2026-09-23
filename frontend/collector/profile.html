@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Collector Partner Profile</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/collector.css">
+</head>
+<body>
+
+<div id="collectorSidebar"></div>
+
+<div class="collector-main">
+    <div id="collectorTopbar"></div>
+
+    <main class="collector-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Fleet & Partner Business Profile</h1>
+                <p class="page-subtitle">Ramesh Kumar • Three-Wheeler Tempo (UP 16 AB 1234) • Verified Commercial Recycling Partner</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-primary" onclick="window.saveCollectorProfile()">
+                    <span>Save Profile Changes</span>
+                </button>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:28px;margin-bottom:36px;">
+            <!-- Left: Partner Badge Card -->
+            <div>
+                <div class="ui-card" style="text-align:center;">
+                    <div class="sidebar-avatar" style="width:80px;height:80px;font-size:28px;margin:0 auto 16px;">RK</div>
+                    <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);" id="colDisplayName">Ramesh Kumar</h2>
+                    <span style="font-size:13px;color:var(--text-muted);display:block;margin-top:2px;">Certified Collector since 2024</span>
+                    <span class="status-pill success" style="margin-top:10px;">KYC & Police Verified ✓</span>
+
+                    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border-subtle);text-align:left;">
+                        <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-bottom:8px;">Operational Metrics</div>
+                        <div style="font-size:13px;margin-bottom:6px;"><strong>Partner ID:</strong> <span style="font-family:monospace;">USR-COL-001</span></div>
+                        <div style="font-size:13px;margin-bottom:6px;"><strong>Lifetime Pickups:</strong> 342 Collections</div>
+                        <div style="font-size:13px;margin-bottom:6px;"><strong>Customer Rating:</strong> ⭐ 4.8 / 5.0</div>
+                        <div style="font-size:13px;"><strong>Vehicle:</strong> <span id="colVehicleBadge">Tempo (UP 16 AB 1234)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Editable Details -->
+            <div style="display:flex;flex-direction:column;gap:24px;">
+                <!-- 1. Vehicle & Logistics -->
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:16px;">Vehicle & Certified Scale Configuration</div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Vehicle Model</label>
+                            <input type="text" id="colVehicleModel" value="Three-Wheeler Auto / Tempo" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Registration Number</label>
+                            <input type="text" id="colVehicleNumber" value="UP 16 AB 1234" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Certified Scale ID</label>
+                            <input type="text" id="colScaleId" value="Essae DS-215 (Scale #EKB-402)" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Service Radius</label>
+                            <select id="colRadius" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;background:#fff;">
+                                <option value="5">Within 5 km</option>
+                                <option value="10" selected>Within 10 km (Current: Sector 62 & surroundings)</option>
+                                <option value="15">Within 15 km</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Bank Details for Automated Payouts -->
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:16px;">Settlement Bank Account</div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Bank Name</label>
+                            <input type="text" value="State Bank of India" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">IFSC Code</label>
+                            <input type="text" value="SBIN0001234" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Account Number</label>
+                        <input type="text" value="••••••••9012" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                        <span style="font-size:12px;color:var(--forest);display:block;margin-top:6px;">✓ Verified Account Holder: Ramesh Kumar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/collector-app.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+/* =========================================================
+   E-KABAADI PLATFORM
+   Shared Component Styles (Buttons, Cards, Steppers, Modals, Badges)
+   File: frontend/shared/css/components.css
+   ========================================================= */
+
+/* --- Buttons --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 1px solid transparent;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--forest);
+    color: #FFFFFF;
+    border-color: var(--forest);
+    box-shadow: 0 2px 6px rgba(31, 111, 67, 0.25);
+}
+.btn-primary:hover {
+    background: #175734;
+    border-color: #175734;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(31, 111, 67, 0.35);
+}
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: #FFFFFF;
+    color: var(--forest-deep);
+    border-color: var(--border-subtle);
+}
+.btn-secondary:hover {
+    background: var(--bg-subtle);
+    border-color: var(--border-medium);
+}
+
+.btn-danger {
+    background: #FFFFFF;
+    color: var(--danger);
+    border-color: #F8D7DA;
+}
+.btn-danger:hover {
+    background: var(--danger);
+    color: #FFFFFF;
+    border-color: var(--danger);
+}
+
+.btn-sm { padding: 6px 12px; font-size: 13px; }
+.btn-lg { padding: 14px 26px; font-size: 16px; border-radius: var(--radius-md); }
+.btn-full { width: 100%; }
+
+/* --- Cards --- */
+.card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: var(--shadow-xs);
+    transition: all var(--transition-normal);
+}
+.card:hover {
+    border-color: var(--border-medium);
+    box-shadow: var(--shadow-sm);
+}
+
+/* --- Badges & Status Pills --- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+}
+.badge-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(22, 160, 93, 0.2); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(217, 115, 13, 0.2); }
+.badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(217, 56, 58, 0.2); }
+.badge-info { background: var(--info-bg); color: var(--info); border: 1px solid rgba(43, 122, 120, 0.2); }
+.badge-neutral { background: var(--bg-subtle); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+
+/* --- Toast Notifications --- */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+.toast {
+    pointer-events: auto;
+    min-width: 300px;
+    max-width: 420px;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    background: #FFFFFF;
+    color: var(--charcoal);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    border-left: 4px solid var(--forest);
+    animation: toast-slide 0.3s ease forwards;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.danger { border-left-color: var(--danger); }
+.toast.info { border-left-color: var(--info); }
+
+@keyframes toast-slide {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Modals --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(18, 55, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-normal);
+}
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-container {
+    background: #FFFFFF;
+    border-radius: var(--radius-lg);
+    max-width: 580px;
+    width: 100%;
+    padding: 28px;
+    box-shadow: var(--shadow-xl);
+    transform: translateY(20px) scale(0.96);
+    transition: all var(--transition-normal);
+}
+.modal-overlay.active .modal-container {
+    transform: translateY(0) scale(1);
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Collector Earnings & Payouts</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/collector.css">
+</head>
+<body>
+
+<div id="collectorSidebar"></div>
+
+<div class="collector-main">
+    <div id="collectorTopbar"></div>
+
+    <main class="collector-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Earnings & Payout Settlements</h1>
+                <p class="page-subtitle">Linked Bank: State Bank of India (A/C ****9012) • Daily Automated End-of-Day Settlement</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-primary" onclick="showToast('Requesting instant bank withdrawal to SBI account...', 'success')">
+                    <span>⚡ Instant Bank Transfer</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 4 Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">This Week's Net Revenue</span>
+                    <div class="stat-icon-wrapper stat-icon-gold">₹</div>
+                </div>
+                <div class="stat-value">₹14,280</div>
+                <div class="stat-subtext">↑ 18% higher than last week</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Today's Operating Profit</span>
+                    <div class="stat-icon-wrapper stat-icon-green">📈</div>
+                </div>
+                <div class="stat-value">₹1,840</div>
+                <div class="stat-subtext">Across 4 completed pickups</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Platform Service Fee</span>
+                    <div class="stat-icon-wrapper stat-icon-lime">🛡️</div>
+                </div>
+                <div class="stat-value">0%</div>
+                <div class="stat-subtext">Municipal Clean City Subsidy</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Settlement Status</span>
+                    <div class="stat-icon-wrapper stat-icon-blue">🏦</div>
+                </div>
+                <div class="stat-value" style="font-size:18px;margin-top:4px;">Auto-Settled</div>
+                <div class="stat-subtext">Direct NEFT / IMPS to SBI</div>
+            </div>
+        </div>
+
+        <!-- Revenue by Category Breakdown -->
+        <div class="ui-card" style="margin-bottom:24px;">
+            <div class="ui-card-title" style="margin-bottom:16px;">Revenue Contribution by Scrap Material</div>
+
+            <div style="margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px;">
+                    <span>🔩 Iron & Scrap Metals (₹6,000.00)</span>
+                    <span style="color:var(--forest);">42%</span>
+                </div>
+                <div class="payload-bar-wrap" style="margin:0;"><div class="payload-bar-fill" style="width:42%;"></div></div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px;">
+                    <span>📦 Corrugated Cardboard & Paper (₹5,000.00)</span>
+                    <span style="color:var(--forest);">35%</span>
+                </div>
+                <div class="payload-bar-wrap" style="margin:0;"><div class="payload-bar-fill" style="width:35%;"></div></div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px;">
+                    <span>♻️ PET Bottles & High-Density Plastics (₹2,140.00)</span>
+                    <span style="color:var(--forest);">15%</span>
+                </div>
+                <div class="payload-bar-wrap" style="margin:0;"><div class="payload-bar-fill" style="width:15%;"></div></div>
+            </div>
+
+            <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px;">
+                    <span>💻 E-Waste & Appliances (₹1,140.00)</span>
+                    <span style="color:var(--forest);">8%</span>
+                </div>
+                <div class="payload-bar-wrap" style="margin:0;"><div class="payload-bar-fill" style="width:8%;"></div></div>
+            </div>
+        </div>
+
+        <!-- Settlement Slips Table -->
+        <div class="ui-card">
+            <div class="ui-card-header">
+                <div class="ui-card-title">Daily Bank Settlement Ledger</div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ui-table">
+                    <thead>
+                        <tr>
+                            <th>Settlement ID</th>
+                            <th>Date</th>
+                            <th>Recycling Yard Depot</th>
+                            <th>Payload Hauled</th>
+                            <th>Wholesale Gross</th>
+                            <th>Doorstep Paid</th>
+                            <th>Net Margin</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#STL-8821</strong></td>
+                            <td>Today, Sep 23</td>
+                            <td>Sector 15 Authorized Recovery Hub</td>
+                            <td>142.5 kg</td>
+                            <td>₹2,360.00</td>
+                            <td>₹1,840.00</td>
+                            <td><strong style="color:var(--forest);">+₹520.00</strong></td>
+                            <td><span class="status-pill success">Settled (SBI)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#STL-8810</strong></td>
+                            <td>Sep 22, 2026</td>
+                            <td>Sector 15 Authorized Recovery Hub</td>
+                            <td>310.0 kg</td>
+                            <td>₹4,890.00</td>
+                            <td>₹3,920.00</td>
+                            <td><strong style="color:var(--forest);">+₹970.00</strong></td>
+                            <td><span class="status-pill success">Settled (SBI)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#STL-8794</strong></td>
+                            <td>Sep 21, 2026</td>
+                            <td>Noida Phase 2 Commercial Yard</td>
+                            <td>265.0 kg</td>
+                            <td>₹4,120.00</td>
+                            <td>₹3,300.00</td>
+                            <td><strong style="color:var(--forest);">+₹820.00</strong></td>
+                            <td><span class="status-pill success">Settled (SBI)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../data/mock-pickups.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/collector-app.js"></script>
+<script src="js/earnings.js"></script>
+</body>
+</html>

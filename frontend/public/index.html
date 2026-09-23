@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="E-Kabaadi — Smart scrap collection connecting citizens with trusted collectors. Turn your scrap into value while making recycling transparent, convenient and rewarding.">
+    <title>E-Kabaadi | Turn Scrap Into Value</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+    <div class="nav-inner">
+        <a href="#" class="nav-brand">
+            <div class="nav-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg>
+            </div>
+            <span class="nav-brand-text">E-Kabaadi</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="rates.html" class="nav-link">Scrap Rates</a>
+            <a href="tracking.html" class="nav-link">Track Pickup</a>
+            <a href="#for-citizens" class="nav-link">For Citizens</a>
+            <a href="#for-collectors" class="nav-link">For Collectors</a>
+            <a href="#impact" class="nav-link">Impact</a>
+            <a href="#about" class="nav-link">About</a>
+        </div>
+        <div class="nav-actions">
+            <a href="../auth/login.html" class="nav-btn nav-btn-ghost">Log in</a>
+            <a href="../auth/signup.html" class="nav-btn nav-btn-primary">Get Started</a>
+        </div>
+        <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="nav-mobile-menu" id="navMobile">
+        <a href="#how-it-works">How It Works</a>
+        <a href="rates.html">Scrap Rates</a>
+        <a href="tracking.html">Track Pickup</a>
+        <a href="#for-citizens">For Citizens</a>
+        <a href="#for-collectors">For Collectors</a>
+        <a href="#impact">Impact</a>
+        <a href="#about">About</a>
+        <div class="nav-mobile-actions">
+            <a href="../auth/login.html" class="nav-btn nav-btn-ghost">Log in</a>
+            <a href="../auth/signup.html" class="nav-btn nav-btn-primary">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-bg">
+        <div class="hero-gradient"></div>
+        <div class="hero-pattern"></div>
+    </div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            India's Smart Scrap Recovery Platform
+        </div>
+        <h1 class="hero-title">
+            Turn Scrap<br>Into <span class="hero-highlight">Value</span>
+        </h1>
+        <p class="hero-subtitle">
+            Smart scrap collection that connects citizens with trusted collectors — making recycling transparent, convenient and rewarding.
+        </p>
+        <div class="hero-actions">
+            <a href="../auth/signup.html" class="btn btn-hero-primary">
+                <span>Sell Your Scrap</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </a>
+            <a href="../auth/signup.html?role=collector" class="btn btn-hero-secondary">Become a Collector</a>
+        </div>
+        <div class="hero-proof">
+            <div class="hero-avatars">
+                <div class="hero-avatar" style="background:#1F6F43;color:#fff">AS</div>
+                <div class="hero-avatar" style="background:#4F8F45;color:#fff">PV</div>
+                <div class="hero-avatar" style="background:#91A86A;color:#fff">RK</div>
+                <div class="hero-avatar" style="background:#A8784F;color:#fff">ML</div>
+            </div>
+            <span>Trusted by <strong>1,200+</strong> users in Noida</span>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="hero-card hero-card-1">
+            <div class="hero-card-icon">📄</div>
+            <div class="hero-card-info">
+                <strong>Paper Detected</strong>
+                <span>~5 kg • ₹70 est.</span>
+            </div>
+            <div class="hero-card-badge">AI Scan</div>
+        </div>
+        <div class="hero-card hero-card-2">
+            <div class="hero-card-icon">🔩</div>
+            <div class="hero-card-info">
+                <strong>Metal Pickup</strong>
+                <span>Completed • ₹133</span>
+            </div>
+            <div class="hero-card-status">✓</div>
+        </div>
+        <div class="hero-card hero-card-3">
+            <div class="hero-card-icon eco">🌱</div>
+            <div class="hero-card-info">
+                <strong>+25 Eco Coins</strong>
+                <span>Reward earned</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TRUST STATS
+     ═══════════════════════════════════════════ -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" data-target="18420">0</div>
+                <div class="stat-unit">kg</div>
+                <div class="stat-label">Scrap Recycled</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="3847">0</div>
+                <div class="stat-label">Pickups Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="1248">0</div>
+                <div class="stat-label">Active Citizens</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="86">0</div>
+                <div class="stat-label">Verified Collectors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="42860">0</div>
+                <div class="stat-unit">kg CO₂</div>
+                <div class="stat-label">Emissions Saved</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     HOW IT WORKS
+     ═══════════════════════════════════════════ -->
+<section class="section how-it-works" id="how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-eyebrow">How It Works</span>
+            <h2 class="section-title">Simple. Transparent. Rewarding.</h2>
+            <p class="section-subtitle">Whether you're selling scrap or collecting it, E-Kabaadi makes the process seamless.</p>
+        </div>
+
+        <div class="flow-tabs">
+            <button class="flow-tab active" data-tab="citizen-flow">For Citizens</button>
+            <button class="flow-tab" data-tab="collector-flow">For Collectors</button>
+        </div>
+
+        <div class="flow-content active" id="citizen-flow">
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-step-num">1</div>
+                    <div class="flow-step-icon">📸</div>
+                    <h3>Identify Scrap</h3>
+                    <p>Upload a photo and our AI identifies the material, quantity and estimated value.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">2</div>
+                    <div class="flow-step-icon">📍</div>
+                    <h3>Find Collector</h3>
+                    <p>Browse nearby verified collectors. Compare ratings, distance and availability.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">3</div>
+                    <div class="flow-step-icon">✅</div>
+                    <h3>Choose & Schedule</h3>
+                    <p>Select your preferred collector and pick a convenient time for pickup.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">4</div>
+                    <div class="flow-step-icon">🚛</div>
+                    <h3>Get Collected</h3>
+                    <p>Track your collector in real-time. Scrap is weighed and valued on-site.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">5</div>
+                    <div class="flow-step-icon">💰</div>
+                    <h3>Get Paid</h3>
+                    <p>Instant digital payment. No cash hassle. Complete transparency.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">6</div>
+                    <div class="flow-step-icon">🌱</div>
+                    <h3>Earn Rewards</h3>
+                    <p>Earn Eco Coins for every pickup. Redeem for cashback, badges or plant a tree.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-content" id="collector-flow">
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-step-num">1</div>
+                    <div class="flow-step-icon">🟢</div>
+                    <h3>Go Online</h3>
+                    <p>Toggle your availability and start receiving pickup requests from nearby citizens.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">2</div>
+                    <div class="flow-step-icon">📩</div>
+                    <h3>Receive Requests</h3>
+                    <p>Get notified instantly when a citizen selects you for a pickup.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">3</div>
+                    <div class="flow-step-icon">✅</div>
+                    <h3>Accept Pickup</h3>
+                    <p>Review the details and accept. Navigate to the pickup location.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">4</div>
+                    <div class="flow-step-icon">⚖️</div>
+                    <h3>Collect & Weigh</h3>
+                    <p>Collect the scrap, verify weight and quality. Log everything digitally.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">5</div>
+                    <div class="flow-step-icon">✔️</div>
+                    <h3>Complete Collection</h3>
+                    <p>Confirm the pickup and payment is processed automatically.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">6</div>
+                    <div class="flow-step-icon">📈</div>
+                    <h3>Grow Earnings</h3>
+                    <p>Track daily, weekly and monthly earnings. Build your reputation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SMART SCRAP IDENTIFICATION
+     ═══════════════════════════════════════════ -->
+<section class="section scrap-ai">
+    <div class="container">
+        <div class="scrap-ai-grid">
+            <div class="scrap-ai-text">
+                <span class="section-eyebrow">AI-Powered</span>
+                <h2 class="section-title">Smart Scrap<br>Identification</h2>
+                <p>Simply upload a photo of your scrap. Our AI instantly identifies the material, estimates quantity and calculates fair market value — before the collector even arrives.</p>
+                <ul class="scrap-ai-features">
+                    <li><span class="feature-check">✓</span> Instant material detection</li>
+                    <li><span class="feature-check">✓</span> Fair price estimation</li>
+                    <li><span class="feature-check">✓</span> 6+ scrap categories supported</li>
+                    <li><span class="feature-check">✓</span> No guesswork, no underpaying</li>
+                </ul>
+            </div>
+            <div class="scrap-ai-demo">
+                <div class="ai-demo-card">
+                    <div class="ai-demo-upload">
+                        <div class="ai-upload-icon">📷</div>
+                        <span>Upload Scrap Image</span>
+                    </div>
+                    <div class="ai-demo-arrow">↓</div>
+                    <div class="ai-demo-results">
+                        <div class="ai-result-row">
+                            <span class="ai-label">Material</span>
+                            <span class="ai-value">Paper <span class="ai-conf">92%</span></span>
+                        </div>
+                        <div class="ai-result-row">
+                            <span class="ai-label">Est. Quantity</span>
+                            <span class="ai-value">~5 kg</span>
+                        </div>
+                        <div class="ai-result-row">
+                            <span class="ai-label">Rate</span>
+                            <span class="ai-value">₹14/kg</span>
+                        </div>
+                        <div class="ai-result-row highlight">
+                            <span class="ai-label">Est. Value</span>
+                            <span class="ai-value">₹70</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     NEARBY COLLECTORS
+     ═══════════════════════════════════════════ -->
+<section class="section collectors-preview" id="about">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-eyebrow">Your Choice</span>
+            <h2 class="section-title">You Choose the Collector</h2>
+            <p class="section-subtitle">Browse nearby verified collectors. Compare ratings, distance, availability and response time. The choice is always yours.</p>
+        </div>
+        <div class="collectors-showcase">
+            <div class="collector-preview-card">
+                <div class="cpc-header">
+                    <div class="cpc-avatar" style="background:#1F6F43">RK</div>
+                    <div class="cpc-info">
+                        <strong>Ramesh Kumar</strong>
+                        <span>⭐ 4.8 • 342 pickups</span>
+                    </div>
+                    <span class="cpc-badge online">Online</span>
+                </div>
+                <div class="cpc-details">
+                    <div><span>📍</span> 1.2 km away</div>
+                    <div><span>⏱️</span> ~15 min response</div>
+                    <div><span>🚛</span> Three-Wheeler</div>
+                </div>
+                <div class="cpc-tags">
+                    <span>Paper</span><span>Plastic</span><span>Metal</span><span>E-waste</span>
+                </div>
+            </div>
+            <div class="collector-preview-card featured">
+                <div class="cpc-header">
+                    <div class="cpc-avatar" style="background:#4F8F45">ML</div>
+                    <div class="cpc-info">
+                        <strong>Mohan Lal</strong>
+                        <span>⭐ 4.9 • 561 pickups</span>
+                    </div>
+                    <span class="cpc-badge online">Online</span>
+                </div>
+                <div class="cpc-details">
+                    <div><span>📍</span> 3.8 km away</div>
+                    <div><span>⏱️</span> ~10 min response</div>
+                    <div><span>🚛</span> Three-Wheeler</div>
+                </div>
+                <div class="cpc-tags">
+                    <span>Paper</span><span>Plastic</span><span>Metal</span><span>Cardboard</span><span>Glass</span><span>E-waste</span>
+                </div>
+            </div>
+            <div class="collector-preview-card">
+                <div class="cpc-header">
+                    <div class="cpc-avatar" style="background:#91A86A">AV</div>
+                    <div class="cpc-info">
+                        <strong>Ashok Verma</strong>
+                        <span>⭐ 4.7 • 289 pickups</span>
+                    </div>
+                    <span class="cpc-badge online">Online</span>
+                </div>
+                <div class="cpc-details">
+                    <div><span>📍</span> 1.8 km away</div>
+                    <div><span>⏱️</span> ~12 min response</div>
+                    <div><span>🚛</span> Three-Wheeler</div>
+                </div>
+                <div class="cpc-tags">
+                    <span>Plastic</span><span>Metal</span><span>E-waste</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TRUST & TRANSPARENCY
+     ═══════════════════════════════════════════ -->
+<section class="section trust-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-eyebrow">Built on Trust</span>
+            <h2 class="section-title">Transparent at Every Step</h2>
+        </div>
+        <div class="trust-grid">
+            <div class="trust-card">
+                <div class="trust-icon">🛡️</div>
+                <h3>Verified Users</h3>
+                <p>Every citizen and collector is identity-verified and approved by admin before joining.</p>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon">📋</div>
+                <h3>Transparent History</h3>
+                <p>Complete pickup history with weights, rates and payments. Nothing hidden.</p>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon">💳</div>
+                <h3>Traceable Payments</h3>
+                <p>Digital payment records for every transaction. Full audit trail.</p>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon">🎧</div>
+                <h3>Support System</h3>
+                <p>Raise complaints, track resolution. Admin oversight on every dispute.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOR CITIZENS
+     ═══════════════════════════════════════════ -->
+<section class="section benefits-section" id="for-citizens">
+    <div class="container">
+        <div class="benefits-grid">
+            <div class="benefits-text">
+                <span class="section-eyebrow">For Citizens</span>
+                <h2 class="section-title">Sell Scrap the Smart Way</h2>
+                <p>No more waiting for random kabadiwallas. Schedule pickups at your convenience, get transparent pricing and earn rewards for recycling.</p>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🏠</div>
+                        <div>
+                            <strong>Doorstep Pickup</strong>
+                            <span>Collector comes to you. No need to carry anything.</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">⚖️</div>
+                        <div>
+                            <strong>Fair Pricing</strong>
+                            <span>AI-estimated rates. No haggling, no underpaying.</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">💸</div>
+                        <div>
+                            <strong>Digital Payment</strong>
+                            <span>Instant UPI payment. No cash, no disputes.</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🌱</div>
+                        <div>
+                            <strong>Eco Rewards</strong>
+                            <span>Earn Eco Coins for every pickup. Redeem for real value.</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="../auth/signup.html" class="btn btn-cta">Start Selling Scrap →</a>
+            </div>
+            <div class="benefits-visual">
+                <div class="benefit-visual-card">
+                    <div class="bvc-header">
+                        <span class="bvc-greeting">Good evening, Aarav 👋</span>
+                        <div class="bvc-coins">🌱 860 Eco Coins</div>
+                    </div>
+                    <div class="bvc-stats">
+                        <div><strong>₹3,240</strong><span>Earned</span></div>
+                        <div><strong>42.6 kg</strong><span>Recycled</span></div>
+                        <div><strong>16</strong><span>Pickups</span></div>
+                    </div>
+                    <div class="bvc-quick">
+                        <button>📸 Sell Scrap</button>
+                        <button>📍 Find Collector</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOR COLLECTORS
+     ═══════════════════════════════════════════ -->
+<section class="section benefits-section alt" id="for-collectors">
+    <div class="container">
+        <div class="benefits-grid reverse">
+            <div class="benefits-visual">
+                <div class="benefit-visual-card dark">
+                    <div class="bvc-header">
+                        <div class="bvc-status online">🟢 Online</div>
+                        <div class="bvc-rating">⭐ 4.8</div>
+                    </div>
+                    <div class="bvc-stats">
+                        <div><strong>₹2,450</strong><span>Today</span></div>
+                        <div><strong>8</strong><span>Pickups</span></div>
+                        <div><strong>342</strong><span>Total</span></div>
+                    </div>
+                    <div class="bvc-request">
+                        <div class="bvc-req-header">
+                            <span>New Request</span>
+                            <span class="bvc-req-badge">📍 1.2 km</span>
+                        </div>
+                        <div class="bvc-req-body">
+                            <strong>Paper • ~5 kg</strong>
+                            <span>Sector 62, Noida</span>
+                        </div>
+                        <div class="bvc-req-actions">
+                            <button class="accept">Accept</button>
+                            <button class="decline">Decline</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="benefits-text">
+                <span class="section-eyebrow">For Collectors</span>
+                <h2 class="section-title">Grow Your Collection Business</h2>
+                <p>No more roaming streets hoping for customers. Receive nearby requests, manage your schedule and build a verified reputation.</p>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📩</div>
+                        <div>
+                            <strong>Nearby Requests</strong>
+                            <span>Receive pickup requests from citizens in your area.</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">⏰</div>
+                        <div>
+                            <strong>Flexible Schedule</strong>
+                            <span>Go online when you want. Accept requests that suit you.</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📊</div>
+                        <div>
+                            <strong>Earnings Dashboard</strong>
+                            <span>Track daily, weekly and monthly earnings with detailed history.</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">⭐</div>
+                        <div>
+                            <strong>Build Reputation</strong>
+                            <span>Verified badge, ratings and reviews. Stand out from the crowd.</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="../auth/signup.html?role=collector" class="btn btn-cta">Become a Collector →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     ENVIRONMENTAL IMPACT
+     ═══════════════════════════════════════════ -->
+<section class="section impact-section" id="impact">
+    <div class="container">
+        <div class="section-header light">
+            <span class="section-eyebrow">Environmental Impact</span>
+            <h2 class="section-title">Every Pickup Counts</h2>
+            <p class="section-subtitle">Together, our community is making a measurable difference for the planet.</p>
+        </div>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <div class="impact-number">18,420 kg</div>
+                <div class="impact-label">Scrap Recovered</div>
+                <div class="impact-bar"><div class="impact-fill" style="width:78%"></div></div>
+            </div>
+            <div class="impact-card">
+                <div class="impact-number">42,860 kg</div>
+                <div class="impact-label">CO₂ Emissions Saved</div>
+                <div class="impact-bar"><div class="impact-fill" style="width:65%"></div></div>
+            </div>
+            <div class="impact-card">
+                <div class="impact-number">72,600 L</div>
+                <div class="impact-label">Water Saved</div>
+                <div class="impact-bar"><div class="impact-fill" style="width:54%"></div></div>
+            </div>
+            <div class="impact-card">
+                <div class="impact-number">1,105</div>
+                <div class="impact-label">Trees Equivalent Saved</div>
+                <div class="impact-bar"><div class="impact-fill" style="width:42%"></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FINAL CTA
+     ═══════════════════════════════════════════ -->
+<section class="section cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Ready to Make Your Scrap Count?</h2>
+            <p>Join thousands of citizens and collectors building a cleaner, greener India — one pickup at a time.</p>
+            <div class="cta-actions">
+                <a href="../auth/signup.html" class="btn btn-hero-primary">
+                    <span>Start Selling Scrap</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                </a>
+                <a href="../auth/signup.html?role=collector" class="btn btn-hero-secondary">Become a Collector</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg>
+                    <span>E-Kabaadi</span>
+                </div>
+                <p>India's smart scrap recovery platform. Connecting citizens with trusted collectors for transparent, convenient recycling.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <a href="#how-it-works">How It Works</a>
+                <a href="rates.html">Scrap Rates</a>
+                <a href="tracking.html">Track Pickup</a>
+                <a href="#for-citizens">For Citizens</a>
+                <a href="#for-collectors">For Collectors</a>
+                <a href="#impact">Impact</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="#about">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Blog</a>
+                <a href="#">Press</a>
+            </div>
+            <div class="footer-links">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 E-Kabaadi. Built for a cleaner India.</span>
+            <span>Made with 🌱 in Noida</span>
+        </div>
+    </div>
+</footer>
+
+<script src="js/landing.js"></script>
+</body>
+</html>

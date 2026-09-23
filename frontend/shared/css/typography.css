@@ -1,0 +1,44 @@
+/* =========================================================
+   E-KABAADI PLATFORM
+   Typography System
+   File: frontend/shared/css/typography.css
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    color: var(--forest-deep);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(28px, 4vw, 38px); }
+h2 { font-size: clamp(22px, 3vw, 28px); }
+h3 { font-size: clamp(18px, 2.2vw, 22px); }
+h4 { font-size: 18px; }
+h5 { font-size: 15px; }
+h6 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+
+.font-mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.text-forest { color: var(--forest); }
+.text-forest-deep { color: var(--forest-deep); }
+.text-muted { color: var(--text-muted); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }

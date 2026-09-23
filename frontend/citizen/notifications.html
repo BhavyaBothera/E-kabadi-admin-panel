@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Citizen Notifications</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .notif-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .notif-card.unread {
+            background: rgba(247, 244, 234, 0.5);
+            border-left: 4px solid var(--forest);
+        }
+        .notif-card:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--border-hover);
+        }
+        .notif-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .notif-main { flex: 1; min-width: 0; }
+        .notif-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--forest-deep);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .notif-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .notif-time {
+            font-size: 11px;
+            color: #96a19b;
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Notifications & Activity Feed</h1>
+                <p class="page-subtitle">Real-time alerts for active collections, UPI settlements, and green coin bonuses.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-secondary" onclick="markAllRead()">
+                    <span>✓ Mark All as Read</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+            <button type="button" class="chip active" onclick="filterNotifs('all', this)">All (7)</button>
+            <button type="button" class="chip" onclick="filterNotifs('unread', this)">Unread (3)</button>
+            <button type="button" class="chip" onclick="filterNotifs('order', this)">Orders (3)</button>
+            <button type="button" class="chip" onclick="filterNotifs('payment', this)">Earnings (2)</button>
+            <button type="button" class="chip" onclick="filterNotifs('reward', this)">Eco Coins (2)</button>
+        </div>
+
+        <!-- Notifications List -->
+        <div id="notifsContainer">
+            <!-- 1. En Route -->
+            <div class="notif-card unread" data-category="order" data-status="unread">
+                <div class="notif-icon stat-icon-green">🛺</div>
+                <div class="notif-main">
+                    <div class="notif-title">
+                        <span>Collector Ramesh Kumar is En Route</span>
+                        <span class="status-pill warning" style="font-size:11px;">Active</span>
+                    </div>
+                    <div class="notif-desc">
+                        Ramesh Kumar with vehicle UP 16 AB 1234 has departed for your pickup at Sector 62, Noida. ETA ~14 mins.
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <a href="tracking.html" style="font-size:13px;color:var(--forest);font-weight:700;">Track Live on Map →</a>
+                        <span class="notif-time">12 minutes ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Payment Received -->
+            <div class="notif-card unread" data-category="payment" data-status="unread">
+                <div class="notif-icon stat-icon-gold">₹</div>
+                <div class="notif-main">
+                    <div class="notif-title">
+                        <span>₹235.00 Transferred to UPI</span>
+                        <span class="status-pill success" style="font-size:11px;">Paid</span>
+                    </div>
+                    <div class="notif-desc">
+                        Payout for Pickup #PKP-8812 (14.5 kg newspaper) has been auto-credited to your linked UPI ID (aarav@okhdfc).
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <a href="payments.html" style="font-size:13px;color:var(--forest);font-weight:700;">View Official Tax Invoice →</a>
+                        <span class="notif-time">Yesterday</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Eco Coins -->
+            <div class="notif-card unread" data-category="reward" data-status="unread">
+                <div class="notif-icon stat-icon-lime">🪙</div>
+                <div class="notif-main">
+                    <div class="notif-title">
+                        <span>+50 Eco Coins Credited!</span>
+                    </div>
+                    <div class="notif-desc">
+                        Bonus Eco Coins awarded for maintaining clean, sorted recycling bins. Your wallet balance is now 860 coins.
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <a href="rewards.html" style="font-size:13px;color:var(--forest);font-weight:700;">Visit Rewards Catalog →</a>
+                        <span class="notif-time">Yesterday</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Rate Alert -->
+            <div class="notif-card" data-category="order" data-status="read">
+                <div class="notif-icon stat-icon-blue">📈</div>
+                <div class="notif-main">
+                    <div class="notif-title">
+                        <span>Daily Rate Alert: Metal Prices Up +8%</span>
+                    </div>
+                    <div class="notif-desc">
+                        Copper reached ₹580/kg and Brass ₹380/kg today due to international recycling demand. Great time to clear heavy metal scrap!
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <a href="sell-scrap.html" style="font-size:13px;color:var(--forest);font-weight:700;">Sell Metal Scrap →</a>
+                        <span class="notif-time">2 days ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Milestone -->
+            <div class="notif-card" data-category="reward" data-status="read">
+                <div class="notif-icon stat-icon-green">🌳</div>
+                <div class="notif-main">
+                    <div class="notif-title">
+                        <span>Milestone: 6 Trees Saved from Pulp Mills!</span>
+                    </div>
+                    <div class="notif-desc">
+                        You have officially recycled over 30 kg of post-consumer paper products through E-Kabaadi.
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <a href="dashboard.html" style="font-size:13px;color:var(--forest);font-weight:700;">View Environmental Footprint →</a>
+                        <span class="notif-time">Sep 18, 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-notifications.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/notifications.js"></script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Eco Coins & Rewards Store</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .tier-progress-card {
+            background: linear-gradient(135deg, #12372A, #1F6F43);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            color: #fff;
+            margin-bottom: 28px;
+            box-shadow: 0 16px 40px rgba(18, 55, 42, 0.18);
+        }
+        .progress-bar-wrap {
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            margin: 16px 0 10px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: #C5D86D;
+            border-radius: 6px;
+            transition: width 0.4s ease;
+        }
+        .badge-list {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .badge-chip {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: var(--shadow-sm);
+        }
+        .badge-chip.locked {
+            opacity: 0.6;
+            filter: grayscale(1);
+        }
+        /* Claim Modal */
+        .redeem-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 55, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            place-items: center;
+            padding: 20px;
+        }
+        .redeem-modal-backdrop.open { display: grid; }
+        .coupon-code-box {
+            background: rgba(247, 244, 234, 0.8);
+            border: 2px dashed var(--forest);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--forest-deep);
+            letter-spacing: 2px;
+            margin: 16px 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Eco Coins & Green Rewards Store</h1>
+                <p class="page-subtitle">Redeem your circular recycling coins for brand gift cards, organic groceries, and certified tree planting.</p>
+            </div>
+            <div class="header-actions">
+                <a href="sell-scrap.html" class="btn-primary">
+                    <span>Earn More Coins →</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tier & Balance Banner -->
+        <div class="tier-progress-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+                <div>
+                    <span style="font-size:12px;font-weight:700;text-transform:uppercase;color:#C5D86D;letter-spacing:0.5px;">Current Eco Coins Wallet</span>
+                    <div style="font-size:36px;font-weight:800;margin-top:2px;">
+                        <span id="rewardsCoinBalance">860</span> <span style="font-size:22px;font-weight:600;opacity:0.9;">Coins</span>
+                    </div>
+                    <div style="font-size:14px;opacity:0.85;margin-top:4px;">
+                        Current Tier: <strong style="color:#C5D86D;">Silver Recycler</strong> (Next: Gold Tier at 1,000 Coins)
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:13px;opacity:0.8;">Total Lifetime Coins</div>
+                    <div style="font-size:20px;font-weight:700;">1,420 Coins</div>
+                </div>
+            </div>
+
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" style="width: 86%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;opacity:0.8;">
+                <span>860 / 1,000 Coins</span>
+                <span>Only 140 Coins to Gold Tier (+10% Scrap Bonus)</span>
+            </div>
+        </div>
+
+        <!-- Environmental Achievement Badges -->
+        <div style="font-size:16px;font-weight:700;color:var(--forest-deep);margin-bottom:12px;">
+            Environmental Milestones & Badges
+        </div>
+        <div class="badge-list">
+            <div class="badge-chip">
+                <div style="font-size:32px;">🌳</div>
+                <div>
+                    <strong style="color:var(--forest-deep);font-size:14px;display:block;">Paper Hero</strong>
+                    <span style="font-size:12px;color:var(--text-muted);">Saved 6 pulp trees • Unlocked</span>
+                </div>
+            </div>
+            <div class="badge-chip">
+                <div style="font-size:32px;">♻️</div>
+                <div>
+                    <strong style="color:var(--forest-deep);font-size:14px;display:block;">Plastic Diverter</strong>
+                    <span style="font-size:12px;color:var(--text-muted);">20+ kg landfill diversion • Unlocked</span>
+                </div>
+            </div>
+            <div class="badge-chip">
+                <div style="font-size:32px;">⚡</div>
+                <div>
+                    <strong style="color:var(--forest-deep);font-size:14px;display:block;">Zero Waste Streak</strong>
+                    <span style="font-size:12px;color:var(--text-muted);">5 consecutive monthly pickups</span>
+                </div>
+            </div>
+            <div class="badge-chip locked">
+                <div style="font-size:32px;">👑</div>
+                <div>
+                    <strong style="color:var(--forest-deep);font-size:14px;display:block;">Century Club</strong>
+                    <span style="font-size:12px;color:var(--text-muted);">Recycle 100 kg (42.6/100 kg)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rewards Catalog Grid -->
+        <div style="font-size:16px;font-weight:700;color:var(--forest-deep);margin-bottom:16px;">
+            Redeemable Perks & Vouchers
+        </div>
+        <div class="rewards-grid">
+            <!-- Voucher 1 -->
+            <div class="reward-card">
+                <div class="reward-icon">🛒</div>
+                <div class="reward-title">₹100 Off at Organic Harvest</div>
+                <div class="reward-desc">Valid on all chemical-free farm groceries, dry fruits, and cold-pressed oils.</div>
+                <div class="reward-cost">
+                    <span class="cost-badge">🪙 200 Coins</span>
+                    <button type="button" class="btn-primary" onclick="claimReward('₹100 Off Organic Harvest', 200, 'HARVEST100')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Voucher 2 -->
+            <div class="reward-card">
+                <div class="reward-icon">☕</div>
+                <div class="reward-title">Insulated Eco Travel Mug</div>
+                <div class="reward-desc">Stainless steel double-walled 350ml reusable tumbler. Delivered directly to your home address.</div>
+                <div class="reward-cost">
+                    <span class="cost-badge">🪙 350 Coins</span>
+                    <button type="button" class="btn-primary" onclick="claimReward('Insulated Eco Travel Mug', 350, 'MUG-ECO-2026')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Voucher 3 -->
+            <div class="reward-card">
+                <div class="reward-icon">🌱</div>
+                <div class="reward-title">Plant a Real Sapling Tree</div>
+                <div class="reward-desc">Planted by SankalpTaru with unique geotag coordinates, survival tracking, and digital certificate.</div>
+                <div class="reward-cost">
+                    <span class="cost-badge">🪙 500 Coins</span>
+                    <button type="button" class="btn-primary" onclick="claimReward('Plant a Real Sapling Tree', 500, 'TREE-GEO-7712')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Voucher 4 -->
+            <div class="reward-card">
+                <div class="reward-icon">💻</div>
+                <div class="reward-title">15% Off Refurbished Tech</div>
+                <div class="reward-desc">Discount on certified refurbished laptops and tablets with 1-year warranty.</div>
+                <div class="reward-cost">
+                    <span class="cost-badge">🪙 300 Coins</span>
+                    <button type="button" class="btn-primary" onclick="claimReward('15% Off Refurbished Tech', 300, 'CIRCULAR15')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Voucher 5 -->
+            <div class="reward-card">
+                <div class="reward-icon">⚡</div>
+                <div class="reward-title">E-Kabaadi Priority Pass</div>
+                <div class="reward-desc">Guaranteed 20-minute priority dispatch and weekend morning reserved slot for 30 days.</div>
+                <div class="reward-cost">
+                    <span class="cost-badge">🪙 250 Coins</span>
+                    <button type="button" class="btn-primary" onclick="claimReward('E-Kabaadi Priority Pass', 250, 'PASS-PRIORITY')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Voucher 6 -->
+            <div class="reward-card">
+                <div class="reward-icon">💡</div>
+                <div class="reward-title">₹50 Water / Power Bill Rebate</div>
+                <div class="reward-desc">Direct discount coupon code applicable on your next municipal electricity or water payment.</div>
+                <div class="reward-cost">
+                    <span class="cost-badge">🪙 400 Coins</span>
+                    <button type="button" class="btn-primary" onclick="claimReward('₹50 Utility Bill Rebate', 400, 'BILL-REBATE-50')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Claim Modal -->
+<div class="redeem-modal-backdrop" id="claimModal">
+    <div class="receipt-modal">
+        <div style="text-align:center;">
+            <div style="font-size:48px;margin-bottom:8px;">🎉</div>
+            <h2 style="font-size:20px;font-weight:800;color:var(--forest-deep);" id="claimTitle">Coupon Redeemed!</h2>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">
+                Use the voucher code below during checkout or present to partner.
+            </p>
+
+            <div class="coupon-code-box" id="couponCodeDisplay" onclick="copyCouponCode()" title="Click to copy">
+                HARVEST100
+            </div>
+            <div style="font-size:12px;color:var(--forest);font-weight:600;">(Click code above to copy to clipboard)</div>
+
+            <div style="margin-top:20px;display:flex;gap:10px;">
+                <button type="button" class="btn-primary" style="flex:1;justify-content:center;" onclick="closeClaimModal()">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-rewards.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/rewards.js"></script>
+<script>
+function claimReward(title, cost, code) {
+    if (typeof citizenService === "undefined" || typeof rewardService === "undefined") return;
+    const citizen = window.currentCitizen || (typeof authService !== "undefined" ? authService.getCurrentUser() : null) || { citizenId: "CIT-1001", id: "USR-CIT-001" };
+    const citizenId = citizen.citizenId || "CIT-1001";
+    const profile = citizenService.getProfile(citizenId) || citizen;
+    let userCoins = profile.ecoCoins || 0;
+
+    if (userCoins < cost) {
+        showToast("Insufficient Eco Coins. Recycle more scrap to earn coins!", "error");
+        return;
+    }
+
+    citizenService.updateProfile(citizenId, { ecoCoins: userCoins - cost });
+    rewardService.addTransaction({
+        userId: profile.userId || citizen.id || "USR-CIT-001",
+        points: -cost,
+        description: `Redeemed: ${title}`,
+        category: "redemption",
+        metadata: { voucherCode: code }
+    });
+
+    document.getElementById("rewardsCoinBalance").textContent = userCoins - cost;
+    document.getElementById("claimTitle").textContent = title + " Redeemed!";
+    document.getElementById("couponCodeDisplay").textContent = code;
+    document.getElementById("claimModal").classList.add("open");
+
+    const pill = document.querySelector(".eco-pill span:last-child");
+    if (pill) pill.textContent = (userCoins - cost) + " Coins";
+
+    showToast(`Deducted ${cost} Eco Coins. Voucher ready!`, "success");
+}
+
+function copyCouponCode() {
+    const code = document.getElementById("couponCodeDisplay").textContent.trim();
+    navigator.clipboard.writeText(code);
+    showToast("Voucher code copied: " + code, "success");
+}
+
+function closeClaimModal() {
+    document.getElementById("claimModal").classList.remove("open");
+}
+</script>
+</body>
+</html>

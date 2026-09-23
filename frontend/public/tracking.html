@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="E-Kabaadi — Real-Time Scrap Pickup Tracking. Track your doorstep pickup status, verified collector arrival, weighing and payout live.">
+    <title>E-Kabaadi | Live Scrap Pickup Tracker</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing.css">
+    <style>
+        .page-banner {
+            padding: 130px 0 60px;
+            background: linear-gradient(180deg, #F4F8F4 0%, #FFFFFF 100%);
+            text-align: center;
+            border-bottom: 1px solid rgba(31,111,67,0.08);
+        }
+        .track-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 14px; border-radius: 999px;
+            background: #EAF4EE; color: #1F6F43;
+            font-size: 13px; font-weight: 700; margin-bottom: 16px;
+        }
+        .page-heading {
+            font-size: 40px; font-weight: 800; color: #12372A;
+            letter-spacing: -1px; margin-bottom: 14px;
+        }
+        .page-subheading {
+            font-size: 17px; color: #526058; max-width: 620px; margin: 0 auto 32px;
+        }
+
+        /* ── Search Input Bar ── */
+        .track-search-bar {
+            max-width: 580px; margin: 0 auto; display: flex; gap: 10px;
+            background: #ffffff; padding: 6px; border-radius: 14px;
+            border: 1.5px solid #DCE6DF; box-shadow: 0 12px 32px rgba(18,55,42,0.08);
+        }
+        .track-search-input {
+            flex: 1; border: 0; outline: none; padding: 12px 18px;
+            font-size: 16px; font-weight: 600; color: #12372A;
+        }
+        .track-search-input::placeholder { color: #8F9E94; font-weight: 400; }
+        .track-search-btn {
+            background: linear-gradient(135deg, #12372A, #1F6F43);
+            color: #ffffff; padding: 12px 28px; border-radius: 10px;
+            font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .track-search-btn:hover {
+            box-shadow: 0 4px 16px rgba(18,55,42,0.25); transform: translateY(-1px);
+        }
+
+        .quick-chips {
+            margin-top: 18px; display: flex; align-items: center; justify-content: center;
+            gap: 10px; flex-wrap: wrap; font-size: 13px; color: #627267;
+        }
+        .quick-chip-btn {
+            background: #EAF4EE; color: #1F6F43; font-weight: 700;
+            padding: 4px 12px; border-radius: 6px; cursor: pointer; transition: all 0.15s;
+        }
+        .quick-chip-btn:hover { background: #1F6F43; color: #ffffff; }
+
+        /* ── Tracking Result View ── */
+        .tracking-result-wrap {
+            max-width: 860px; margin: 40px auto 80px;
+        }
+        .tracking-card {
+            background: #ffffff; border: 1px solid #E1E8E2; border-radius: 20px;
+            padding: 36px; box-shadow: 0 16px 40px rgba(18,55,42,0.06);
+        }
+        .tracking-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 16px; padding-bottom: 24px; border-bottom: 1px solid #EEF3EF;
+        }
+        .tracking-id-label { font-size: 13px; color: #6F7D74; font-weight: 600; text-transform: uppercase; }
+        .tracking-id-val { font-size: 24px; font-weight: 800; color: #12372A; }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
+        }
+        .status-badge.requested { background: #FFF4E5; color: #B7791F; }
+        .status-badge.accepted { background: #EBF8FF; color: #2B6CB0; }
+        .status-badge.on_the_way { background: #FAF5FF; color: #6B46C1; }
+        .status-badge.arrived, .status-badge.collecting { background: #FEFCBF; color: #975A16; }
+        .status-badge.completed, .status-badge.paid { background: #E6FFFA; color: #234E52; }
+        .status-badge.cancelled { background: #FFF5F5; color: #C53030; }
+
+        /* ── Stepper ── */
+        .stepper-wrap {
+            padding: 36px 0; display: flex; justify-content: space-between; position: relative;
+        }
+        .stepper-line {
+            position: absolute; top: 52px; left: 40px; right: 40px; height: 3px;
+            background: #E2E8F0; z-index: 1;
+        }
+        .stepper-progress {
+            height: 100%; background: #38A169; width: 0%; transition: width 0.4s ease;
+        }
+        .step-node {
+            position: relative; z-index: 2; text-align: center; width: 80px;
+        }
+        .step-circle {
+            width: 34px; height: 34px; border-radius: 50%; background: #ffffff;
+            border: 2.5px solid #CBD5E0; color: #718096; display: grid; place-items: center;
+            font-size: 13px; font-weight: 700; margin: 0 auto 10px; transition: all 0.3s;
+        }
+        .step-node.completed .step-circle {
+            background: #38A169; border-color: #38A169; color: #ffffff;
+        }
+        .step-node.current .step-circle {
+            background: #ffffff; border-color: #1F6F43; color: #1F6F43;
+            box-shadow: 0 0 0 4px rgba(31,111,67,0.15);
+        }
+        .step-title {
+            font-size: 12px; font-weight: 600; color: #718096; line-height: 1.3;
+        }
+        .step-node.completed .step-title, .step-node.current .step-title {
+            color: #12372A; font-weight: 700;
+        }
+
+        /* ── Details Grid ── */
+        .details-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;
+        }
+        .info-box {
+            background: #F8FAF9; border-radius: 12px; padding: 20px;
+        }
+        .info-box-title {
+            font-size: 12px; font-weight: 700; text-transform: uppercase; color: #627267;
+            letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        }
+        .info-line {
+            display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;
+        }
+        .info-label { color: #6F7D74; }
+        .info-value { font-weight: 700; color: #1D2521; }
+
+        @media (max-width: 768px) {
+            .details-grid { grid-template-columns: 1fr; }
+            .stepper-wrap { overflow-x: auto; padding-bottom: 20px; }
+            .step-node { min-width: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+     ═══════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-brand">
+            <div class="nav-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg>
+            </div>
+            <span class="nav-brand-text">E-Kabaadi</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+            <a href="rates.html" class="nav-link">Scrap Rates</a>
+            <a href="tracking.html" class="nav-link" style="color:#1F6F43;font-weight:700;">Track Pickup</a>
+            <a href="index.html#for-citizens" class="nav-link">For Citizens</a>
+            <a href="index.html#for-collectors" class="nav-link">For Collectors</a>
+            <a href="index.html#impact" class="nav-link">Impact</a>
+        </div>
+        <div class="nav-actions">
+            <a href="../auth/login.html" class="nav-btn nav-btn-ghost">Log in</a>
+            <a href="../auth/signup.html" class="nav-btn nav-btn-primary">Get Started</a>
+        </div>
+        <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="nav-mobile-menu" id="navMobile">
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="rates.html">Scrap Rates</a>
+        <a href="tracking.html" style="color:#1F6F43;font-weight:700;">Track Pickup</a>
+        <a href="index.html#for-citizens">For Citizens</a>
+        <a href="index.html#for-collectors">For Collectors</a>
+        <a href="index.html#impact">Impact</a>
+        <div class="nav-mobile-actions">
+            <a href="../auth/login.html" class="nav-btn nav-btn-ghost">Log in</a>
+            <a href="../auth/signup.html" class="nav-btn nav-btn-primary">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HEADER & LOOKUP BAR
+     ═══════════════════════════════════════════ -->
+<section class="page-banner">
+    <div class="container">
+        <div class="track-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Guest Tracking Portal • No Login Required
+        </div>
+        <h1 class="page-heading">Live Scrap Pickup Tracking</h1>
+        <p class="page-subheading">Track your scheduled doorstep pickup in real-time, view verified collector credentials, certified weights, and digital payments.</p>
+
+        <!-- Search Form -->
+        <form id="trackForm" class="track-search-bar" onsubmit="event.preventDefault(); window.doTrack();">
+            <input type="text" id="trackingInput" class="track-search-input" placeholder="Enter Pickup ID (e.g. PKP-1001, PKP-1002)..." required autocomplete="off">
+            <button type="submit" class="track-search-btn">Track Status</button>
+        </form>
+
+        <div class="quick-chips">
+            <span>Try sample pickups:</span>
+            <button type="button" class="quick-chip-btn" onclick="window.quickTrack('PKP-1001')">PKP-1001 (Requested)</button>
+            <button type="button" class="quick-chip-btn" onclick="window.quickTrack('PKP-1002')">PKP-1002 (Completed)</button>
+            <button type="button" class="quick-chip-btn" onclick="window.quickTrack('PKP-1003')">PKP-1003 (Accepted)</button>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TRACKING OUTPUT CONTAINER
+     ═══════════════════════════════════════════ -->
+<main class="container">
+    <div class="tracking-result-wrap" id="trackingResultWrap">
+        <!-- Rendered dynamically -->
+        <div style="text-align:center;padding:60px 24px;background:#F9FBFA;border:1.5px dashed #D2DDD6;border-radius:18px;">
+            <div style="font-size:42px;margin-bottom:12px;">📦</div>
+            <h3 style="font-size:20px;font-weight:700;color:#12372A;margin-bottom:8px;">Ready to Track Your Pickup</h3>
+            <p style="font-size:14px;color:#627267;max-width:440px;margin:0 auto;">Enter your booking reference above or click any sample ID to see real-time dispatch and verification stages.</p>
+        </div>
+    </div>
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg>
+                    <span>E-Kabaadi</span>
+                </div>
+                <p>India's smart scrap recovery platform. Connecting citizens with trusted collectors for transparent, convenient recycling.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <a href="index.html#how-it-works">How It Works</a>
+                <a href="rates.html">Scrap Rates</a>
+                <a href="tracking.html" style="color:#1F6F43;font-weight:700;">Track Pickup</a>
+                <a href="index.html#for-citizens">For Citizens</a>
+                <a href="index.html#for-collectors">For Collectors</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="index.html#about">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Blog</a>
+                <a href="#">Press</a>
+            </div>
+            <div class="footer-links">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 E-Kabaadi. Built for a cleaner India.</span>
+            <span>Made with 🌱 in Noida</span>
+        </div>
+    </div>
+</footer>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../data/mock-pickups.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script>
+    (function () {
+        "use strict";
+
+        // Mobile Nav Toggle
+        const navToggle = document.getElementById("navToggle");
+        const navMobile = document.getElementById("navMobile");
+        if (navToggle && navMobile) {
+            navToggle.addEventListener("click", () => {
+                navToggle.classList.toggle("open");
+                navMobile.style.display = navMobile.style.display === "block" ? "none" : "block";
+            });
+        }
+
+        const stages = [
+            { key: "requested", label: "Requested" },
+            { key: "accepted", label: "Accepted" },
+            { key: "on_the_way", label: "On The Way" },
+            { key: "collecting", label: "Weighing" },
+            { key: "completed", label: "Completed" }
+        ];
+
+        function getStepIndex(status) {
+            if (status === "requested") return 0;
+            if (status === "accepted") return 1;
+            if (status === "on_the_way") return 2;
+            if (status === "arrived" || status === "collecting") return 3;
+            if (status === "completed" || status === "paid") return 4;
+            return 0;
+        }
+
+        function formatStatusLabel(st) {
+            return (st || "requested").replace(/_/g, " ").toUpperCase();
+        }
+
+        window.quickTrack = function (id) {
+            document.getElementById("trackingInput").value = id;
+            window.doTrack();
+        };
+
+        window.doTrack = function () {
+            const input = document.getElementById("trackingInput");
+            const q = input.value.trim().toUpperCase();
+            if (!q) return;
+
+            let pickup = null;
+            if (typeof pickupService !== "undefined" && pickupService.getById) {
+                pickup = pickupService.getById(q);
+            }
+            if (!pickup && typeof window.EKABADI_STORAGE !== "undefined") {
+                pickup = window.EKABADI_STORAGE.adapter.findById("pickups", q);
+            }
+            if (!pickup && typeof window.MOCK_PICKUPS !== "undefined") {
+                pickup = window.MOCK_PICKUPS.find(p => p.id === q);
+            }
+
+            const wrap = document.getElementById("trackingResultWrap");
+
+            if (!pickup) {
+                wrap.innerHTML = `
+                    <div style="text-align:center;padding:48px 24px;background:#FFF5F5;border:1.5px solid #FED7D7;border-radius:18px;">
+                        <div style="font-size:36px;margin-bottom:12px;">⚠️</div>
+                        <h3 style="font-size:18px;font-weight:700;color:#C53030;margin-bottom:6px;">Pickup Tracking ID Not Found</h3>
+                        <p style="font-size:14px;color:#742A2A;margin-bottom:16px;">We could not find any active or past pickup associated with <strong>"${q}"</strong>.</p>
+                        <p style="font-size:13px;color:#9B2C2C;">Please verify your reference code (e.g. PKP-1001) or log in to your Citizen Portal to view full history.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const stepIdx = getStepIndex(pickup.status);
+            const progressPct = (stepIdx / (stages.length - 1)) * 100;
+            const items = pickup.items || [];
+            const scrapNames = items.length ? items.map(i => `${i.category} (${i.estimatedWeight || i.verifiedWeight || ''}kg)`).join(", ") : (pickup.scrapType || "Recyclable Scrap");
+            const weight = pickup.finalWeight || pickup.estimatedWeight || pickup.estimatedQty || 12;
+            const value = pickup.finalValue || pickup.estimatedValue || (weight * 14);
+
+            wrap.innerHTML = `
+                <div class="tracking-card">
+                    <div class="tracking-header">
+                        <div>
+                            <span class="tracking-id-label">Tracking ID</span>
+                            <div class="tracking-id-val">${pickup.id}</div>
+                            <span style="font-size:13px;color:#627267;">Booked on: ${pickup.createdAt ? new Date(pickup.createdAt).toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" }) : "Recent"}</span>
+                        </div>
+                        <div>
+                            <span class="status-badge ${pickup.status}">
+                                <span style="width:8px;height:8px;border-radius:50%;background:currentColor;"></span>
+                                ${formatStatusLabel(pickup.status)}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Stepper -->
+                    <div class="stepper-wrap">
+                        <div class="stepper-line">
+                            <div class="stepper-progress" style="width: ${progressPct}%;"></div>
+                        </div>
+                        ${stages.map((st, i) => `
+                            <div class="step-node ${i < stepIdx ? 'completed' : (i === stepIdx ? 'current' : '')}">
+                                <div class="step-circle">${i < stepIdx ? '✓' : (i + 1)}</div>
+                                <div class="step-title">${st.label}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+
+                    <!-- Details Grid -->
+                    <div class="details-grid">
+                        <div class="info-box">
+                            <div class="info-box-title">
+                                📍 Pickup & Citizen Details
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Citizen</span>
+                                <span class="info-value">${pickup.citizenName || 'Verified Citizen'}</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Pickup Address</span>
+                                <span class="info-value">${pickup.address || 'Sector 62, Noida'}</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Scheduled Date</span>
+                                <span class="info-value">${pickup.preferredDate || 'Today'} (${pickup.preferredTime || '10:00 AM - 12:00 PM'})</span>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-title">
+                                🚚 Assigned Collector Partner
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Collector Name</span>
+                                <span class="info-value">${pickup.collectorName || 'Ramesh Kumar (Assigned)'}</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Partner ID</span>
+                                <span class="info-value">${pickup.collectorId || 'COL-2001'}</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Certified Scale</span>
+                                <span class="info-value" style="color:#1F6F43;">✓ Essae DS-215 Calibrated</span>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-title">
+                                ⚖️ Scrap & Weight Verification
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Scrap Types</span>
+                                <span class="info-value">${scrapNames}</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Recorded Weight</span>
+                                <span class="info-value">${weight} kg</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Status</span>
+                                <span class="info-value">${pickup.status === 'completed' || pickup.status === 'paid' ? 'Final Certified' : 'Estimated'}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-title">
+                                💰 Value & Environmental Benefit
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Settlement Amount</span>
+                                <span class="info-value" style="color:#1F6F43;font-size:16px;">₹${Number(value).toFixed(0)}</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Eco Coins Earned</span>
+                                <span class="info-value" style="color:#D69E2E;">+${Math.round(weight * 2)} Coins</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">CO₂ Offset</span>
+                                <span class="info-value" style="color:#3182CE;">~${(weight * 2.3).toFixed(1)} kg CO₂</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px;text-align:center;">
+                        <a href="../citizen/pickup.html" style="display:inline-block;padding:12px 24px;background:#1F6F43;color:#ffffff;border-radius:10px;font-weight:700;font-size:14px;">
+                            Book Another Pickup →
+                        </a>
+                    </div>
+                </div>
+            `;
+        };
+
+        // URL parameter support: ?id=PKP-1001
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryId = urlParams.get("id");
+        if (queryId) {
+            document.getElementById("trackingInput").value = queryId;
+            window.doTrack();
+        }
+    })();
+</script>
+</body>
+</html>

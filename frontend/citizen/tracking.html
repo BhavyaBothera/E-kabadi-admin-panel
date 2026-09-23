@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Live Pickup Tracking</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+
+        /* Mock Map Canvas */
+        .map-view-box {
+            background: #14231c;
+            border-radius: var(--radius-lg);
+            height: 380px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(31, 111, 67, 0.3);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+        }
+        .map-grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(31, 111, 67, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(31, 111, 67, 0.15) 1px, transparent 1px);
+            background-size: 36px 36px;
+        }
+        .map-route-line {
+            position: absolute;
+            top: 190px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #C5D86D, #16a05d);
+            border-radius: 2px;
+            box-shadow: 0 0 10px #C5D86D;
+        }
+        .map-pin {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+        .map-pin.collector {
+            top: 190px;
+            left: 35%;
+            animation: float-car 3s ease-in-out infinite;
+        }
+        @keyframes float-car {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-6px); }
+        }
+        .map-pin.home {
+            top: 190px;
+            left: 80%;
+        }
+        .pin-bubble {
+            background: #fff;
+            color: #12372A;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            margin-bottom: 6px;
+        }
+        .pin-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+        }
+        .pin-icon.col-icon { background: #C5D86D; color: #12372A; }
+        .pin-icon.home-icon { background: #1F6F43; color: #fff; }
+
+        .map-hud {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            background: rgba(18, 55, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(197, 216, 109, 0.2);
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            z-index: 10;
+        }
+
+        /* Simulator controls */
+        .simulator-bar {
+            background: linear-gradient(135deg, rgba(31,111,67,0.08), rgba(197,216,109,0.15));
+            border: 1.5px dashed var(--forest);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 900px) {
+            .tracking-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Live Pickup Tracking</h1>
+                <p class="page-subtitle">Tracking Order #PKP-9024 • Collector partner en route to Sector 62, Noida.</p>
+            </div>
+            <div class="header-actions">
+                <span class="pickup-badge enroute active-pulse" id="orderStatusBadge">● Out for Pickup • ETA ~14 mins</span>
+            </div>
+        </div>
+
+        <!-- Evaluator Simulator Bar -->
+        <div class="simulator-bar">
+            <div>
+                <strong style="color:var(--forest-deep);font-size:14px;display:block;">⚡ Demo Simulator Controls</strong>
+                <span style="font-size:12px;color:var(--text-muted);">Simulate live stage transitions from transit to digital weighing & final settlement:</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <button type="button" class="btn-secondary" onclick="simulateStage(3)" style="padding:6px 12px;font-size:12px;">En Route</button>
+                <button type="button" class="btn-secondary" onclick="simulateStage(4)" style="padding:6px 12px;font-size:12px;">Arrived & Weighed</button>
+                <button type="button" class="btn-primary" onclick="simulateStage(5)" style="padding:6px 12px;font-size:12px;">Payment Completed</button>
+            </div>
+        </div>
+
+        <div class="tracking-grid">
+            <!-- Left Column: Map & Timeline -->
+            <div>
+                <!-- Mock Map Box -->
+                <div class="map-view-box">
+                    <div class="map-grid-bg"></div>
+                    <div class="map-route-line"></div>
+
+                    <!-- Collector Pin -->
+                    <div class="map-pin collector" id="mapCollectorPin">
+                        <div class="pin-bubble" id="colDistanceBubble">Ramesh (1.2 km away)</div>
+                        <div class="pin-icon col-icon">🛺</div>
+                    </div>
+
+                    <!-- Home Pin -->
+                    <div class="map-pin home">
+                        <div class="pin-bubble">📍 Flat B-402 (Home)</div>
+                        <div class="pin-icon home-icon">🏠</div>
+                    </div>
+
+                    <!-- Map HUD -->
+                    <div class="map-hud">
+                        <div>
+                            <span style="font-size:11px;opacity:0.8;text-transform:uppercase;">Estimated Arrival</span>
+                            <div style="font-size:16px;font-weight:800;color:#C5D86D;" id="hudEta">10:45 AM (~14 mins)</div>
+                        </div>
+                        <div>
+                            <span style="font-size:11px;opacity:0.8;text-transform:uppercase;">Distance Remaining</span>
+                            <div style="font-size:16px;font-weight:800;" id="hudDist">1.2 km</div>
+                        </div>
+                        <div>
+                            <span style="font-size:11px;opacity:0.8;text-transform:uppercase;">Transit Speed</span>
+                            <div style="font-size:16px;font-weight:800;">24 km/h</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Stepper Timeline -->
+                <div class="ui-card">
+                    <div class="ui-card-header">
+                        <h2 class="ui-card-title">Order Lifecycle Timeline</h2>
+                        <span style="font-size:13px;color:var(--forest);font-weight:700;">#PKP-9024</span>
+                    </div>
+
+                    <div class="tracking-timeline" style="margin-top:20px;">
+                        <div class="timeline-bar-progress" id="timelineBar" style="width: 50%;"></div>
+                        <div class="tracking-node done" id="node1">
+                            <div class="node-circle">✓</div>
+                            <div class="node-label">Booked</div>
+                            <div class="node-time">09:15 AM</div>
+                        </div>
+                        <div class="tracking-node done" id="node2">
+                            <div class="node-circle">✓</div>
+                            <div class="node-label">Assigned</div>
+                            <div class="node-time">09:30 AM</div>
+                        </div>
+                        <div class="tracking-node current" id="node3">
+                            <div class="node-circle">3</div>
+                            <div class="node-label">En Route</div>
+                            <div class="node-time" id="timeNode3">09:42 AM</div>
+                        </div>
+                        <div class="tracking-node" id="node4">
+                            <div class="node-circle">4</div>
+                            <div class="node-label">Weighed</div>
+                            <div class="node-time" id="timeNode4">Pending</div>
+                        </div>
+                        <div class="tracking-node" id="node5">
+                            <div class="node-circle">5</div>
+                            <div class="node-label">Paid</div>
+                            <div class="node-time" id="timeNode5">Pending</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Collector & Digital Slip -->
+            <div style="display:flex;flex-direction:column;gap:20px;">
+                <!-- Collector Details Card -->
+                <div class="ui-card">
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                        <div class="sidebar-avatar" style="width:54px;height:54px;font-size:18px;">RK</div>
+                        <div>
+                            <strong style="font-size:17px;color:var(--forest-deep);display:block;">Ramesh Kumar</strong>
+                            <div style="font-size:13px;color:#c48b00;font-weight:700;">★ 4.8 Rating (342 Pickups)</div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Three-Wheeler Tempo (UP 16 AB 1234)</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:10px;margin-bottom:16px;">
+                        <button type="button" class="btn-primary" style="flex:1;justify-content:center;" onclick="showToast('Calling Ramesh Kumar (+91 98111 55500)...', 'info')">
+                            📞 Call
+                        </button>
+                        <button type="button" class="btn-secondary" style="flex:1;justify-content:center;" onclick="showToast('Opening WhatsApp chat with collector...', 'info')">
+                            💬 Message
+                        </button>
+                    </div>
+
+                    <div style="background:rgba(247,244,234,0.6);padding:12px;border-radius:10px;font-size:13px;color:var(--forest-deep);border:1px solid var(--border-subtle);">
+                        🛡️ <strong>Safety Guarantee:</strong> Partner has verified commercial identity, negative police history record, and calibrated certified digital scale.
+                    </div>
+                </div>
+
+                <!-- Digital Scale Weighing & Payment Receipt -->
+                <div class="ui-card" id="receiptCard">
+                    <div class="ui-card-header">
+                        <div class="ui-card-title">Digital Scale Slip</div>
+                        <span class="status-pill warning" id="receiptStatusBadge">Weighing Pending</span>
+                    </div>
+
+                    <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">
+                        Final itemized weights logged on collector's Bluetooth certified scale:
+                    </div>
+
+                    <div class="detected-item">
+                        <div>
+                            <strong style="color:var(--forest-deep);font-size:14px;">Old Newspaper & Books</strong>
+                            <div style="font-size:12px;color:var(--text-muted);">Certified Tare: Zero</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="color:var(--forest-deep);font-size:14px;">15.0 kg</strong>
+                            <div style="font-size:12px;color:var(--forest);">@ ₹14.00 = ₹210.00</div>
+                        </div>
+                    </div>
+
+                    <div class="detected-item">
+                        <div>
+                            <strong style="color:var(--forest-deep);font-size:14px;">Corrugated Cardboard (Patti)</strong>
+                            <div style="font-size:12px;color:var(--text-muted);">Dry Grade</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="color:var(--forest-deep);font-size:14px;">10.5 kg</strong>
+                            <div style="font-size:12px;color:var(--forest);">@ ₹11.50 = ₹120.75</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:14px;font-weight:700;color:var(--forest-deep);">Total Certified Settlement</span>
+                        <strong style="font-size:20px;color:var(--forest);" id="totalSettlementAmount">₹330.75</strong>
+                    </div>
+
+                    <div id="paymentSuccessNotice" style="display:none;margin-top:16px;background:#e8f7ee;border:1px solid #c3ebcf;padding:12px;border-radius:10px;text-align:center;">
+                        <strong style="color:#16a05d;display:block;font-size:14px;">✓ Transferred via Instant UPI</strong>
+                        <span style="font-size:12px;color:#456b52;">Ref: UPI-9024-88412 • +45 Eco Coins Credited</span>
+                        <a href="payments.html" style="display:block;font-size:13px;color:var(--forest);font-weight:700;margin-top:8px;">View Official Tax Invoice →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-pickups.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/tracking.js"></script>
+</body>
+</html>

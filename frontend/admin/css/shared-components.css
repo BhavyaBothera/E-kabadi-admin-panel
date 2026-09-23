@@ -1,0 +1,83 @@
+/* =========================================================
+   E-KABAADI — Shared Platform Components
+   File: css/shared-components.css
+   ========================================================= */
+
+:root {
+    --forest-deep: #12372A;
+    --forest: #1F6F43;
+    --eco-green: #4F8F45;
+    --sage: #91A86A;
+    --soft-lime: #C5D86D;
+    --warm-ivory: #F7F4EA;
+    --warm-sand: #E9E1CF;
+    --charcoal: #1D2521;
+}
+
+/* ── Status Pills & Badges ── */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.status-badge.success { background: rgba(22,160,93,0.12); color: #16a05d; }
+.status-badge.warning { background: rgba(230,165,0,0.14); color: #b87a00; }
+.status-badge.danger  { background: rgba(229,72,77,0.12); color: #e5484d; }
+.status-badge.info    { background: rgba(38,115,179,0.1); color: #2673b3; }
+
+/* ── Eco Coins Pill ── */
+.eco-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, rgba(197,216,109,0.2), rgba(79,143,69,0.15));
+    border: 1px solid rgba(79,143,69,0.25);
+    border-radius: 20px;
+    color: var(--forest-deep);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ── Ratings ── */
+.rating-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #e6a500;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+/* ── Universal Toast ── */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(18,55,42,0.1);
+    border: 1px solid rgba(31,111,67,0.1);
+    font-size: 14px;
+    color: #12372A;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+}
+.toast.show { transform: translateX(0); }
+.toast-success { border-left: 4px solid #16a05d; }
+.toast-error   { border-left: 4px solid #e5484d; }
+.toast-info    { border-left: 4px solid #1F6F43; }

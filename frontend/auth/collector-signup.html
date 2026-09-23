@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Collector Registration</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-bg"><div class="auth-gradient"></div><div class="auth-pattern"></div></div>
+
+<main class="auth-wrapper auth-card-wide">
+    <a href="../public/index.html" class="auth-brand">
+        <div class="auth-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg>
+        </div>
+        <span>E-Kabaadi</span>
+    </a>
+
+    <section class="auth-card" id="collectorSignupForm">
+        <!-- Progress Stepper (9 steps) -->
+        <div class="progress-stepper">
+            <div class="step-dot active" title="Credentials"></div>
+            <div class="step-dot" title="Personal Info"></div>
+            <div class="step-dot" title="Contact"></div>
+            <div class="step-dot" title="Service Area"></div>
+            <div class="step-dot" title="Logistics"></div>
+            <div class="step-dot" title="Categories"></div>
+            <div class="step-dot" title="Verification"></div>
+            <div class="step-dot" title="Bank Details"></div>
+            <div class="step-dot" title="Review"></div>
+        </div>
+
+        <!-- Step 1: Account Credentials -->
+        <div class="step-content active" data-step="1">
+            <div class="step-title">Collector Account Setup</div>
+            <div class="step-subtitle">Create your secure partner credentials</div>
+            <div class="form-group">
+                <label>Business / Login Email</label>
+                <input type="email" name="email" placeholder="partner@domain.com" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="At least 8 characters" required>
+                    <div class="form-hint">Must include uppercase and number</div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirmPassword" placeholder="Re-enter password" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Personal & Business Info -->
+        <div class="step-content" data-step="2">
+            <div class="step-title">Partner Identity</div>
+            <div class="step-subtitle">Tell us about you or your scrap recycling firm</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="firstName" placeholder="Ramesh" required>
+                </div>
+                <div class="form-group">
+                    <label>Surname</label>
+                    <input type="text" name="surname" placeholder="Kumar" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date of Birth / Est.</label>
+                    <input type="date" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label>Collector Classification</label>
+                    <select name="collectorType" required>
+                        <option value="">Select type</option>
+                        <option value="Individual Collector">Individual Kabadiwala / Collector</option>
+                        <option value="Scrap Shop Dealer">Licensed Scrap Yard / Shop</option>
+                        <option value="Recycling Agency">Authorized Recycling Agency</option>
+                        <option value="Bulk Industrial Collector">Bulk Industrial Aggregator</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Contact Details -->
+        <div class="step-content" data-step="3">
+            <div class="step-title">Contact & Communication</div>
+            <div class="step-subtitle">How citizens and dispatch coordinate with you</div>
+            <div class="form-group">
+                <label>Primary WhatsApp / Mobile Number</label>
+                <input type="tel" name="phone" placeholder="+91 98111 XXXXX" required>
+                <div class="form-hint">Used for live pickup alerts and instant citizen calls</div>
+            </div>
+            <div class="form-group">
+                <label>Alternate / Emergency Phone</label>
+                <input type="tel" name="altPhone" placeholder="+91 98222 XXXXX">
+            </div>
+        </div>
+
+        <!-- Step 4: Operations & Service Area -->
+        <div class="step-content" data-step="4">
+            <div class="step-title">Service Operations Base</div>
+            <div class="step-subtitle">Define where you collect and your coverage radius</div>
+            <div class="form-group">
+                <label>Yard / Base Address</label>
+                <input type="text" name="address" placeholder="Shop 12, Main Mandi Road" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City / District</label>
+                    <input type="text" name="city" placeholder="Noida" required>
+                </div>
+                <div class="form-group">
+                    <label>Base PIN Code</label>
+                    <input type="text" name="pin" placeholder="201301" required maxlength="6">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>State</label>
+                    <select name="state" required>
+                        <option value="">Select state</option>
+                        <option>Uttar Pradesh</option><option>Delhi NCR</option><option>Haryana</option>
+                        <option>Maharashtra</option><option>Karnataka</option><option>Tamil Nadu</option>
+                        <option>Rajasthan</option><option>Gujarat</option><option>West Bengal</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Maximum Service Radius</label>
+                    <select name="serviceRadius" required>
+                        <option value="5">Within 5 km</option>
+                        <option value="10" selected>Within 10 km (Recommended)</option>
+                        <option value="15">Within 15 km</option>
+                        <option value="25">Within 25 km (Bulk Truck)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Vehicle & Logistics -->
+        <div class="step-content" data-step="5">
+            <div class="step-title">Transport & Weighing Gear</div>
+            <div class="step-subtitle">Specify your logistics capacity for pickup requests</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Vehicle Type</label>
+                    <select name="vehicleType" required>
+                        <option value="">Select vehicle</option>
+                        <option value="Three-Wheeler Auto">Three-Wheeler Auto / Tempo</option>
+                        <option value="Cargo E-Rickshaw">Electric Cargo Rickshaw</option>
+                        <option value="Mini Truck">Mini Truck (Tata Ace / Bolero Maxi)</option>
+                        <option value="Heavy Commercial Truck">Commercial Canter / Truck</option>
+                        <option value="Hand Cart / Bicycle">Hand Cart / Bicycle (Hyperlocal)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Vehicle Registration Number</label>
+                    <input type="text" name="vehicleNumber" placeholder="e.g. UP 16 AB 1234" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Certified Weighing Equipment</label>
+                <select name="equipmentType" required>
+                    <option value="Certified Digital Platform Scale (200kg)">Certified Digital Platform Scale (Up to 200 kg)</option>
+                    <option value="Portable Digital Hanging Scale (50kg)">Portable Digital Hanging Scale (Up to 50 kg)</option>
+                    <option value="Heavy Duty Weighbridge Compatible">Industrial Scale / Commercial Weighbridge</option>
+                </select>
+                <div class="form-hint">E-Kabaadi strictly mandates digital, zero-error scales for consumer trust.</div>
+            </div>
+        </div>
+
+        <!-- Step 6: Accepted Scrap Categories -->
+        <div class="step-content" data-step="6">
+            <div class="step-title">Accepted Scrap Streams</div>
+            <div class="step-subtitle">Choose the material categories you collect and monetize</div>
+            <div class="form-group">
+                <div class="checkbox-grid">
+                    <label class="checkbox-tag selected"><input type="checkbox" name="scrapCategories" value="Paper & Cardboard" checked> 📄 Paper & Cardboard</label>
+                    <label class="checkbox-tag selected"><input type="checkbox" name="scrapCategories" value="Plastics & Polymers" checked> ♻️ Plastics & Bottles</label>
+                    <label class="checkbox-tag selected"><input type="checkbox" name="scrapCategories" value="Iron & Ferrous Metal" checked> 🔩 Iron & Steel</label>
+                    <label class="checkbox-tag selected"><input type="checkbox" name="scrapCategories" value="Non-Ferrous (Copper/Brass)" checked> 🟨 Copper & Brass</label>
+                    <label class="checkbox-tag"><input type="checkbox" name="scrapCategories" value="Electronic Waste (E-waste)"> 💻 Computers & E-Waste</label>
+                    <label class="checkbox-tag"><input type="checkbox" name="scrapCategories" value="Glass Bottles & Jars"> 🫙 Glass & Bottles</label>
+                    <label class="checkbox-tag"><input type="checkbox" name="scrapCategories" value="Lead Batteries"> 🔋 Inverter & Vehicle Batteries</label>
+                    <label class="checkbox-tag"><input type="checkbox" name="scrapCategories" value="Large Appliances"> ❄️ AC, Fridge & Heavy Appliances</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 7: Identity & Document Verification -->
+        <div class="step-content" data-step="7">
+            <div class="step-title">Official Verification</div>
+            <div class="step-subtitle">Upload KYC documents to receive the Verified Collector badge</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Identity Document Type</label>
+                    <select name="docType" required>
+                        <option value="Aadhaar Card">Aadhaar Card (UIDAI)</option>
+                        <option value="PAN Card">PAN Card (Income Tax Dept)</option>
+                        <option value="Driving License">Commercial Driving License</option>
+                        <option value="Voter ID">Election Voter ID</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Document / ID Number</label>
+                    <input type="text" name="docNumber" placeholder="XXXX-XXXX-XXXX" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Upload Primary ID (Front & Back)</label>
+                <div class="file-upload-area">
+                    <input type="file" name="idProof" accept="image/*,.pdf" style="display:none">
+                    <div class="upload-icon">🪪</div>
+                    <div class="upload-text">Click to upload Government ID or <strong>drag & drop</strong></div>
+                    <div class="upload-hint">Clear scan in JPG, PNG or PDF (Max 5MB)</div>
+                    <div class="upload-preview">
+                        <span class="upload-preview-icon">📄</span>
+                        <div class="upload-preview-info">
+                            <strong class="upload-file-name">collector_id.pdf</strong>
+                            <span>Ready to upload</span>
+                        </div>
+                        <button type="button" class="upload-remove">✕</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 8: Bank Account for Instant Payouts -->
+        <div class="step-content" data-step="8">
+            <div class="step-title">Payout & Settlement Bank</div>
+            <div class="step-subtitle">Link your account for direct platform settlements & subsidies</div>
+            <div class="form-group">
+                <label>Account Holder Name (as per Bank)</label>
+                <input type="text" name="accountHolder" placeholder="Ramesh Kumar" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Bank Name</label>
+                    <input type="text" name="bankName" placeholder="State Bank of India" required>
+                </div>
+                <div class="form-group">
+                    <label>IFSC Code</label>
+                    <input type="text" name="ifscCode" placeholder="SBIN0001234" required style="text-transform:uppercase">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="password" name="accountNumber" placeholder="Enter bank account number" required>
+                </div>
+                <div class="form-group">
+                    <label>UPI ID (Optional for Instant Transfers)</label>
+                    <input type="text" name="upiId" placeholder="partner@okhdfcbank">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 9: Review & Submit -->
+        <div class="step-content" data-step="9">
+            <div class="step-title">Review Partner Application</div>
+            <div class="step-subtitle">Ensure all logistics and payout details are accurate</div>
+            <div id="collectorReviewContent"></div>
+            <div style="margin-top:16px;padding:12px 14px;background:rgba(31,111,67,0.04);border-radius:10px;border:1px solid rgba(31,111,67,0.1);font-size:13px;color:#1D2521;">
+                🛡️ <strong>Fair Weighing Commitment:</strong> By submitting, you pledge to maintain zero-tolerance calibration honesty, transparent scrap rates, and courteous conduct with citizens.
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="step-nav">
+            <button type="button" class="btn-step btn-step-back" id="stepBack" style="display:none">← Back</button>
+            <button type="button" class="btn-step btn-step-next" id="stepNext">Continue →</button>
+        </div>
+    </section>
+
+    <div class="auth-footer-text" style="margin-top:20px">
+        Already an approved partner? <a href="login.html">Sign in →</a>
+    </div>
+
+    <footer class="auth-footer">
+        <span>E-Kabaadi Partner Network</span> · <span>Empowering Circular Economy</span>
+    </footer>
+</main>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="js/auth-flow.js"></script>
+</body>
+</html>

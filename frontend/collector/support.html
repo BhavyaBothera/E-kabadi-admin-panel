@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Partner Roadside & Support Desk</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/collector.css">
+</head>
+<body>
+
+<div id="collectorSidebar"></div>
+
+<div class="collector-main">
+    <div id="collectorTopbar"></div>
+
+    <main class="collector-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Partner Roadside & Grievance Desk</h1>
+                <p class="page-subtitle">Immediate emergency support for vehicle breakdowns, locked society gates, and weighing disputes.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-danger" onclick="triggerSos()" style="font-size:14px;padding:12px 20px;">
+                    🚨 24/7 Fleet SOS Hotline
+                </button>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:28px;margin-bottom:32px;">
+            <!-- Left: Raise Dispute Form -->
+            <div class="ui-card">
+                <div class="ui-card-title" style="margin-bottom:16px;">Log Field Incident / Dispute</div>
+
+                <form onsubmit="submitPartnerTicket(event)">
+                    <div style="margin-bottom:14px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Incident Category</label>
+                        <select id="pCat" required style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;background:#fff;">
+                            <option value="">Select category</option>
+                            <option value="Citizen No-Show / Gate Locked">Citizen No-Show / Locked Gate</option>
+                            <option value="Material Contamination / Refusal">Material Heavy Contamination / Refusal</option>
+                            <option value="Vehicle Breakdown / Puncture">Vehicle Mechanical Breakdown / Towing Need</option>
+                            <option value="Weighing Disagreement">Weighing / Scale Dispute on Spot</option>
+                            <option value="Depot Yard Weighbridge Issue">Depot Yard Weighbridge Issue</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Associated Order ID</label>
+                        <input type="text" id="pOrder" value="#PKP-9024" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                    </div>
+
+                    <div style="margin-bottom:18px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Incident Description</label>
+                        <textarea id="pDesc" placeholder="Describe the on-ground situation..." required style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;min-height:90px;"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:13px;">
+                        Submit Incident to Fleet Control →
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Direct Helpline & Past Tickets -->
+            <div style="display:flex;flex-direction:column;gap:20px;">
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:12px;">Fleet Emergency Hotlines</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+                        <div>🚨 <strong>Tow & Mechanical SOS:</strong> +91 99999 11222 (24/7)</div>
+                        <div>📞 <strong>Noida Zone Dispatch Officer:</strong> +91 98111 88990</div>
+                        <div>⚖️ <strong>Legal Metrology Calibration Cell:</strong> 1800-200-9821</div>
+                    </div>
+                </div>
+
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:12px;">Resolved Field Tickets</div>
+                    <div style="background:rgba(247,244,234,0.6);border-radius:10px;padding:14px;border:1px solid var(--border-subtle);">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                            <strong style="color:var(--forest-deep);font-size:13px;">#COL-2810: Wet paper tare dispute</strong>
+                            <span class="status-pill success">Resolved</span>
+                        </div>
+                        <p style="font-size:12px;color:var(--text-muted);line-height:1.4;">
+                            Officer validated that soaked newspaper weight could be adjusted per platform dampness guide. Customer agreed.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/collector-app.js"></script>
+<script src="js/support.js"></script>
+</body>
+</html>

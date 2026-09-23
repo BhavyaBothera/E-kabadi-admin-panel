@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Log in to E-Kabaadi — Access your citizen, collector, or admin dashboard.">
+    <title>E-Kabaadi | Log In</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-bg">
+    <div class="auth-gradient"></div>
+    <div class="auth-pattern"></div>
+</div>
+
+<main class="auth-wrapper">
+    <a href="../public/index.html" class="auth-brand">
+        <div class="auth-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg>
+        </div>
+        <span>E-Kabaadi</span>
+    </a>
+
+    <section class="auth-card">
+        <div class="auth-card-header">
+            <h1>Welcome back</h1>
+            <p>Sign in to your E-Kabaadi account</p>
+        </div>
+
+        <form id="loginForm" novalidate>
+            <div class="form-group">
+                <label for="loginEmail">Email or phone number</label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
+                    <input type="text" id="loginEmail" placeholder="Enter email or phone" autocomplete="email" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label-row">
+                    <label for="loginPassword">Password</label>
+                    <a href="forgot-password.html" class="form-link">Forgot password?</a>
+                </div>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" required>
+                    <button type="button" class="input-toggle" id="togglePassword" aria-label="Show password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="loginError" class="form-error" role="alert" aria-live="polite"></div>
+
+            <button type="submit" class="btn btn-submit" id="loginBtn">
+                <span>Sign In</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </button>
+        </form>
+
+        <div class="auth-divider"><span>Demo accounts</span></div>
+
+        <div class="demo-accounts">
+            <button class="demo-account" data-email="admin@ekabadi.demo" data-password="admin123">
+                <div class="demo-avatar" style="background:#12372A">BB</div>
+                <div class="demo-info">
+                    <strong>Admin</strong>
+                    <span>admin@ekabadi.demo</span>
+                </div>
+                <span class="demo-role admin">Admin</span>
+            </button>
+            <button class="demo-account" data-email="citizen@ekabadi.demo" data-password="citizen123">
+                <div class="demo-avatar" style="background:#1F6F43">AS</div>
+                <div class="demo-info">
+                    <strong>Citizen</strong>
+                    <span>citizen@ekabadi.demo</span>
+                </div>
+                <span class="demo-role citizen">Citizen</span>
+            </button>
+            <button class="demo-account" data-email="collector@ekabadi.demo" data-password="collector123">
+                <div class="demo-avatar" style="background:#4F8F45">RK</div>
+                <div class="demo-info">
+                    <strong>Collector</strong>
+                    <span>collector@ekabadi.demo</span>
+                </div>
+                <span class="demo-role collector">Collector</span>
+            </button>
+        </div>
+
+        <div class="auth-footer-text">
+            Don't have an account? <a href="signup.html">Create one →</a>
+        </div>
+    </section>
+
+    <footer class="auth-footer">
+        <span>E-Kabaadi</span> · <span>Smart Scrap Recovery</span>
+    </footer>
+</main>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="js/auth-flow.js"></script>
+</body>
+</html>

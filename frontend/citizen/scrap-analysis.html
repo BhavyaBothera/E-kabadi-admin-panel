@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | AI Scrap Analysis Result</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">AI Scrap Diagnostics & Valuation</h1>
+                <p class="page-subtitle">Computer-vision classification, tare compensation, and fair market rate benchmarking.</p>
+            </div>
+            <div class="header-actions">
+                <a href="sell-scrap.html" class="btn-secondary">← Back to Camera</a>
+                <a href="collectors.html" class="btn-primary">Choose Collector Partner →</a>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:24px;margin-bottom:30px;">
+            <!-- Analysis Card -->
+            <div class="ui-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <span class="status-pill success">● 94% High Confidence Match</span>
+                    <span style="font-size:12px;color:var(--text-muted);">Calibrated with Noida Municipal Benchmark</span>
+                </div>
+
+                <div style="background:#14231c;border-radius:12px;padding:30px;color:#fff;text-align:center;position:relative;overflow:hidden;margin-bottom:20px;">
+                    <span style="font-size:54px;display:block;margin-bottom:10px;">📄</span>
+                    <h2 style="color:#C5D86D;font-size:24px;margin-bottom:4px;">Dry Corrugated & Office Paper Lot</h2>
+                    <p style="opacity:0.8;font-size:13px;">ISO 14021 Certified Secondary Raw Material Stream</p>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:14px;margin-bottom:20px;">
+                    <div style="background:rgba(247,244,234,0.7);padding:14px;border-radius:10px;border:1px solid var(--border-subtle);">
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Estimated Weight</span>
+                        <strong style="font-size:18px;color:var(--forest-deep);" id="analyzedWeight">15.5 kg</strong>
+                    </div>
+                    <div style="background:rgba(247,244,234,0.7);padding:14px;border-radius:10px;border:1px solid var(--border-subtle);">
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Government Benchmark Rate</span>
+                        <strong style="font-size:18px;color:var(--forest);" id="analyzedRate">₹14.00 / kg</strong>
+                    </div>
+                    <div style="background:rgba(247,244,234,0.7);padding:14px;border-radius:10px;border:1px solid var(--border-subtle);">
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Gross Estimated Payout</span>
+                        <strong style="font-size:18px;color:var(--forest);" id="analyzedCash">₹217.00</strong>
+                    </div>
+                    <div style="background:rgba(247,244,234,0.7);padding:14px;border-radius:10px;border:1px solid var(--border-subtle);">
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Eco Coins Award</span>
+                        <strong style="font-size:18px;color:var(--forest-deep);">+31 Coins 🪙</strong>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:12px;">
+                    <a href="collectors.html" class="btn-primary" style="flex:1;justify-content:center;padding:14px;">Select Collector & Book Pickup →</a>
+                </div>
+            </div>
+
+            <!-- Environmental Impact Card -->
+            <div class="ui-card">
+                <div class="ui-card-title" style="margin-bottom:14px;">Environmental Value Realization</div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;align-items:center;gap:14px;padding:12px;background:#f4f1e6;border-radius:10px;">
+                        <span style="font-size:24px;">🌳</span>
+                        <div>
+                            <strong style="font-size:14px;color:var(--forest-deep);display:block;">0.8 Trees Preserved</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">Equivalent virgin pulp paper conserved.</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:14px;padding:12px;background:#f4f1e6;border-radius:10px;">
+                        <span style="font-size:24px;">💧</span>
+                        <div>
+                            <strong style="font-size:14px;color:var(--forest-deep);display:block;">224 Liters Water Saved</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">Industrial bleaching effluents prevented.</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:14px;padding:12px;background:#f4f1e6;border-radius:10px;">
+                        <span style="font-size:24px;">💨</span>
+                        <div>
+                            <strong style="font-size:14px;color:var(--forest-deep);display:block;">35.6 kg CO₂ Offset</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">Landfill methane decomposition averted.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;padding:14px;background:#fff8eb;border:1px solid #ffe8cc;border-radius:10px;font-size:13px;color:#995c00;">
+                    🛡️ <strong>Certified Scale Guarantee:</strong> All partner collectors are equipped with certified trade scales with tare compensation.
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-scrap.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="js/citizen-app.js"></script>
+</body>
+</html>

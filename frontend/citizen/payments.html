@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Payments & Payout History</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .payout-methods-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        /* Modal for Receipt */
+        .receipt-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 55, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            place-items: center;
+            padding: 20px;
+        }
+        .receipt-modal-backdrop.open { display: grid; }
+        .receipt-modal {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-subtle);
+            position: relative;
+        }
+        .receipt-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1.5px dashed #e4e9e6;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 6px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Payments & Scrap Revenue</h1>
+                <p class="page-subtitle">Track your domestic recycling revenue, instant UPI settlements, and view certified digital receipts.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-primary" onclick="showToast('Exporting complete payment statements as CSV...', 'success')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <span>Export Statement</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 4 Summary Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Earnings</span>
+                    <div class="stat-icon-wrapper stat-icon-gold">₹</div>
+                </div>
+                <div class="stat-value">₹3,240.25</div>
+                <div class="stat-subtext">100% Settled directly</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Pending Settlements</span>
+                    <div class="stat-icon-wrapper stat-icon-green">✓</div>
+                </div>
+                <div class="stat-value">₹0.00</div>
+                <div class="stat-subtext">All past pickups cleared</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Average Payout / Pickup</span>
+                    <div class="stat-icon-wrapper stat-icon-lime">📈</div>
+                </div>
+                <div class="stat-value">₹462.80</div>
+                <div class="stat-subtext">Across 7 completed pickups</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Linked UPI Handle</span>
+                    <div class="stat-icon-wrapper stat-icon-blue">🏦</div>
+                </div>
+                <div class="stat-value" style="font-size:18px;margin-top:4px;">aarav@okhdfc</div>
+                <div class="stat-subtext">Verified Bank Auto-Credit</div>
+            </div>
+        </div>
+
+        <!-- Linked Payout Card -->
+        <div class="payout-methods-card">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div style="width:44px;height:44px;border-radius:12px;background:rgba(31,111,67,0.08);display:grid;place-items:center;font-size:22px;">
+                    💳
+                </div>
+                <div>
+                    <strong style="color:var(--forest-deep);font-size:15px;display:block;">Primary Settlement: HDFC Bank Instant UPI</strong>
+                    <span style="font-size:13px;color:var(--text-muted);">Payouts automatically transfer within 60 seconds of collector weighing.</span>
+                </div>
+            </div>
+            <button type="button" class="btn-secondary" onclick="showToast('Manage payout methods under Profile Settings.', 'info')">
+                Change UPI / Bank →
+            </button>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="ui-card">
+            <div class="ui-card-header">
+                <div class="ui-card-title">Transaction Records</div>
+                <div style="display:flex;gap:8px;">
+                    <button type="button" class="chip active">All Records</button>
+                    <button type="button" class="chip">UPI Payouts</button>
+                    <button type="button" class="chip">Cash</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ui-table">
+                    <thead>
+                        <tr>
+                            <th>Txn ID</th>
+                            <th>Date</th>
+                            <th>Collector</th>
+                            <th>Scrap Items</th>
+                            <th>Weight</th>
+                            <th>Amount</th>
+                            <th>Mode</th>
+                            <th>Status</th>
+                            <th>Receipt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#TXN-9024</strong></td>
+                            <td>Today, 10:55 AM</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Paper & Cartons</td>
+                            <td>25.5 kg</td>
+                            <td><strong style="color:var(--forest);">₹330.75</strong></td>
+                            <td>UPI</td>
+                            <td><span class="status-pill success">Settled</span></td>
+                            <td><button type="button" onclick="openReceipt('TXN-9024', 'Today', 'Ramesh Kumar', '25.5 kg', '₹330.75', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#TXN-8812</strong></td>
+                            <td>Sep 21, 2026</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Old Newspapers</td>
+                            <td>14.5 kg</td>
+                            <td><strong style="color:var(--forest);">₹235.00</strong></td>
+                            <td>UPI</td>
+                            <td><span class="status-pill success">Settled</span></td>
+                            <td><button type="button" onclick="openReceipt('TXN-8812', 'Sep 21, 2026', 'Ramesh Kumar', '14.5 kg', '₹235.00', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#TXN-8671</strong></td>
+                            <td>Sep 14, 2026</td>
+                            <td>Vikram Singh</td>
+                            <td>Iron & Steel Scrap</td>
+                            <td>18.0 kg</td>
+                            <td><strong style="color:var(--forest);">₹576.00</strong></td>
+                            <td>UPI</td>
+                            <td><span class="status-pill success">Settled</span></td>
+                            <td><button type="button" onclick="openReceipt('TXN-8671', 'Sep 14, 2026', 'Vikram Singh', '18.0 kg', '₹576.00', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#TXN-8450</strong></td>
+                            <td>Aug 29, 2026</td>
+                            <td>Suresh Kabadiwala</td>
+                            <td>E-Waste & Electronics</td>
+                            <td>10.1 kg</td>
+                            <td><strong style="color:var(--forest);">₹454.00</strong></td>
+                            <td>Cash</td>
+                            <td><span class="status-pill success">Settled</span></td>
+                            <td><button type="button" onclick="openReceipt('TXN-8450', 'Aug 29, 2026', 'Suresh Kabadiwala', '10.1 kg', '₹454.00', 'Cash')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#TXN-8120</strong></td>
+                            <td>Aug 12, 2026</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Cardboard Boxes</td>
+                            <td>35.0 kg</td>
+                            <td><strong style="color:var(--forest);">₹402.50</strong></td>
+                            <td>UPI</td>
+                            <td><span class="status-pill success">Settled</span></td>
+                            <td><button type="button" onclick="openReceipt('TXN-8120', 'Aug 12, 2026', 'Ramesh Kumar', '35.0 kg', '₹402.50', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Receipt Modal -->
+<div class="receipt-modal-backdrop" id="receiptModal">
+    <div class="receipt-modal">
+        <div class="receipt-header-row">
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="sidebar-logo" style="width:28px;height:28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg></div>
+                    <strong style="color:var(--forest-deep);font-size:16px;">E-Kabaadi Certified Receipt</strong>
+                </div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Zero Waste Circular Recycling Network</div>
+            </div>
+            <button type="button" onclick="closeReceipt()" style="font-size:20px;color:var(--text-muted);cursor:pointer;">✕</button>
+        </div>
+
+        <div style="text-align:center;padding:12px 0 16px;">
+            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Settlement Amount</span>
+            <div style="font-size:32px;font-weight:800;color:var(--forest);margin-top:2px;" id="modalAmount">₹330.75</div>
+            <span class="status-pill success" style="margin-top:4px;">Verified Direct Deposit</span>
+        </div>
+
+        <div style="background:rgba(247,244,234,0.6);border-radius:10px;padding:14px;margin-bottom:16px;">
+            <div class="receipt-line"><span style="color:var(--text-muted);">Receipt Ref</span><strong id="modalTxnId">#TXN-9024</strong></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Date & Time</span><span id="modalDate">Today, 10:55 AM</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Collector Partner</span><span id="modalCollector">Ramesh Kumar</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Total Certified Weight</span><strong id="modalWeight">25.5 kg</strong></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Payment Mode</span><span id="modalMode">UPI (aarav@okhdfc)</span></div>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+            <button type="button" class="btn-primary" style="flex:1;justify-content:center;" onclick="window.print()">
+                Print / Save Slip 📄
+            </button>
+            <button type="button" class="btn-secondary" style="flex:1;justify-content:center;" onclick="closeReceipt()">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-payments.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/payments.js"></script>
+<script>
+function openReceipt(id, date, col, weight, amount, mode) {
+    document.getElementById("modalTxnId").textContent = "#" + id;
+    document.getElementById("modalDate").textContent = date;
+    document.getElementById("modalCollector").textContent = col;
+    document.getElementById("modalWeight").textContent = weight;
+    document.getElementById("modalAmount").textContent = amount;
+    document.getElementById("modalMode").textContent = mode + " (Instant Settlement)";
+    document.getElementById("receiptModal").classList.add("open");
+}
+function closeReceipt() {
+    document.getElementById("receiptModal").classList.remove("open");
+}
+</script>
+</body>
+</html>

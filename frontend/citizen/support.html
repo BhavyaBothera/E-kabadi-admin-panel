@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Citizen Help Desk & Tickets</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .support-layout {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+        .faq-item {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .faq-question {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--forest-deep);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-answer {
+            display: none;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-subtle);
+        }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-item.open .faq-question span { transform: rotate(180deg); }
+        @media (max-width: 900px) {
+            .support-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Citizen Help & Grievance Redressal</h1>
+                <p class="page-subtitle">Submit concerns regarding weighing accuracy, collector conduct, or payment clearance.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-secondary" onclick="showToast('Calling Citizen Helpline 1800-352-2234...', 'info')">
+                    📞 1800-EKABADI
+                </button>
+            </div>
+        </div>
+
+        <div class="support-layout">
+            <!-- Left: Raise Ticket Form -->
+            <div class="ui-card">
+                <div class="ui-card-header">
+                    <div>
+                        <h2 class="ui-card-title">Raise a Support Ticket</h2>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">Guaranteed redressal within 4 business hours</div>
+                    </div>
+                </div>
+
+                <form id="supportTicketForm" onsubmit="submitTicket(event)">
+                    <div style="margin-bottom:16px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Related Pickup Order</label>
+                        <select id="ticketOrder" style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;background:#fff;">
+                            <option value="PKP-9024">#PKP-9024 (Today with Ramesh Kumar)</option>
+                            <option value="PKP-8812">#PKP-8812 (Sep 21, ₹235.00)</option>
+                            <option value="PKP-8671">#PKP-8671 (Sep 14, ₹576.00)</option>
+                            <option value="general">General Platform Inquiry (No order)</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom:16px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Grievance Category</label>
+                        <select id="ticketCategory" required style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;background:#fff;">
+                            <option value="">Select grievance category</option>
+                            <option value="Weighing Discrepancy">Weighing Scale Reading Discrepancy</option>
+                            <option value="Collector Delay">Collector Delayed or Unreachable</option>
+                            <option value="Payment Delay">UPI Payout Not Received on Phone</option>
+                            <option value="Collector Conduct">Collector Conduct or Refusal of Material</option>
+                            <option value="Eco Coins Missing">Missing Eco Coins for Completed Lot</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom:16px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Subject Title</label>
+                        <input type="text" id="ticketSubject" placeholder="Brief summary of your grievance" required style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;">
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+                        <label style="display:block;font-size:13px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Detailed Explanation</label>
+                        <textarea id="ticketBody" placeholder="Please mention exact details to expedite resolution..." required style="width:100%;padding:12px;border:1.5px solid #e4e9e6;border-radius:10px;min-height:90px;"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:13px;">
+                        Submit Official Ticket →
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Active Tickets & Hotlines -->
+            <div style="display:flex;flex-direction:column;gap:20px;">
+                <!-- Existing Tickets -->
+                <div class="ui-card">
+                    <div class="ui-card-header">
+                        <div class="ui-card-title">My Recent Tickets</div>
+                    </div>
+
+                    <div id="ticketsList">
+                        <div style="background:rgba(247,244,234,0.6);border-radius:10px;padding:14px;border:1px solid var(--border-subtle);margin-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                                <strong style="color:var(--forest-deep);font-size:14px;">#TKT-7102: Scale tare check</strong>
+                                <span class="status-pill success">Resolved</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--text-muted);line-height:1.4;">
+                                Officer review: Collector digital scale was calibrated. +50 bonus Eco Coins credited as consumer goodwill.
+                            </p>
+                        </div>
+
+                        <div style="background:rgba(247,244,234,0.6);border-radius:10px;padding:14px;border:1px solid var(--border-subtle);">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                                <strong style="color:var(--forest-deep);font-size:14px;">#TKT-6921: Bulk packaging collection</strong>
+                                <span class="status-pill success">Resolved</span>
+                            </div>
+                            <p style="font-size:12px;color:var(--text-muted);line-height:1.4;">
+                                Commercial truck was scheduled for weekend society collection. Completed on time.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Immediate Channels -->
+                <div class="ui-card">
+                    <div class="ui-card-title" style="margin-bottom:12px;">Direct Support Channels</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span>📞</span> <strong>Helpline:</strong> 1800-352-2234 (Toll-Free, 8 AM - 8 PM)
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span>💬</span> <strong>WhatsApp Desk:</strong> +91 98111 00000
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span>✉️</span> <strong>Email Desk:</strong> support@ekabaadi.in
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQs Accordion -->
+        <div style="font-size:18px;font-weight:800;color:var(--forest-deep);margin-bottom:14px;">
+            Frequently Asked Questions
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                How do I know the collector's weighing scale is honest?
+                <span style="transition:transform 0.2s;">▼</span>
+            </div>
+            <div class="faq-answer">
+                Every collector partner is equipped with an E-Kabaadi verified, Bluetooth-synced digital platform scale. When weight is measured, the exact grams are transmitted live to your app screen before payment confirmation. Analog spring scales are strictly prohibited on the platform.
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                When does the cash or UPI payment hit my account?
+                <span style="transition:transform 0.2s;">▼</span>
+            </div>
+            <div class="faq-answer">
+                Instant UPI settlements take under 60 seconds from the moment you confirm the weighing slip. If you prefer cash, collectors carry exact currency notes and settle immediately on your doorstep.
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                Is there any fee if I need to cancel or postpone my pickup?
+                <span style="transition:transform 0.2s;">▼</span>
+            </div>
+            <div class="faq-answer">
+                No. E-Kabaadi maintains a zero-penalty cancellation policy. You can cancel or reschedule freely anytime before the collector arrives at your gate.
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/support.js"></script>
+</body>
+</html>

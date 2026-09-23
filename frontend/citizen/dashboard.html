@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Citizen Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Welcome back, Aarav 👋</h1>
+                <p class="page-subtitle">Track your domestic scrap recycling, upcoming pickups, and redeemable Eco Coins.</p>
+            </div>
+            <div class="header-actions">
+                <a href="sell-scrap.html" class="btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                    <span>Sell Scrap Now</span>
+                </a>
+                <a href="collectors.html" class="btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    <span>Find Collectors</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 4 Stat Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Scrap Sold</span>
+                    <div class="stat-icon-wrapper stat-icon-green">♻️</div>
+                </div>
+                <div class="stat-value">42.6 <span style="font-size:18px;font-weight:600;">kg</span></div>
+                <div class="stat-subtext">↑ 8.4 kg recycled this month</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Earnings</span>
+                    <div class="stat-icon-wrapper stat-icon-gold">₹</div>
+                </div>
+                <div class="stat-value">₹3,240</div>
+                <div class="stat-subtext">Direct to UPI • Zero deduction</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Eco Coins Balance</span>
+                    <div class="stat-icon-wrapper stat-icon-lime">🪙</div>
+                </div>
+                <div class="stat-value">860 <span style="font-size:16px;font-weight:600;color:#c48b00;">Silver Tier</span></div>
+                <div class="stat-subtext"><a href="rewards.html" style="color:var(--forest);text-decoration:underline;">Redeem 4 coupons available</a></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Pickups Completed</span>
+                    <div class="stat-icon-wrapper stat-icon-blue">📦</div>
+                </div>
+                <div class="stat-value">7</div>
+                <div class="stat-subtext">100% On-time collector arrival</div>
+            </div>
+        </div>
+
+        <!-- Eco Impact Widget -->
+        <div class="eco-impact-widget">
+            <div class="impact-header">
+                <div>
+                    <div class="impact-title">🌱 Your Environmental Impact Contribution</div>
+                    <div style="font-size:13px;opacity:0.85;margin-top:2px;">Calculated using Central Pollution Control Board (CPCB) circular emission factors</div>
+                </div>
+                <span class="impact-badge">Certified Green Household</span>
+            </div>
+            <div class="impact-metrics-row">
+                <div class="impact-metric">
+                    <div class="impact-metric-icon">🌳</div>
+                    <div class="impact-metric-val">6 Trees</div>
+                    <div class="impact-metric-lbl">Saved from pulp deforestation</div>
+                </div>
+                <div class="impact-metric">
+                    <div class="impact-metric-icon">💨</div>
+                    <div class="impact-metric-val">14.2 kg</div>
+                    <div class="impact-metric-lbl">CO₂ Greenhouse Gas Avoided</div>
+                </div>
+                <div class="impact-metric">
+                    <div class="impact-metric-icon">💧</div>
+                    <div class="impact-metric-val">1,280 L</div>
+                    <div class="impact-metric-lbl">Freshwater Conserved in recovery</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Pickup Banner -->
+        <div class="active-pickup-card">
+            <div class="pickup-status-header">
+                <div>
+                    <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Active Pickup #PKP-9024</span>
+                    <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);margin-top:2px;">Collector En Route to Your Address</h2>
+                </div>
+                <span class="pickup-badge enroute active-pulse">● En Route • Arriving in ~25 mins</span>
+            </div>
+
+            <!-- Tracking Timeline -->
+            <div class="tracking-timeline">
+                <div class="timeline-bar-progress" style="width: 50%;"></div>
+                <div class="tracking-node done">
+                    <div class="node-circle">✓</div>
+                    <div class="node-label">Booked</div>
+                    <div class="node-time">09:15 AM</div>
+                </div>
+                <div class="tracking-node done">
+                    <div class="node-circle">✓</div>
+                    <div class="node-label">Assigned</div>
+                    <div class="node-time">09:30 AM</div>
+                </div>
+                <div class="tracking-node current">
+                    <div class="node-circle">3</div>
+                    <div class="node-label">On The Way</div>
+                    <div class="node-time">En Route</div>
+                </div>
+                <div class="tracking-node">
+                    <div class="node-circle">4</div>
+                    <div class="node-label">Weighed</div>
+                    <div class="node-time">Pending</div>
+                </div>
+                <div class="tracking-node">
+                    <div class="node-circle">5</div>
+                    <div class="node-label">Paid</div>
+                    <div class="node-time">Pending</div>
+                </div>
+            </div>
+
+            <!-- Collector Dispatch Info -->
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;background:rgba(247,244,234,0.6);padding:14px 18px;border-radius:12px;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div class="sidebar-avatar" style="width:46px;height:46px;">RK</div>
+                    <div>
+                        <strong style="font-size:15px;color:var(--forest-deep);display:block;">Ramesh Kumar (⭐ 4.8)</strong>
+                        <span style="font-size:13px;color:var(--text-muted);">Three-Wheeler Tempo • UP 16 AB 1234 • Certified Scale</span>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button type="button" class="btn-secondary" onclick="showToast('Calling collector Ramesh Kumar (+91 98111 55500)...', 'info')" style="padding:8px 16px;">
+                        📞 Call Collector
+                    </button>
+                    <a href="tracking.html" class="btn-primary" style="padding:8px 16px;">
+                        Live Tracking View →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Column Section -->
+        <div class="dashboard-grid">
+            <!-- Left Column: Daily Scrap Rates -->
+            <div class="ui-card">
+                <div class="ui-card-header">
+                    <div>
+                        <div class="ui-card-title">Live Scrap Market Rates</div>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">Updated daily • Guaranteed zero-deduction platform rates</div>
+                    </div>
+                    <a href="sell-scrap.html" class="ui-card-action">Estimate My Lot →</a>
+                </div>
+
+                <div class="scrap-grid">
+                    <div class="scrap-card">
+                        <div class="scrap-emoji">📄</div>
+                        <div class="scrap-name">Newspaper & Paper</div>
+                        <div class="scrap-rate">₹14.00 / kg</div>
+                    </div>
+                    <div class="scrap-card">
+                        <div class="scrap-emoji">📦</div>
+                        <div class="scrap-name">Cardboard (Patti)</div>
+                        <div class="scrap-rate">₹11.50 / kg</div>
+                    </div>
+                    <div class="scrap-card">
+                        <div class="scrap-emoji">♻️</div>
+                        <div class="scrap-name">PET Bottles / Plastic</div>
+                        <div class="scrap-rate">₹18.00 / kg</div>
+                    </div>
+                    <div class="scrap-card">
+                        <div class="scrap-emoji">🔩</div>
+                        <div class="scrap-name">Iron / Steel Scrap</div>
+                        <div class="scrap-rate">₹32.00 / kg</div>
+                    </div>
+                    <div class="scrap-card">
+                        <div class="scrap-emoji">🟨</div>
+                        <div class="scrap-name">Brass & Pital</div>
+                        <div class="scrap-rate">₹380.00 / kg</div>
+                    </div>
+                    <div class="scrap-card">
+                        <div class="scrap-emoji">💻</div>
+                        <div class="scrap-name">E-Waste & Electronics</div>
+                        <div class="scrap-rate">₹45.00 / kg</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Quick Shortcuts -->
+            <div style="display:flex;flex-direction:column;gap:20px;">
+                <!-- AI Scrap Estimator CTA -->
+                <div class="ui-card" style="background:linear-gradient(135deg, rgba(31,111,67,0.06), rgba(197,216,109,0.12));border:1.5px dashed var(--forest);">
+                    <div style="font-size:32px;margin-bottom:8px;">📸</div>
+                    <h3 style="font-size:16px;font-weight:800;color:var(--forest-deep);margin-bottom:6px;">Smart Scrap Scanner</h3>
+                    <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:14px;">
+                        Take a photo of your scrap pile. Our AI instantly categorizes the materials, estimates weight, and calculates expected cash payout.
+                    </p>
+                    <a href="sell-scrap.html" class="btn-primary" style="width:100%;justify-content:center;">
+                        Open AI Scanner →
+                    </a>
+                </div>
+
+                <!-- Refer Neighbor Widget -->
+                <div class="ui-card">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                        <span style="font-size:24px;">🎁</span>
+                        <h3 style="font-size:15px;font-weight:700;color:var(--forest-deep);">Invite Your Society</h3>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">
+                        Get 100 Eco Coins for every neighbor who completes their first eco-friendly scrap pickup.
+                    </p>
+                    <button type="button" class="btn-secondary" onclick="navigator.clipboard.writeText('https://ekabaadi.in/join?ref=AARAV62');showToast('Referral link copied to clipboard!', 'success');" style="width:100%;justify-content:center;">
+                        Copy Invite Link
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Pickup Activity Table -->
+        <div class="ui-card">
+            <div class="ui-card-header">
+                <div class="ui-card-title">Recent Pickup Receipts</div>
+                <a href="history.html" class="ui-card-action">View All Records →</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ui-table">
+                    <thead>
+                        <tr>
+                            <th>Pickup ID</th>
+                            <th>Date</th>
+                            <th>Collector</th>
+                            <th>Category</th>
+                            <th>Weight</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Receipt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8812</strong></td>
+                            <td>Sep 21, 2026</td>
+                            <td>Ramesh Kumar</td>
+                            <td>Paper & Plastics</td>
+                            <td>14.5 kg</td>
+                            <td><strong>₹235.00</strong></td>
+                            <td><span class="status-pill success">Paid (UPI)</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">View Slip 📄</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8671</strong></td>
+                            <td>Sep 14, 2026</td>
+                            <td>Vikram Singh</td>
+                            <td>Iron & Metal Parts</td>
+                            <td>18.0 kg</td>
+                            <td><strong>₹576.00</strong></td>
+                            <td><span class="status-pill success">Paid (UPI)</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">View Slip 📄</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8450</strong></td>
+                            <td>Aug 29, 2026</td>
+                            <td>Suresh Kabadiwala</td>
+                            <td>E-Waste & Appliances</td>
+                            <td>10.1 kg</td>
+                            <td><strong>₹454.00</strong></td>
+                            <td><span class="status-pill success">Paid (Cash)</span></td>
+                            <td><a href="payments.html" style="color:var(--forest);font-weight:600;">View Slip 📄</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-scrap.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="../shared/components/badges.js"></script>
+<script src="js/citizen-app.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

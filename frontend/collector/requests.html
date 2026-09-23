@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Collector Pickup Requests</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/collector.css">
+    <style>
+        .request-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border-subtle);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+        .request-card:hover {
+            border-color: var(--forest);
+            box-shadow: var(--shadow-md);
+        }
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .timer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            background: #fff5eb;
+            color: #d9730d;
+            border: 1px solid #ffd8a8;
+        }
+        .lot-breakdown-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            background: rgba(247, 244, 234, 0.6);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            border: 1px solid var(--border-subtle);
+        }
+    </style>
+</head>
+<body>
+
+<div id="collectorSidebar"></div>
+
+<div class="collector-main">
+    <div id="collectorTopbar"></div>
+
+    <main class="collector-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Live Pickup Dispatch Requests</h1>
+                <p class="page-subtitle">Broadcasting consumer scrap pickup requests in Sector 62, Noida zone (Within 10 km radius).</p>
+            </div>
+            <div class="header-actions">
+                <span class="status-pill success" style="animation:blink 1.4s infinite;">● Live Radar Scanning</span>
+            </div>
+        </div>
+
+        <!-- Requests List -->
+        <div id="requestsListContainer">
+            <!-- Request 1 -->
+            <div class="request-card" id="reqCard1">
+                <div class="request-header">
+                    <div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                            <span class="status-pill warning">High Match Route</span>
+                            <span style="font-size:13px;font-weight:700;color:var(--text-muted);">#REQ-9041</span>
+                        </div>
+                        <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);">Pooja Verma</h2>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
+                            📍 Flat 104, B-Block, Sector 62, Noida (0.8 km away • Along your current transit route)
+                        </div>
+                    </div>
+                    <div class="timer-badge">
+                        <span>⏳</span> Respond within: <strong id="timer1">42s</strong>
+                    </div>
+                </div>
+
+                <div class="lot-breakdown-row">
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Estimated Material</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">📄 Textbooks & PET Bottles</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Estimated Weight</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">~12.0 kg</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Expected Payout</span>
+                        <strong style="color:var(--forest);font-size:16px;">₹180.00</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Requested Time</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">Today Morning (11:30 AM)</strong>
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:flex-end;gap:12px;">
+                    <button type="button" class="btn-danger" onclick="declineReq('reqCard1')">Decline Request</button>
+                    <button type="button" class="btn-primary" onclick="acceptReq('reqCard1', 'Pooja Verma', 'Sector 62, Block B')">
+                        Accept & Add to Route →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Request 2 -->
+            <div class="request-card" id="reqCard2">
+                <div class="request-header">
+                    <div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                            <span class="status-pill success">High Value Lot (₹1,000+)</span>
+                            <span style="font-size:13px;font-weight:700;color:var(--text-muted);">#REQ-9042</span>
+                        </div>
+                        <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);">Deepak Mehta</h2>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
+                            📍 Plot 14, Sector 63, Near Electronic City Metro (2.1 km away)
+                        </div>
+                    </div>
+                    <div class="timer-badge">
+                        <span>⏳</span> Respond within: <strong id="timer2">58s</strong>
+                    </div>
+                </div>
+
+                <div class="lot-breakdown-row">
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Estimated Material</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">🔩 Iron Grills & Copper Wire</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Estimated Weight</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">~35.0 kg</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Expected Payout</span>
+                        <strong style="color:var(--forest);font-size:16px;">₹1,120.00</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Requested Time</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">Today Afternoon (01:00 PM)</strong>
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:flex-end;gap:12px;">
+                    <button type="button" class="btn-danger" onclick="declineReq('reqCard2')">Decline Request</button>
+                    <button type="button" class="btn-primary" onclick="acceptReq('reqCard2', 'Deepak Mehta', 'Sector 63')">
+                        Accept & Add to Route →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Request 3 -->
+            <div class="request-card" id="reqCard3">
+                <div class="request-header">
+                    <div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                            <span class="status-pill neutral">Standard Lot</span>
+                            <span style="font-size:13px;font-weight:700;color:var(--text-muted);">#REQ-9043</span>
+                        </div>
+                        <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);">Sunita Aggarwal</h2>
+                        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
+                            📍 Prateek Fedora, Sector 61, Noida (3.5 km away)
+                        </div>
+                    </div>
+                    <div class="timer-badge">
+                        <span>⏳</span> Respond within: <strong>1m 15s</strong>
+                    </div>
+                </div>
+
+                <div class="lot-breakdown-row">
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Estimated Material</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">📦 Corrugated Cartons & Plastic</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Estimated Weight</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">~20.0 kg</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Expected Payout</span>
+                        <strong style="color:var(--forest);font-size:16px;">₹260.00</strong>
+                    </div>
+                    <div>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;">Requested Time</span>
+                        <strong style="color:var(--forest-deep);font-size:14px;">Today Afternoon (02:30 PM)</strong>
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:flex-end;gap:12px;">
+                    <button type="button" class="btn-danger" onclick="declineReq('reqCard3')">Decline Request</button>
+                    <button type="button" class="btn-primary" onclick="acceptReq('reqCard3', 'Sunita Aggarwal', 'Sector 61')">
+                        Accept & Add to Route →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../data/mock-pickups.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/collector-app.js"></script>
+<script src="js/requests.js"></script>
+</body>
+</html>

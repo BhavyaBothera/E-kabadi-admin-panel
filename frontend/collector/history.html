@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Collector Pickup Ledger</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/collector.css">
+</head>
+<body>
+
+<div id="collectorSidebar"></div>
+
+<div class="collector-main">
+    <div id="collectorTopbar"></div>
+
+    <main class="collector-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Scrap Collection Ledger</h1>
+                <p class="page-subtitle">Ramesh Kumar (Tempo UP 16 AB 1234) • Certified Digital Trade Records</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-primary" onclick="showToast('Exporting operations manifest as Excel / CSV...', 'success')">
+                    <span>Export Ledger</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 4 Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Pickups</span>
+                    <div class="stat-icon-wrapper stat-icon-green">📦</div>
+                </div>
+                <div class="stat-value">342</div>
+                <div class="stat-subtext">100% Digital Scale Certified</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Scrap Hauled</span>
+                    <div class="stat-icon-wrapper stat-icon-lime">⚖️</div>
+                </div>
+                <div class="stat-value">12.85 <span style="font-size:16px;">Tons</span></div>
+                <div class="stat-subtext">Delivered to authorized recyclers</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Total Payouts Settled</span>
+                    <div class="stat-icon-wrapper stat-icon-gold">₹</div>
+                </div>
+                <div class="stat-value">₹1,28,500</div>
+                <div class="stat-subtext">Paid directly to citizens</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-label">Citizen Satisfaction</span>
+                    <div class="stat-icon-wrapper stat-icon-blue">⭐</div>
+                </div>
+                <div class="stat-value">4.8 / 5.0</div>
+                <div class="stat-subtext">Top 5% Partner in Noida zone</div>
+            </div>
+        </div>
+
+        <!-- Historical Table -->
+        <div class="ui-card">
+            <div class="ui-card-header">
+                <div class="ui-card-title">Completed Collections Archive</div>
+                <div style="display:flex;gap:8px;">
+                    <button type="button" class="chip active">Today</button>
+                    <button type="button" class="chip">This Week</button>
+                    <button type="button" class="chip">This Month</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="ui-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Time</th>
+                            <th>Citizen & Location</th>
+                            <th>Categories</th>
+                            <th>Weight</th>
+                            <th>Amount Paid</th>
+                            <th>Mode</th>
+                            <th>Slip</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-9024</strong></td>
+                            <td>10:55 AM</td>
+                            <td>Aarav Sharma (Sec 62)</td>
+                            <td>Paper & Cartons</td>
+                            <td><strong>25.5 kg</strong></td>
+                            <td>₹330.75</td>
+                            <td><span class="status-pill success">UPI</span></td>
+                            <td><a href="collection.html" style="color:var(--forest);font-weight:700;">Slip #403</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8991</strong></td>
+                            <td>08:40 AM</td>
+                            <td>Karan Gupta (Sec 62)</td>
+                            <td>Cardboard Boxes</td>
+                            <td><strong>45.0 kg</strong></td>
+                            <td>₹517.50</td>
+                            <td><span class="status-pill success">UPI</span></td>
+                            <td><a href="collection.html" style="color:var(--forest);font-weight:700;">Slip #402</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8984</strong></td>
+                            <td>08:05 AM</td>
+                            <td>Sneha Roy (Sec 63)</td>
+                            <td>Old Magazines & Paper</td>
+                            <td><strong>22.5 kg</strong></td>
+                            <td>₹315.00</td>
+                            <td><span class="status-pill success">Cash</span></td>
+                            <td><a href="collection.html" style="color:var(--forest);font-weight:700;">Slip #401</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8970</strong></td>
+                            <td>07:30 AM</td>
+                            <td>Rajesh Joshi (Sec 62)</td>
+                            <td>Plastics & Iron scrap</td>
+                            <td><strong>75.0 kg</strong></td>
+                            <td>₹1,007.50</td>
+                            <td><span class="status-pill success">UPI</span></td>
+                            <td><a href="collection.html" style="color:var(--forest);font-weight:700;">Slip #400</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8812</strong></td>
+                            <td>Sep 21, 2026</td>
+                            <td>Aarav Sharma (Sec 62)</td>
+                            <td>Old Newspapers</td>
+                            <td><strong>14.5 kg</strong></td>
+                            <td>₹235.00</td>
+                            <td><span class="status-pill success">UPI</span></td>
+                            <td><a href="collection.html" style="color:var(--forest);font-weight:700;">Slip #399</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color:var(--forest-deep);">#PKP-8805</strong></td>
+                            <td>Sep 21, 2026</td>
+                            <td>Meena Agarwal (Sec 61)</td>
+                            <td>PET Plastic Bottles</td>
+                            <td><strong>30.0 kg</strong></td>
+                            <td>₹540.00</td>
+                            <td><span class="status-pill success">UPI</span></td>
+                            <td><a href="collection.html" style="color:var(--forest);font-weight:700;">Slip #398</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../data/mock-pickups.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/collector-app.js"></script>
+<script src="js/history.js"></script>
+</body>
+</html>

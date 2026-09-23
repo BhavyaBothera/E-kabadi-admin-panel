@@ -1,0 +1,68 @@
+/* =========================================================
+   E-KABAADI PLATFORM
+   Design System Tokens (Forest & Earth Theme)
+   File: frontend/shared/css/variables.css
+   ========================================================= */
+
+:root {
+    /* Brand Forest & Sustainable Palette */
+    --forest-deep: #12372A;
+    --forest: #1F6F43;
+    --eco-green: #4F8F45;
+    --sage: #91A86A;
+    --soft-lime: #C5D86D;
+    
+    /* Warm Ivory & Natural Earth Neutrals */
+    --warm-ivory: #F7F4EA;
+    --warm-sand: #E9E1CF;
+    --charcoal: #1D2521;
+    --muted-earth: #A8784F;
+    
+    /* Functional Semantic Colors */
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #F4F1E6;
+    --bg-card: #FFFFFF;
+    --border-subtle: #E3DECE;
+    --border-medium: #D1CAB8;
+    --border-strong: #1F6F43;
+    
+    --text-primary: #12372A;
+    --text-secondary: #4A564F;
+    --text-muted: #738077;
+    --text-inverse: #FFFFFF;
+    
+    --success: #16A05D;
+    --success-bg: #EAF7EE;
+    --warning: #D9730D;
+    --warning-bg: #FFF5EB;
+    --danger: #D9383A;
+    --danger-bg: #FDE8E8;
+    --info: #2B7A78;
+    --info-bg: #E6F4F1;
+
+    /* Elevation & Shadows */
+    --shadow-xs: 0 1px 2px rgba(18, 55, 42, 0.05);
+    --shadow-sm: 0 2px 6px rgba(18, 55, 42, 0.07);
+    --shadow-md: 0 6px 16px rgba(18, 55, 42, 0.09);
+    --shadow-lg: 0 12px 28px rgba(18, 55, 42, 0.12);
+    --shadow-xl: 0 20px 40px rgba(18, 55, 42, 0.15);
+
+    /* Radii */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Transitions */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Layout Dimensions */
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 72px;
+    --topbar-height: 70px;
+    --max-content-width: 1400px;
+}

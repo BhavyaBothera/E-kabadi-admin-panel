@@ -3,108 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="E-Kabadi Command Center — Smart Waste Management Administration">
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-    <title>E-Kabadi | Command Center</title>
-
+    <title>E-Kabaadi | Clean Tech Waste Management Platform</title>
+    <meta http-equiv="refresh" content="2; url=frontend/public/index.html">
+    <link rel="icon" type="image/svg+xml" href="frontend/assets/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --forest: #1F6F43;
+            --forest-deep: #164E2E;
+            --lime: #C5D86D;
+            --bg: #0C1E14;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border: rgba(197, 216, 109, 0.2);
+            --text-main: #FFFFFF;
+            --text-muted: #A3B899;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(31, 111, 67, 0.35) 0%, rgba(12, 30, 20, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            width: 100%;
+            text-align: center;
+        }
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 999px;
+            background: rgba(197, 216, 109, 0.12);
+            border: 1px solid var(--border);
+            color: var(--lime);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #FFFFFF 40%, var(--lime) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        p.subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .portal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 16px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #FFFFFF;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .portal-card:hover {
+            background: rgba(197, 216, 109, 0.15);
+            border-color: var(--lime);
+            transform: translateY(-3px);
+        }
+        .portal-icon { font-size: 24px; }
+        .portal-title { font-size: 13px; font-weight: 700; }
+        .portal-desc { font-size: 11px; color: var(--text-muted); }
+        .redirect-notice {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(197, 216, 109, 0.3);
+            border-top-color: var(--lime);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .primary-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--lime);
+            color: var(--forest-deep);
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
+        }
+        .primary-cta:hover { transform: scale(1.03); }
+    </style>
 </head>
+<body>
+    <div class="glow"></div>
+    <div class="container">
+        <div class="brand-badge">
+            <span>🌱</span> E-KABAADI PLATFORM GATEWAY
+        </div>
+        <h1>Smart Circular Economy</h1>
+        <p class="subtitle">
+            AI-powered scrap diagnostics, live collector dispatch with IoT scale settlement, and unified city environmental intelligence.
+        </p>
 
-<body class="login-page">
+        <a href="frontend/public/index.html" class="primary-cta">
+            <span>Enter Platform Landing Page</span> →
+        </a>
 
-    <div class="login-background">
-        <div class="ambient ambient-1"></div>
-        <div class="ambient ambient-2"></div>
-        <div class="ambient ambient-3"></div>
-    </div>
-
-    <main class="login-wrapper">
-
-        <div class="login-brand">
-            <div class="brand-mark"><i data-lucide="recycle"></i></div>
-            <div><h1>E-Kabadi</h1><span>COMMAND CENTER</span></div>
+        <div class="portal-grid">
+            <a href="frontend/citizen/dashboard.html" class="portal-card">
+                <span class="portal-icon">🏡</span>
+                <span class="portal-title">Citizen</span>
+                <span class="portal-desc">Sell Scrap & Track</span>
+            </a>
+            <a href="frontend/collector/dashboard.html" class="portal-card">
+                <span class="portal-icon">🚛</span>
+                <span class="portal-title">Collector</span>
+                <span class="portal-desc">Fleet & Scale Ops</span>
+            </a>
+            <a href="frontend/admin/index.html" class="portal-card">
+                <span class="portal-icon">🛡️</span>
+                <span class="portal-title">Admin Center</span>
+                <span class="portal-desc">Command Dashboard</span>
+            </a>
+            <a href="frontend/auth/login.html" class="portal-card">
+                <span class="portal-icon">🔑</span>
+                <span class="portal-title">Sign In</span>
+                <span class="portal-desc">Unified Accounts</span>
+            </a>
         </div>
 
-        <section class="login-card">
+        <div class="redirect-notice">
+            <div class="spinner"></div>
+            <span>Auto-launching public experience in 2 seconds...</span>
+            <a href="frontend/public/index.html" style="color:var(--lime);margin-left:4px;">Click here to bypass</a>
+        </div>
+    </div>
 
-            <div class="login-header">
-                <div class="login-icon"><i data-lucide="shield-check"></i></div>
-                <h2>Welcome back</h2>
-                <p>Sign in to manage the E-Kabadi ecosystem.</p>
-            </div>
-
-            <form id="loginForm" novalidate>
-
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <div class="input-wrapper">
-                        <i data-lucide="mail"></i>
-                        <input type="email" id="email" name="email" placeholder="admin@ekabadi.demo" autocomplete="email" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-label-row">
-                        <label for="password">Password</label>
-                        <span class="demo-label">Demo access</span>
-                    </div>
-                    <div class="input-wrapper">
-                        <i data-lucide="lock"></i>
-                        <input type="password" id="password" name="password" placeholder="Enter password" autocomplete="current-password" required>
-                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
-                            <i data-lucide="eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="loginError" class="form-error hidden" role="alert" aria-live="polite"></div>
-
-                <button type="submit" class="btn btn-primary btn-full" id="loginButton">
-                    <span>Enter Command Center</span>
-                    <i data-lucide="arrow-right"></i>
-                </button>
-
-            </form>
-
-            <div class="demo-credentials">
-                <div class="demo-header">
-                    <i data-lucide="info"></i>
-                    <span>Hackathon demo credentials</span>
-                </div>
-                <div class="credential-row">
-                    <span>Email</span>
-                    <button type="button" data-copy="admin@ekabadi.demo" class="credential-value">admin@ekabadi.demo</button>
-                </div>
-                <div class="credential-row">
-                    <span>Password</span>
-                    <button type="button" data-copy="admin123" class="credential-value">••••••••</button>
-                </div>
-            </div>
-
-        </section>
-
-        <footer class="login-footer">
-            <span>E-Kabadi Command Center</span>
-            <span class="footer-dot"></span>
-            <span>Smart Waste Management</span>
-        </footer>
-
-    </main>
-
-    <div id="toastRoot" class="toast-container"></div>
-
-    <script src="js/data.js"></script>
-    <script src="js/storage.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/components.js"></script>
-    <script src="js/app.js"></script>
-    <script>if (window.lucide) lucide.createIcons();</script>
-
+    <script>
+        setTimeout(function() {
+            window.location.href = "frontend/public/index.html";
+        }, 1500);
+    </script>
 </body>
 </html>

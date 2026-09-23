@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Collector Dispatch Alerts</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/collector.css">
+</head>
+<body>
+
+<div id="collectorSidebar"></div>
+
+<div class="collector-main">
+    <div id="collectorTopbar"></div>
+
+    <main class="collector-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Dispatch Alerts & Municipal Bulletins</h1>
+                <p class="page-subtitle">Real-time alerts for incoming consumer pickups, yard unload queues, and daily mandi scrap commodity prices.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-secondary" onclick="showToast('All dispatch notifications marked as read.', 'success')">
+                    <span>✓ Mark All Read</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+            <button type="button" class="chip active">All Bulletins</button>
+            <button type="button" class="chip">Dispatch (2)</button>
+            <button type="button" class="chip">Yard Updates</button>
+            <button type="button" class="chip">Market Rates</button>
+        </div>
+
+        <!-- Notification Cards -->
+        <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="ui-card" style="border-left:4px solid var(--forest);display:flex;gap:16px;align-items:flex-start;">
+                <div class="stat-icon-wrapper stat-icon-green" style="flex-shrink:0;">📢</div>
+                <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <strong style="color:var(--forest-deep);font-size:15px;">New Consumer Request in Sector 62 (0.8 km)</strong>
+                        <span class="status-pill warning">Live Dispatch</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:8px;">
+                        Pooja Verma requested 12 kg old textbooks & PET plastic collection at Block B. Along your current route.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:14px;">
+                        <a href="requests.html" style="font-size:13px;color:var(--forest);font-weight:700;">Open Request Queue →</a>
+                        <span style="font-size:11px;color:#96a19b;">8 minutes ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-card" style="border-left:4px solid #16a05d;display:flex;gap:16px;align-items:flex-start;">
+                <div class="stat-icon-wrapper stat-icon-gold" style="flex-shrink:0;">₹</div>
+                <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <strong style="color:var(--forest-deep);font-size:15px;">Automated Bank Payout Credited: ₹1,840.00</strong>
+                        <span class="status-pill success">Settled</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:8px;">
+                        Bank settlement #STL-8821 has been transferred directly into your State Bank of India account (A/C ****9012).
+                    </p>
+                    <div style="display:flex;align-items:center;gap:14px;">
+                        <a href="earnings.html" style="font-size:13px;color:var(--forest);font-weight:700;">View Settlement Slip →</a>
+                        <span style="font-size:11px;color:#96a19b;">1 hour ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-card" style="display:flex;gap:16px;align-items:flex-start;">
+                <div class="stat-icon-wrapper stat-icon-blue" style="flex-shrink:0;">🏭</div>
+                <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <strong style="color:var(--forest-deep);font-size:15px;">Sector 15 Depot Hours Extended to 8:30 PM</strong>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:8px;">
+                        Authorized regional recovery depot will accept evening tempo unloads till 8:30 PM today with instant weighbridge slips.
+                    </p>
+                    <span style="font-size:11px;color:#96a19b;">Today, 09:00 AM</span>
+                </div>
+            </div>
+
+            <div class="ui-card" style="display:flex;gap:16px;align-items:flex-start;">
+                <div class="stat-icon-wrapper stat-icon-lime" style="flex-shrink:0;">📈</div>
+                <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <strong style="color:var(--forest-deep);font-size:15px;">Daily Wholesale Mandi Price Bulletin</strong>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:8px;">
+                        Copper wire: ₹580/kg • Aluminum: ₹110/kg • Iron: ₹32/kg • Corrugated Cardboard: ₹11.50/kg.
+                    </p>
+                    <span style="font-size:11px;color:#96a19b;">Yesterday</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-notifications.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/collector-app.js"></script>
+<script src="js/notifications.js"></script>
+</body>
+</html>

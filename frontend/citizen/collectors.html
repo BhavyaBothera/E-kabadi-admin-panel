@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Find Nearby Collectors</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .filter-toolbar {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .filter-search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 240px;
+        }
+        .filter-search-wrap input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border-radius: 10px;
+            border: 1.5px solid #e4e9e6;
+            font-size: 14px;
+            color: var(--charcoal);
+        }
+        .filter-search-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #96a19b;
+        }
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .chip {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(247, 244, 234, 0.8);
+            border: 1px solid var(--border-subtle);
+            color: var(--charcoal);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chip:hover {
+            border-color: var(--forest);
+        }
+        .chip.active {
+            background: var(--forest);
+            color: #fff;
+            border-color: var(--forest);
+        }
+
+        /* Map Radar Preview */
+        .radar-box {
+            background: linear-gradient(135deg, #12372A, #194835);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            color: #fff;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .radar-rings {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 180px;
+            height: 180px;
+            border: 1px solid rgba(197, 216, 109, 0.2);
+            border-radius: 50%;
+        }
+        .radar-rings::before {
+            content: '';
+            position: absolute;
+            inset: 30px;
+            border: 1px solid rgba(197, 216, 109, 0.3);
+            border-radius: 50%;
+        }
+        .radar-rings::after {
+            content: '';
+            position: absolute;
+            inset: 65px;
+            background: rgba(197, 216, 109, 0.4);
+            border-radius: 50%;
+            box-shadow: 0 0 16px #C5D86D;
+            animation: pulse-dot 1.8s infinite;
+        }
+        @keyframes pulse-dot { 0%, 100% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
+
+        .collectors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        @media (max-width: 768px) {
+            .radar-box { flex-direction: column; text-align: center; }
+            .radar-rings { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Find Nearby Scrap Collectors</h1>
+                <p class="page-subtitle">Background-verified collectors operating around Sector 62, Noida with zero-tamper certified digital scales.</p>
+            </div>
+            <div class="header-actions">
+                <a href="sell-scrap.html" class="btn-secondary">
+                    <span>← Edit Scrap Basket</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Radar Dispatch Banner -->
+        <div class="radar-box">
+            <div style="position:relative;z-index:2;max-width:480px;">
+                <div style="display:inline-block;padding:3px 10px;background:rgba(255,255,255,0.15);border-radius:20px;font-size:12px;font-weight:700;margin-bottom:8px;">
+                    📡 Live Collector Radar
+                </div>
+                <h2 style="font-size:20px;font-weight:800;margin-bottom:6px;">4 Collectors Available for Immediate Pickup</h2>
+                <p style="font-size:13px;opacity:0.85;line-height:1.5;">
+                    Current address detected: <strong>Sector 62, Noida (201309)</strong>. Average arrival ETA is 20-35 minutes from booking confirmation.
+                </p>
+            </div>
+            <div class="radar-rings"></div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="filter-toolbar">
+            <div class="filter-search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="collectorSearchInput" placeholder="Search by name, vehicle, or area..." oninput="filterCollectors()">
+            </div>
+
+            <div class="filter-chips">
+                <button type="button" class="chip active" data-filter="all" onclick="setFilter(this, 'all')">All Fleet</button>
+                <button type="button" class="chip" data-filter="tempo" onclick="setFilter(this, 'tempo')">🛺 Three-Wheeler Auto</button>
+                <button type="button" class="chip" data-filter="erickshaw" onclick="setFilter(this, 'erickshaw')">⚡ E-Rickshaw</button>
+                <button type="button" class="chip" data-filter="truck" onclick="setFilter(this, 'truck')">🚛 Mini Truck</button>
+            </div>
+        </div>
+
+        <!-- Collectors Cards List -->
+        <div class="collectors-list" id="collectorsListContainer">
+            <!-- Collector 1 -->
+            <div class="collector-card" data-category="tempo" data-name="Ramesh Kumar">
+                <div class="collector-avatar-wrap">
+                    <div class="collector-avatar">RK</div>
+                    <div class="collector-status-dot" title="Online & Available"></div>
+                </div>
+                <div class="collector-details">
+                    <div class="collector-name">
+                        Ramesh Kumar <span class="verified-icon" title="KYC & Police Verified">✓ Verified</span>
+                    </div>
+                    <div class="collector-rating">
+                        <span>★ 4.8</span>
+                        <span style="color:var(--text-muted);font-weight:400;">(342 completed pickups)</span>
+                    </div>
+                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
+                        Vehicle: <strong>Three-Wheeler Tempo (UP 16 AB 1234)</strong>
+                    </div>
+                    <div class="collector-tags">
+                        <span class="tag-badge">⚖️ Certified Digital Scale</span>
+                        <span class="tag-badge">📄 Paper & Cardboard</span>
+                        <span class="tag-badge">♻️ Plastics</span>
+                        <span class="tag-badge">🔩 Scrap Metals</span>
+                    </div>
+                </div>
+                <div class="collector-action">
+                    <div class="collector-distance">📍 1.2 km away</div>
+                    <span style="font-size:12px;color:#16a05d;font-weight:600;">⚡ ETA ~15 mins</span>
+                    <button type="button" class="btn-primary" onclick="selectCollector('Ramesh Kumar', 'Three-Wheeler Tempo', 'UP 16 AB 1234', '4.8', '1.2 km')">
+                        Book Ramesh →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collector 2 -->
+            <div class="collector-card" data-category="erickshaw" data-name="Vikram Singh">
+                <div class="collector-avatar-wrap">
+                    <div class="collector-avatar" style="background:linear-gradient(135deg,#1F6F43,#4F8F45);">VS</div>
+                    <div class="collector-status-dot" title="Online"></div>
+                </div>
+                <div class="collector-details">
+                    <div class="collector-name">
+                        Vikram Singh <span class="verified-icon">✓ Verified</span>
+                    </div>
+                    <div class="collector-rating">
+                        <span>★ 4.9</span>
+                        <span style="color:var(--text-muted);font-weight:400;">(518 completed pickups)</span>
+                    </div>
+                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
+                        Vehicle: <strong>Eco Cargo E-Rickshaw (UP 16 ER 5521)</strong>
+                    </div>
+                    <div class="collector-tags">
+                        <span class="tag-badge">🌱 Zero Emissions Fleet</span>
+                        <span class="tag-badge">⚡ Instant UPI Payout</span>
+                        <span class="tag-badge">📦 Bulk Cardboard</span>
+                    </div>
+                </div>
+                <div class="collector-action">
+                    <div class="collector-distance">📍 2.4 km away</div>
+                    <span style="font-size:12px;color:#16a05d;font-weight:600;">⚡ ETA ~25 mins</span>
+                    <button type="button" class="btn-primary" onclick="selectCollector('Vikram Singh', 'Cargo E-Rickshaw', 'UP 16 ER 5521', '4.9', '2.4 km')">
+                        Book Vikram →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collector 3 -->
+            <div class="collector-card" data-category="truck" data-name="Suresh Kabadiwala">
+                <div class="collector-avatar-wrap">
+                    <div class="collector-avatar" style="background:linear-gradient(135deg,#12372A,#3b5e4f);">SK</div>
+                    <div class="collector-status-dot" title="Online"></div>
+                </div>
+                <div class="collector-details">
+                    <div class="collector-name">
+                        Suresh Kabadiwala <span class="verified-icon">✓ Verified</span>
+                    </div>
+                    <div class="collector-rating">
+                        <span>★ 4.7</span>
+                        <span style="color:var(--text-muted);font-weight:400;">(210 completed pickups)</span>
+                    </div>
+                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
+                        Vehicle: <strong>Tata Ace Mini Truck (DL 1L AA 9081)</strong>
+                    </div>
+                    <div class="collector-tags">
+                        <span class="tag-badge">🚛 Heavy Bulk Capacity</span>
+                        <span class="tag-badge">💻 E-Waste Certified</span>
+                        <span class="tag-badge">❄️ Appliances Disposal</span>
+                    </div>
+                </div>
+                <div class="collector-action">
+                    <div class="collector-distance">📍 3.8 km away</div>
+                    <span style="font-size:12px;color:#c48b00;font-weight:600;">⏱️ ETA ~40 mins</span>
+                    <button type="button" class="btn-primary" onclick="selectCollector('Suresh Kabadiwala', 'Mini Truck', 'DL 1L AA 9081', '4.7', '3.8 km')">
+                        Book Suresh →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collector 4 -->
+            <div class="collector-card" data-category="truck" data-name="Eco-Recycle Agency Hub">
+                <div class="collector-avatar-wrap">
+                    <div class="collector-avatar" style="background:linear-gradient(135deg,#2673b3,#12372A);">ER</div>
+                    <div class="collector-status-dot" title="Online"></div>
+                </div>
+                <div class="collector-details">
+                    <div class="collector-name">
+                        Eco-Recycle Agency Hub <span class="verified-icon">✓ Authorized Partner</span>
+                    </div>
+                    <div class="collector-rating">
+                        <span>★ 4.9</span>
+                        <span style="color:var(--text-muted);font-weight:400;">(1,240 pickups)</span>
+                    </div>
+                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
+                        Fleet: <strong>Commercial Aggregator (Canter & Weighbridge)</strong>
+                    </div>
+                    <div class="collector-tags">
+                        <span class="tag-badge">🏭 Society / Bulk Lots</span>
+                        <span class="tag-badge">📜 ISO 14001 Recycling Slip</span>
+                        <span class="tag-badge">🏢 Corporate Pickups</span>
+                    </div>
+                </div>
+                <div class="collector-action">
+                    <div class="collector-distance">📍 4.5 km away</div>
+                    <span style="font-size:12px;color:#c48b00;font-weight:600;">⏱️ Slot Booking</span>
+                    <button type="button" class="btn-primary" onclick="selectCollector('Eco-Recycle Hub', 'Commercial Fleet', 'UP 16 TR 8890', '4.9', '4.5 km')">
+                        Book Agency →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-collectors.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script>
+let activeFilter = "all";
+
+function setFilter(btn, filter) {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = filter;
+    filterCollectors();
+}
+
+function filterCollectors() {
+    const query = (document.getElementById("collectorSearchInput")?.value || "").toLowerCase();
+    const cards = document.querySelectorAll(".collector-card");
+
+    cards.forEach(card => {
+        const cat = card.dataset.category;
+        const name = (card.dataset.name || "").toLowerCase();
+        const matchesCat = activeFilter === "all" || cat === activeFilter;
+        const matchesQuery = !query || name.includes(query);
+
+        if (matchesCat && matchesQuery) {
+            card.style.display = "flex";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
+function selectCollector(name, vehicle, number, rating, distance, id = "COL-2001") {
+    // If id is not specified, determine from name
+    if (name.includes("Ramesh")) id = "COL-2001";
+    else if (name.includes("Suresh")) id = "COL-2002";
+    else if (name.includes("Mohan")) id = "COL-2003";
+
+    sessionStorage.setItem("ekabadi_selected_collector", JSON.stringify({
+        id, name, vehicle, number, rating, distance
+    }));
+    showToast("Selected " + name + ". Proceeding to booking...", "success");
+    setTimeout(() => {
+        window.location.href = "pickup.html";
+    }, 500);
+}
+</script>
+</body>
+</html>

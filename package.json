@@ -1,0 +1,24 @@
+{
+  "name": "e-kabadi-platform",
+  "version": "2.0.0",
+  "description": "E-Kabaadi — Smart Clean Tech Waste Management Platform with Citizen, Collector, and Admin Portals",
+  "main": "frontend/public/index.html",
+  "scripts": {
+    "test": "node tests/test-verification.js && node tests/test-golden-flow-e2e.js && node tests/test-phase3-qa.js",
+    "test:verify": "node tests/test-verification.js",
+    "test:e2e": "node tests/test-golden-flow-e2e.js",
+    "test:qa": "node tests/test-phase3-qa.js",
+    "start": "npx serve -p 3000 ."
+  },
+  "keywords": [
+    "clean-tech",
+    "waste-management",
+    "recycling",
+    "eco-coins",
+    "citizen-portal",
+    "collector-cockpit",
+    "admin-dashboard"
+  ],
+  "author": "E-Kabaadi Team",
+  "license": "MIT"
+}

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Sell Scrap & AI Estimator</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/citizen.css">
+    <style>
+        .scanner-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+        .upload-dropzone {
+            border: 2px dashed rgba(31, 111, 67, 0.3);
+            border-radius: var(--radius-lg);
+            background: #fff;
+            padding: 40px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .upload-dropzone:hover {
+            border-color: var(--forest);
+            background: rgba(31, 111, 67, 0.02);
+        }
+        .dropzone-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .sample-photos-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .sample-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(31, 111, 67, 0.06);
+            color: var(--forest-deep);
+            border: 1px solid rgba(31, 111, 67, 0.12);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .sample-btn:hover {
+            background: var(--forest);
+            color: #fff;
+        }
+        .ai-result-panel {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+        }
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(31,111,67,0.1), rgba(197,216,109,0.2));
+            color: var(--forest-deep);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            width: fit-content;
+        }
+        .detected-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: rgba(247, 244, 234, 0.5);
+            margin-bottom: 10px;
+            border: 1px solid rgba(31, 111, 67, 0.06);
+        }
+        .scanner-loader {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(31, 111, 67, 0.15);
+            border-top-color: var(--forest);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Manual rate counter */
+        .calculator-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .calc-item {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .calc-qty-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            background: rgba(31, 111, 67, 0.08);
+            color: var(--forest-deep);
+            font-weight: 700;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+        }
+        .qty-btn:hover { background: var(--forest); color: #fff; }
+        .qty-val {
+            font-weight: 700;
+            min-width: 40px;
+            text-align: center;
+        }
+        .checkout-bar {
+            position: sticky;
+            bottom: 20px;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            padding: 18px 28px;
+            box-shadow: 0 10px 40px rgba(18, 55, 42, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 32px;
+            z-index: 50;
+        }
+        @media (max-width: 900px) {
+            .scanner-container { grid-template-columns: 1fr; }
+            .checkout-bar { flex-direction: column; gap: 14px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="citizenSidebar"></div>
+
+<div class="citizen-main">
+    <div id="citizenTopbar"></div>
+
+    <main class="citizen-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Sell Scrap & Smart AI Estimator</h1>
+                <p class="page-subtitle">Upload a photo to let our AI scan and price your scrap pile, or enter weights manually below.</p>
+            </div>
+            <div class="header-actions">
+                <a href="collectors.html" class="btn-secondary">
+                    <span>Browse Collectors Directly →</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- AI Image Scanner Section -->
+        <div class="scanner-container">
+            <!-- Left: Dropzone -->
+            <div class="upload-dropzone" id="scannerDropzone">
+                <input type="file" id="scrapPhotoInput" accept="image/*" style="display:none">
+                <div class="dropzone-icon">📸</div>
+                <h2 style="font-size:18px;font-weight:700;color:var(--forest-deep);margin-bottom:6px;">Upload Scrap Photo for AI Analysis</h2>
+                <p style="font-size:14px;color:var(--text-muted);max-width:360px;margin:0 auto 16px;">
+                    Snap a quick photo of your newspaper stacks, cartons, old appliances, or metal scrap.
+                </p>
+                <button type="button" class="btn-primary" style="margin-bottom:14px;" onclick="document.getElementById('scrapPhotoInput').click()">
+                    <span>Browse Photo / Capture</span>
+                </button>
+
+                <!-- Demo quick test buttons -->
+                <div style="font-size:12px;color:var(--text-muted);margin-top:12px;">Or test with pre-analyzed demo samples:</div>
+                <div class="sample-photos-row">
+                    <button type="button" class="sample-btn" data-sample="paper">📄 Old Newspapers & Books (15kg)</button>
+                    <button type="button" class="sample-btn" data-sample="carton">📦 Cardboard & Packaging (20kg)</button>
+                    <button type="button" class="sample-btn" data-sample="metal">🔩 Mixed Steel & Copper (8kg)</button>
+                    <button type="button" class="sample-btn" data-sample="plastic">♻️ Sorted PET Bottles (10kg)</button>
+                </div>
+            </div>
+
+            <!-- Right: AI Results Card -->
+            <div class="ai-result-panel" id="aiResultCard">
+                <div class="ai-badge">✨ E-Kabaadi Neural Scrap Vision v2.4</div>
+                <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);margin-bottom:16px;">Analysis & Valuation Breakdown</h2>
+
+                <div class="scanner-loader" id="scannerLoader">
+                    <div class="spinner"></div>
+                    <div style="font-weight:700;color:var(--forest-deep);margin-bottom:4px;">Scanning Material Contours & Density...</div>
+                    <div style="font-size:13px;color:var(--text-muted);">Comparing against verified recycling commodity price index</div>
+                </div>
+
+                <div id="aiItemsList">
+                    <div class="detected-item">
+                        <div>
+                            <strong style="color:var(--forest-deep);font-size:14px;display:block;">Newspaper & Old Office Paper</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">98% Match • Clean & Dry Grade A</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="color:var(--forest);font-size:15px;display:block;">15.0 kg</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">@ ₹14.00/kg = ₹210.00</span>
+                        </div>
+                    </div>
+
+                    <div class="detected-item">
+                        <div>
+                            <strong style="color:var(--forest-deep);font-size:14px;display:block;">Corrugated Cardboard (Patti)</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">95% Match • Folded Cartons</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="color:var(--forest);font-size:15px;display:block;">10.5 kg</strong>
+                            <span style="font-size:12px;color:var(--text-muted);">@ ₹11.50/kg = ₹120.75</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estimated Payout Total -->
+                <div style="margin-top:auto;padding-top:18px;border-top:1px solid var(--border-subtle);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                        <span style="color:var(--text-muted);font-size:14px;">Total Estimated Weight</span>
+                        <strong style="color:var(--forest-deep);font-size:16px;" id="aiTotalWeight">25.5 kg</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                        <span style="color:var(--text-muted);font-size:14px;">Total Estimated Cash</span>
+                        <strong style="color:var(--forest);font-size:22px;" id="aiTotalCash">₹330.75</strong>
+                    </div>
+                    <div style="font-size:12px;color:#96a19b;margin-bottom:16px;">
+                        *Final payout certified at door with digital scale. Zero deduction guaranteed.
+                    </div>
+                    <button type="button" class="btn-primary" style="width:100%;justify-content:center;" onclick="proceedToBooking()">
+                        Confirm Lot & Book Collector →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Scrap Item Calculator -->
+        <div class="ui-card">
+            <div class="ui-card-header">
+                <div>
+                    <h2 class="ui-card-title">Manual Item Weight Adjuster</h2>
+                    <p style="font-size:13px;color:var(--text-muted);margin-top:2px;">Adjust specific weights if you have weighed them at home.</p>
+                </div>
+                <button type="button" class="btn-secondary" onclick="resetCalculator()" style="padding:6px 12px;font-size:12px;">Reset</button>
+            </div>
+
+            <div class="calculator-row">
+                <div class="calc-item" data-rate="14" data-id="paper">
+                    <div>
+                        <div style="font-weight:700;color:var(--forest-deep);font-size:14px;">📄 Newspaper</div>
+                        <div style="font-size:12px;color:var(--forest);">₹14.00 / kg</div>
+                    </div>
+                    <div class="calc-qty-control">
+                        <button type="button" class="qty-btn" onclick="adjustQty('paper', -1)">-</button>
+                        <span class="qty-val" id="qty-paper">15</span> kg
+                        <button type="button" class="qty-btn" onclick="adjustQty('paper', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="calc-item" data-rate="11.5" data-id="carton">
+                    <div>
+                        <div style="font-weight:700;color:var(--forest-deep);font-size:14px;">📦 Cardboard</div>
+                        <div style="font-size:12px;color:var(--forest);">₹11.50 / kg</div>
+                    </div>
+                    <div class="calc-qty-control">
+                        <button type="button" class="qty-btn" onclick="adjustQty('carton', -1)">-</button>
+                        <span class="qty-val" id="qty-carton">10</span> kg
+                        <button type="button" class="qty-btn" onclick="adjustQty('carton', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="calc-item" data-rate="18" data-id="plastic">
+                    <div>
+                        <div style="font-weight:700;color:var(--forest-deep);font-size:14px;">♻️ PET Bottles</div>
+                        <div style="font-size:12px;color:var(--forest);">₹18.00 / kg</div>
+                    </div>
+                    <div class="calc-qty-control">
+                        <button type="button" class="qty-btn" onclick="adjustQty('plastic', -1)">-</button>
+                        <span class="qty-val" id="qty-plastic">0</span> kg
+                        <button type="button" class="qty-btn" onclick="adjustQty('plastic', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="calc-item" data-rate="32" data-id="iron">
+                    <div>
+                        <div style="font-weight:700;color:var(--forest-deep);font-size:14px;">🔩 Iron Scrap</div>
+                        <div style="font-size:12px;color:var(--forest);">₹32.00 / kg</div>
+                    </div>
+                    <div class="calc-qty-control">
+                        <button type="button" class="qty-btn" onclick="adjustQty('iron', -1)">-</button>
+                        <span class="qty-val" id="qty-iron">0</span> kg
+                        <button type="button" class="qty-btn" onclick="adjustQty('iron', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="calc-item" data-rate="380" data-id="brass">
+                    <div>
+                        <div style="font-weight:700;color:var(--forest-deep);font-size:14px;">🟨 Brass (Pital)</div>
+                        <div style="font-size:12px;color:var(--forest);">₹380.00 / kg</div>
+                    </div>
+                    <div class="calc-qty-control">
+                        <button type="button" class="qty-btn" onclick="adjustQty('brass', -1)">-</button>
+                        <span class="qty-val" id="qty-brass">0</span> kg
+                        <button type="button" class="qty-btn" onclick="adjustQty('brass', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="calc-item" data-rate="45" data-id="ewaste">
+                    <div>
+                        <div style="font-weight:700;color:var(--forest-deep);font-size:14px;">💻 E-Waste</div>
+                        <div style="font-size:12px;color:var(--forest);">₹45.00 / kg</div>
+                    </div>
+                    <div class="calc-qty-control">
+                        <button type="button" class="qty-btn" onclick="adjustQty('ewaste', -1)">-</button>
+                        <span class="qty-val" id="qty-ewaste">0</span> kg
+                        <button type="button" class="qty-btn" onclick="adjustQty('ewaste', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Checkout Bar -->
+        <div class="checkout-bar">
+            <div>
+                <span style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Estimated Scrap Basket</span>
+                <div style="font-size:18px;font-weight:800;color:var(--forest-deep);margin-top:2px;">
+                    <span id="basketWeight">25.0</span> kg • <span id="basketCash" style="color:var(--forest);">₹325.00</span> Payout
+                    <span style="font-size:13px;font-weight:600;color:#c48b00;margin-left:8px;">(+50 Eco Coins)</span>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;">
+                <button type="button" class="btn-primary" onclick="proceedToBooking()">
+                    Find Available Collectors (3 Nearby) →
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-scrap.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/citizen-app.js"></script>
+<script>
+const rates = {
+    paper: 14.0,
+    carton: 11.5,
+    plastic: 18.0,
+    iron: 32.0,
+    brass: 380.0,
+    ewaste: 45.0
+};
+let quantities = {
+    paper: 15,
+    carton: 10,
+    plastic: 0,
+    iron: 0,
+    brass: 0,
+    ewaste: 0
+};
+
+function updateTotals() {
+    let totalWeight = 0;
+    let totalAmount = 0;
+    for (const [key, qty] of Object.entries(quantities)) {
+        totalWeight += qty;
+        totalAmount += qty * rates[key];
+    }
+    document.getElementById("basketWeight").textContent = totalWeight.toFixed(1);
+    document.getElementById("basketCash").textContent = "₹" + totalAmount.toFixed(2);
+    document.getElementById("aiTotalWeight").textContent = totalWeight.toFixed(1) + " kg";
+    document.getElementById("aiTotalCash").textContent = "₹" + totalAmount.toFixed(2);
+}
+
+function adjustQty(id, delta) {
+    quantities[id] = Math.max(0, quantities[id] + delta);
+    document.getElementById("qty-" + id).textContent = quantities[id];
+    updateTotals();
+}
+
+function resetCalculator() {
+    for (const key of Object.keys(quantities)) {
+        quantities[key] = 0;
+        document.getElementById("qty-" + key).textContent = "0";
+    }
+    updateTotals();
+    showToast("Calculator reset", "info");
+}
+
+// Demo quick-scan simulator
+document.querySelectorAll(".sample-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const type = btn.dataset.sample;
+        const loader = document.getElementById("scannerLoader");
+        const list = document.getElementById("aiItemsList");
+
+        loader.style.display = "block";
+        list.style.display = "none";
+        showToast("AI analyzing sample photograph...", "info");
+
+        setTimeout(() => {
+            loader.style.display = "none";
+            list.style.display = "block";
+
+            if (type === "paper") {
+                quantities = { paper: 15, carton: 0, plastic: 0, iron: 0, brass: 0, ewaste: 0 };
+            } else if (type === "carton") {
+                quantities = { paper: 0, carton: 20, plastic: 0, iron: 0, brass: 0, ewaste: 0 };
+            } else if (type === "metal") {
+                quantities = { paper: 0, carton: 0, plastic: 0, iron: 6, brass: 2, ewaste: 0 };
+            } else if (type === "plastic") {
+                quantities = { paper: 0, carton: 0, plastic: 10, iron: 0, brass: 0, ewaste: 0 };
+            }
+
+            for (const key of Object.keys(quantities)) {
+                document.getElementById("qty-" + key).textContent = quantities[key];
+            }
+            updateTotals();
+            showToast("AI Detection complete: 98% confidence score", "success");
+        }, 800);
+    });
+});
+
+// File upload simulation
+document.getElementById("scrapPhotoInput")?.addEventListener("change", (e) => {
+    if (e.target.files.length) {
+        const file = e.target.files[0];
+        const loader = document.getElementById("scannerLoader");
+        const list = document.getElementById("aiItemsList");
+        loader.style.display = "block";
+        list.style.display = "none";
+        showToast("Processing " + file.name + " through AI Vision...", "info");
+
+        setTimeout(() => {
+            loader.style.display = "none";
+            list.style.display = "block";
+            quantities = { paper: 12, carton: 8, plastic: 4, iron: 0, brass: 0, ewaste: 0 };
+            for (const key of Object.keys(quantities)) {
+                document.getElementById("qty-" + key).textContent = quantities[key];
+            }
+            updateTotals();
+            showToast("Scrap image parsed successfully!", "success");
+        }, 1200);
+    }
+});
+
+function proceedToBooking() {
+    sessionStorage.setItem("ekabadi_scrap_basket", JSON.stringify({
+        quantities: quantities,
+        weight: document.getElementById("basketWeight").textContent,
+        amount: document.getElementById("basketCash").textContent
+    }));
+    window.location.href = "collectors.html";
+}
+
+updateTotals();
+</script>
+</body>
+</html>

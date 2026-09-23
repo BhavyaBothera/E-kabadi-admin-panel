@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Kabaadi | Partner Perks & Fuel Rewards</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="css/collector.css">
+    <style>
+        .tier-progress-card {
+            background: linear-gradient(135deg, #12372A, #1F6F43);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            color: #fff;
+            margin-bottom: 28px;
+            box-shadow: 0 16px 40px rgba(18, 55, 42, 0.18);
+        }
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .reward-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+        }
+        .reward-card:hover {
+            border-color: var(--forest);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .redeem-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 55, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            place-items: center;
+            padding: 20px;
+        }
+        .redeem-modal-backdrop.open { display: grid; }
+        .coupon-code-box {
+            background: rgba(247, 244, 234, 0.8);
+            border: 2px dashed var(--forest);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--forest-deep);
+            letter-spacing: 2px;
+            margin: 16px 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="collectorSidebar"></div>
+
+<div class="collector-main">
+    <div id="collectorTopbar"></div>
+
+    <main class="collector-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Collector Perks & Fleet Fuel Rewards</h1>
+                <p class="page-subtitle">Redeem your operational Eco Coins for CNG/petrol vouchers, fleet maintenance discounts, and equipment subsidies.</p>
+            </div>
+        </div>
+
+        <!-- Coins Banner -->
+        <div class="tier-progress-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+                <div>
+                    <span style="font-size:12px;font-weight:700;text-transform:uppercase;color:#C5D86D;letter-spacing:0.5px;">Partner Operational Wallet</span>
+                    <div style="font-size:36px;font-weight:800;margin-top:2px;">
+                        <span id="colCoinBalance">2,400</span> <span style="font-size:22px;font-weight:600;opacity:0.9;">Coins</span>
+                    </div>
+                    <div style="font-size:14px;opacity:0.85;margin-top:4px;">
+                        Partner Classification: <strong style="color:#C5D86D;">Verified Pro Collector</strong> (Zero Platform Fee)
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <span class="status-pill success" style="background:#C5D86D;color:#12372A;">Top Tier Partner</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fleet Perks Grid -->
+        <div class="rewards-grid">
+            <!-- Perk 1 -->
+            <div class="reward-card">
+                <div style="font-size:36px;margin-bottom:10px;">⛽</div>
+                <h2 style="font-size:16px;font-weight:800;color:var(--forest-deep);margin-bottom:6px;">₹300 IndianOil / HPCL Fuel Voucher</h2>
+                <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:16px;flex:1;">
+                    Redeemable at all partner petrol pumps and CNG stations in Noida & NCR zone.
+                </p>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border-subtle);">
+                    <strong style="color:var(--forest);font-size:15px;">🪙 500 Coins</strong>
+                    <button type="button" class="btn-primary" onclick="claimCollectorPerk('₹300 Fuel Voucher', 500, 'CNG-IOCL-9081')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Perk 2 -->
+            <div class="reward-card">
+                <div style="font-size:36px;margin-bottom:10px;">🔧</div>
+                <h2 style="font-size:16px;font-weight:800;color:var(--forest-deep);margin-bottom:6px;">₹500 Commercial Vehicle Service Rebate</h2>
+                <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:16px;flex:1;">
+                    Valid for engine oil change, brake calibration, and grease overhaul at authorized garages.
+                </p>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border-subtle);">
+                    <strong style="color:var(--forest);font-size:15px;">🪙 800 Coins</strong>
+                    <button type="button" class="btn-primary" onclick="claimCollectorPerk('₹500 Service Rebate', 800, 'GARAGE-SRV-402')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Perk 3 -->
+            <div class="reward-card">
+                <div style="font-size:36px;margin-bottom:10px;">⚖️</div>
+                <h2 style="font-size:16px;font-weight:800;color:var(--forest-deep);margin-bottom:6px;">Bluetooth Trade Scale Upgrade (50% Subsidy)</h2>
+                <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:16px;flex:1;">
+                    Upgrade to Essae 300kg heavy-duty wireless trade scale with Government Legal Metrology stamp.
+                </p>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border-subtle);">
+                    <strong style="color:var(--forest);font-size:15px;">🪙 1,200 Coins</strong>
+                    <button type="button" class="btn-primary" onclick="claimCollectorPerk('50% Scale Subsidy', 1200, 'SCALE-SUB-50')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+
+            <!-- Perk 4 -->
+            <div class="reward-card">
+                <div style="font-size:36px;margin-bottom:10px;">🌧️</div>
+                <h2 style="font-size:16px;font-weight:800;color:var(--forest-deep);margin-bottom:6px;">Heavy Duty Waterproof Tarpaulin (Tarp)</h2>
+                <p style="font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:16px;flex:1;">
+                    Commercial 12ft x 10ft heavy waterproof canvas cover for open cart / tempo scrap protection.
+                </p>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border-subtle);">
+                    <strong style="color:var(--forest);font-size:15px;">🪙 450 Coins</strong>
+                    <button type="button" class="btn-primary" onclick="claimCollectorPerk('Waterproof Tarpaulin', 450, 'TARP-HEAVY-12')">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal -->
+<div class="redeem-modal-backdrop" id="claimModal">
+    <div style="background:#fff;border-radius:var(--radius-lg);max-width:440px;width:100%;padding:28px;text-align:center;">
+        <div style="font-size:42px;margin-bottom:8px;">🎟️</div>
+        <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);" id="claimTitle">Perk Claimed!</h2>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">
+            Show the voucher token below at the fuel pump or partner garage.
+        </p>
+
+        <div class="coupon-code-box" id="couponCodeDisplay" onclick="copyCode()">
+            CNG-IOCL-9081
+        </div>
+        <div style="font-size:12px;color:var(--forest);font-weight:600;">(Click code above to copy)</div>
+
+        <button type="button" class="btn-primary" style="width:100%;justify-content:center;margin-top:20px;" onclick="closeModal()">
+            Done
+        </button>
+    </div>
+</div>
+
+<div id="toastRoot" class="toast-container"></div>
+
+<script src="../data/mock-users.js"></script>
+<script src="../data/mock-collectors.js"></script>
+<script src="../data/mock-rewards.js"></script>
+<script src="../shared/js/storage.js"></script>
+<script src="../shared/js/services.js"></script>
+<script src="../shared/js/router.js"></script>
+<script src="../shared/js/notifications.js"></script>
+<script src="../shared/js/utilities.js"></script>
+<script src="js/collector-app.js"></script>
+<script src="js/rewards.js"></script>
+</body>
+</html>
