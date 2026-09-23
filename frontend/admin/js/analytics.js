@@ -1034,6 +1034,30 @@
 
         if (!container) return;
 
+        const settings = typeof storageGetSettings === "function" ? storageGetSettings() : (window.EKABADI_DATA?.settings || {});
+        const aiBadge = document.querySelector(".ai-badge");
+
+        if (settings && settings.enableAIAnalysis === false) {
+            if (aiBadge) {
+                aiBadge.textContent = "✦ AI Analysis Paused";
+                aiBadge.style.opacity = "0.6";
+            }
+            container.innerHTML = `
+                <div class="insight-item warning">
+                    <div class="insight-icon">ℹ</div>
+                    <div class="insight-content">
+                        <strong>AI Waste Analysis Paused</strong>
+                        <p>AI-assisted insights and predictive trend generation are currently paused in System Settings. Re-enable them anytime under Settings &gt; Platform Features.</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        if (aiBadge) {
+            aiBadge.textContent = "✦ AI Assisted";
+            aiBadge.style.opacity = "1";
+        }
 
         const insights = [];
 

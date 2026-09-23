@@ -148,7 +148,6 @@
                             const section =
                                 this.dataset.section;
 
-
                             document
                                 .querySelectorAll(
                                     ".settings-tab"
@@ -159,13 +158,6 @@
                                             "active"
                                         )
                                 );
-
-
-                            if (JSON.stringify(collectSettings()) !== JSON.stringify(originalSettings)) {
-                                if (!window.confirm("You have unsaved settings changes. Switch sections without saving?")) {
-                                    return;
-                                }
-                            }
 
                             document
                                 .querySelectorAll(
@@ -178,11 +170,9 @@
                                         )
                                 );
 
-
                             this.classList.add(
                                 "active"
                             );
-
 
                             document
                                 .querySelector(
@@ -228,7 +218,11 @@
     function setupInputGuards() {
         const phone = document.getElementById("supportPhone");
         phone?.addEventListener("input", event => {
-            const digits = event.target.value.replace(/\D/g, "").replace(/^91/, "").slice(0, 10);
+            let digits = event.target.value.replace(/\D/g, "");
+            if (digits.startsWith("91") && digits.length > 10) {
+                digits = digits.slice(2);
+            }
+            digits = digits.slice(0, 10);
             event.target.value = digits ? "+91 " + digits : "";
         });
 
@@ -366,10 +360,14 @@
     function saveSettings() {
         const settings = collectSettings();
         const email = String(settings.supportEmail || "").trim();
-        const phoneDigits = String(settings.supportPhone || "").replace(/\D/g, "");
+        let rawDigits = String(settings.supportPhone || "").replace(/\D/g, "");
+        if (rawDigits.startsWith("91") && rawDigits.length > 10) {
+            rawDigits = rawDigits.slice(2);
+        }
+        const phoneDigits = rawDigits.slice(0, 10);
         settings.platformName = settings.platformName.replace(/\s+/g, " ").trim();
         settings.supportEmail = email;
-        settings.supportPhone = phoneDigits ? "+91 " + phoneDigits.slice(-10) : "";
+        settings.supportPhone = phoneDigits ? "+91 " + phoneDigits : "";
 
         if (!settings.platformName || settings.platformName.length < 2) {
             showToast("Platform name must contain at least 2 characters.", "warning", "Check Settings");
@@ -396,58 +394,47 @@
             return;
         }
 
-
         let success = false;
-
 
         if (
             typeof storageUpdateSettings ===
             "function"
         ) {
-
-            success =
-                storageUpdateSettings(
-                    settings
-                );
-
+            const res = storageUpdateSettings(
+                settings
+            );
+            success = !!res;
         }
 
-
         if (!success) {
-
             try {
-
+                localStorage.setItem(
+                    "ekabadi_admin_settings_v2",
+                    JSON.stringify(
+                        settings
+                    )
+                );
                 localStorage.setItem(
                     "ekabadi_admin_settings_v1",
                     JSON.stringify(
                         settings
                     )
                 );
-
                 success = true;
-
             } catch (error) {
-
                 console.error(
                     error
                 );
-
             }
-
         }
 
-
         if (!success) {
-
             showToast(
                 "Unable to save settings.",
                 "error"
             );
-
             return;
-
         }
-
 
         setValue("platformName", settings.platformName);
         setValue("supportEmail", settings.supportEmail);
@@ -456,8 +443,16 @@
         originalSettings = JSON.parse(JSON.stringify(settings));
         updateNotificationUI();
         updateSaveState(false);
-        showToast("Settings saved successfully.", "success", "Settings Updated");
 
+        // Live broadcast & cross-module sync
+        window.dispatchEvent(new CustomEvent("ekabadi:settings_updated", { detail: settings }));
+        window.dispatchEvent(new CustomEvent("ekabadi:statechange", { detail: { key: "ekabadi_admin_settings_v2", value: settings } }));
+        const brand = document.querySelector(".brand-text strong");
+        if (brand && settings.platformName) brand.textContent = settings.platformName;
+        const ver = document.querySelector(".sidebar-version");
+        if (ver && settings.platformName) ver.textContent = `${settings.platformName} v2.0.0 · Unified Platform`;
+
+        showToast("Settings saved successfully.", "success", "Settings Updated");
     }
 
 
@@ -474,15 +469,19 @@
                     EKABADI_DATA.settings ||
                     {};
 
-
                 let success = false;
 
                 if (typeof storageUpdateSettings === "function") {
-                    success = storageUpdateSettings(JSON.parse(JSON.stringify(defaults)));
+                    const res = storageUpdateSettings(JSON.parse(JSON.stringify(defaults)));
+                    success = !!res;
                 }
 
                 if (!success) {
                     try {
+                        localStorage.setItem(
+                            "ekabadi_admin_settings_v2",
+                            JSON.stringify(defaults)
+                        );
                         localStorage.setItem(
                             "ekabadi_admin_settings_v1",
                             JSON.stringify(defaults)
@@ -499,10 +498,16 @@
                 }
 
                 loadSettings();
-
-
                 updateNotificationUI();
                 updateSaveState(false);
+
+                window.dispatchEvent(new CustomEvent("ekabadi:settings_updated", { detail: defaults }));
+                window.dispatchEvent(new CustomEvent("ekabadi:statechange", { detail: { key: "ekabadi_admin_settings_v2", value: defaults } }));
+                const brand = document.querySelector(".brand-text strong");
+                if (brand && defaults.platformName) brand.textContent = defaults.platformName;
+                const ver = document.querySelector(".sidebar-version");
+                if (ver && defaults.platformName) ver.textContent = `${defaults.platformName} v2.0.0 · Unified Platform`;
+
                 showToast("Settings reset to defaults.", "success", "Defaults Restored");
 
             };

@@ -14,13 +14,13 @@
 
 <body>
 
-<div class="app-layout">
-
-    <aside class="sidebar" id="appSidebar"></aside>
+    <!-- Shared Sidebar -->
+    <div id="appSidebar"></div>
 
     <div class="main-wrapper">
 
-        <header class="topbar" id="appTopbar"></header>
+        <!-- Shared Topbar -->
+        <div id="appTopbar"></div>
 
         <main class="page-content">
 
@@ -65,7 +65,7 @@
             <section class="settings-status">
 
                 <div class="settings-status-icon">
-                    ✓
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
 
                 <div>
@@ -98,66 +98,43 @@
                     <button
                         class="settings-tab active"
                         data-section="general">
-
-                        <span>◉</span>
-
-                        General
-
+                        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+                        <span>General</span>
                     </button>
-
 
                     <button
                         class="settings-tab"
                         data-section="pickup">
-
-                        <span>⌖</span>
-
-                        Pickup Operations
-
+                        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+                        <span>Pickup Operations</span>
                     </button>
-
 
                     <button
                         class="settings-tab"
                         data-section="features">
-
-                        <span>✦</span>
-
-                        Platform Features
-
+                        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                        <span>Platform Features</span>
                     </button>
-
 
                     <button
                         class="settings-tab"
                         data-section="notifications">
-
-                        <span>◌</span>
-
-                        Notifications
-
+                        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+                        <span>Notifications</span>
                     </button>
-
 
                     <button
                         class="settings-tab"
                         data-section="payments">
-
-                        <span>₹</span>
-
-                        Payments
-
+                        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+                        <span>Payments</span>
                     </button>
-
 
                     <button
                         class="settings-tab"
                         data-section="security">
-
-                        <span>⌁</span>
-
-                        Security
-
+                        <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                        <span>Security</span>
                     </button>
 
                 </aside>
@@ -373,20 +350,22 @@
 
                                 <div class="form-group">
 
-                                    <label>
-                                        Default Pickup Radius (km)
+                                    <label for="defaultPickupRadius">
+                                        Default Pickup Radius
                                     </label>
 
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        id="defaultPickupRadius"
-                                        class="form-control"
-                                        step="0.5">
+                                    <div class="input-unit-group">
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            id="defaultPickupRadius"
+                                            class="form-control"
+                                            step="0.5">
+                                        <span class="input-unit-badge">km</span>
+                                    </div>
 
                                     <small>
-                                        Search for collectors within
-                                        this distance.
+                                        Search for collectors within this radius.
                                     </small>
 
                                 </div>
@@ -394,36 +373,51 @@
 
                                 <div class="form-group">
 
-                                    <label>
-                                        Maximum Pickup Distance (km)
+                                    <label for="maxPickupDistance">
+                                        Maximum Pickup Distance
                                     </label>
 
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        id="maxPickupDistance"
-                                        class="form-control"
-                                        step="0.5">
+                                    <div class="input-unit-group">
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            id="maxPickupDistance"
+                                            class="form-control"
+                                            step="0.5">
+                                        <span class="input-unit-badge">km</span>
+                                    </div>
+
+                                    <small>
+                                        Hard ceiling for collection assignments.
+                                    </small>
 
                                 </div>
 
 
                                 <div class="form-group">
 
-                                    <label>
-                                        Minimum Pickup Weight (kg)
+                                    <label for="minimumPickupWeight">
+                                        Minimum Pickup Weight
                                     </label>
 
-                                    <input
-                                        type="number"
-                                        min="0.1"
-                                        step="0.1"
-                                        id="minimumPickupWeight"
-                                        class="form-control">
+                                    <div class="input-unit-group">
+                                        <input
+                                            type="number"
+                                            min="0.1"
+                                            step="0.1"
+                                            id="minimumPickupWeight"
+                                            class="form-control">
+                                        <span class="input-unit-badge">kg</span>
+                                    </div>
+
+                                    <small>
+                                        Minimum recyclable scrap threshold.
+                                    </small>
 
                                 </div>
 
                             </div>
+
 
 
                             <div class="settings-toggle-list">
@@ -938,8 +932,6 @@
         </main>
 
     </div>
-
-</div>
 
 
 <div id="toastRoot"></div>

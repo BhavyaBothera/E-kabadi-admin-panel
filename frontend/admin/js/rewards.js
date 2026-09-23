@@ -368,8 +368,20 @@
 
         updateStats();
 
+        updateRewardProgramStatus();
+
         applyFilters();
 
+    }
+
+    function updateRewardProgramStatus() {
+        const settings = typeof storageGetSettings === "function" ? storageGetSettings() : (window.EKABADI_DATA?.settings || {});
+        const heroStrong = document.querySelector(".reward-hero-content strong");
+        const heroSpan = document.querySelector(".reward-hero-content span");
+        if (settings && settings.enableRewards === false) {
+            if (heroStrong) heroStrong.textContent = "⚠️ EcoCoin Rewards Program Paused";
+            if (heroSpan) heroSpan.textContent = "The EcoCoin reward redemption program is currently disabled in System Settings. You can enable it under Settings > Platform Features.";
+        }
     }
 
 

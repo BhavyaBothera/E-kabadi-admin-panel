@@ -69,6 +69,8 @@
         const container=document.getElementById("appSidebar");
         if(!container)return;
         const currentPage=getCurrentPage();
+        const currentSettings = typeof storageGetSettings === "function" ? storageGetSettings() : (window.EKABADI_DATA?.settings || {});
+        const platformName = currentSettings?.platformName || "E-Kabadi";
         let navHTML="";
         NAVIGATION.forEach(group=>{
             navHTML+=`<div class="nav-section"><div class="nav-section-title">${group.section}</div>`;
@@ -78,7 +80,21 @@
             });
             navHTML+=`</div>`;
         });
-        container.innerHTML=`<aside class="sidebar" id="mainSidebar"><div class="sidebar-brand"><a href="dashboard.html" class="brand-link"><div class="brand-logo">${icon("leaf")}</div><div class="brand-text"><strong>E-Kabadi</strong><span>Command Center</span></div></a><button class="sidebar-close" id="sidebarClose" aria-label="Close menu">${icon("close")}</button></div><div class="sidebar-status"><span class="status-dot"></span><div><strong>System Online</strong><small>All services operational</small></div></div><nav class="sidebar-nav">${navHTML}</nav><div class="sidebar-footer"><div class="sidebar-help"><div class="help-icon">${icon("help")}</div><div><strong>Need help?</strong><span>Check system issues</span></div></div><button class="sidebar-logout" id="sidebarLogout">${icon("logout")}<span>Sign out</span></button><div class="sidebar-version">E-Kabadi v1.0.0 · Prototype</div></div></aside><div class="sidebar-overlay" id="sidebarOverlay"></div>`;
+        const sidebarContent = `<div class="sidebar-brand"><a href="dashboard.html" class="brand-link"><div class="brand-logo">${icon("leaf")}</div><div class="brand-text"><strong>${escapeHTML(platformName)}</strong><span>Command Center</span></div></a><button class="sidebar-close" id="sidebarClose" aria-label="Close menu">${icon("close")}</button></div><div class="sidebar-status"><span class="status-dot"></span><div><strong>System Online</strong><small>All services operational</small></div></div><nav class="sidebar-nav">${navHTML}</nav><div class="sidebar-footer"><div class="sidebar-help"><div class="help-icon">${icon("help")}</div><div><strong>Need help?</strong><span>Check system issues</span></div></div><button class="sidebar-logout" id="sidebarLogout">${icon("logout")}<span>Sign out</span></button><div class="sidebar-version">${escapeHTML(platformName)} v2.0.0 · Unified Platform</div></div>`;
+        
+        if (container.tagName.toLowerCase() === "aside") {
+            container.className = "sidebar";
+            container.id = "mainSidebar";
+            container.innerHTML = sidebarContent;
+            if (!document.getElementById("sidebarOverlay")) {
+                const overlay = document.createElement("div");
+                overlay.className = "sidebar-overlay";
+                overlay.id = "sidebarOverlay";
+                document.body.appendChild(overlay);
+            }
+        } else {
+            container.innerHTML = `<aside class="sidebar" id="mainSidebar">${sidebarContent}</aside><div class="sidebar-overlay" id="sidebarOverlay"></div>`;
+        }
         bindSidebarEvents();
     }
 
@@ -86,12 +102,20 @@
         const container=document.getElementById("appTopbar");
         if(!container)return;
         const page=getPageConfig();
-        const admin=typeof getCurrentAdmin==="function"?getCurrentAdmin():{name:"Admin",role:"Super Admin",avatar:"A"};
-        const adminName=admin?.name||"Admin";
+        const admin=typeof getCurrentAdmin==="function"?getCurrentAdmin():{name:"Bhavya Bothera",role:"Super Admin",avatar:"BB"};
+        const adminName=admin?.name||"Bhavya Bothera";
         const adminRole=admin?.role||"Super Admin";
         const adminAvatar=admin?.avatar||getInitials(adminName);
         const unreadCount=typeof getUnreadNotificationCount==="function"?getUnreadNotificationCount():0;
-        container.innerHTML=`<header class="topbar"><div class="topbar-left"><button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">${icon("menu")}</button><div class="page-heading"><div class="breadcrumb"><span>Command Center</span><span class="breadcrumb-separator">/</span><strong>${page.title}</strong></div><h1>${page.title}</h1></div></div><div class="topbar-right"><div class="global-search">${icon("search")}<input type="text" id="globalSearch" placeholder="Search anything..." autocomplete="off"/><kbd>⌘ K</kbd></div><div class="notification-wrapper"><button class="topbar-icon-btn" id="notificationBtn" aria-label="Notifications">${icon("bell")}${unreadCount>0?`<span class="notification-count">${unreadCount>9?"9+":unreadCount}</span>`:""}</button><div class="notification-dropdown" id="notificationDropdown"></div></div><div class="topbar-divider"></div><div class="user-menu-wrapper"><button class="user-menu-btn" id="userMenuBtn"><div class="user-avatar">${escapeHTML(adminAvatar)}</div><div class="user-info"><strong>${escapeHTML(adminName)}</strong><span>${escapeHTML(adminRole)}</span></div>${icon("chevron","user-chevron")}</button><div class="user-dropdown" id="userDropdown"><div class="user-dropdown-header"><div class="user-avatar large">${escapeHTML(adminAvatar)}</div><div><strong>${escapeHTML(adminName)}</strong><span>${escapeHTML(adminRole)}</span></div></div><div class="dropdown-divider"></div><a href="settings.html">${icon("settings")}<span>Settings</span></a><a href="issues.html">${icon("help")}<span>Help & Support</span></a><div class="dropdown-divider"></div><button id="topbarLogout" class="danger">${icon("logout")}<span>Sign out</span></button></div></div></div></header>`;
+        
+        const topbarContent = `<div class="topbar-left"><button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">${icon("menu")}</button><div class="page-heading"><div class="breadcrumb"><span>Command Center</span><span class="breadcrumb-separator">/</span><strong>${page.title}</strong></div><h1>${page.title}</h1></div></div><div class="topbar-right"><div class="global-search">${icon("search")}<input type="text" id="globalSearch" placeholder="Search anything..." autocomplete="off"/><kbd>⌘ K</kbd></div><div class="notification-wrapper"><button class="topbar-icon-btn" id="notificationBtn" aria-label="Notifications">${icon("bell")}${unreadCount>0?`<span class="notification-count">${unreadCount>9?"9+":unreadCount}</span>`:""}</button><div class="notification-dropdown" id="notificationDropdown"></div></div><div class="topbar-divider"></div><div class="user-menu-wrapper"><button class="user-menu-btn" id="userMenuBtn"><div class="user-avatar">${escapeHTML(adminAvatar)}</div><div class="user-info"><strong>${escapeHTML(adminName)}</strong><span>${escapeHTML(adminRole)}</span></div>${icon("chevron","user-chevron")}</button><div class="user-dropdown" id="userDropdown"><div class="user-dropdown-header"><div class="user-avatar large">${escapeHTML(adminAvatar)}</div><div><strong>${escapeHTML(adminName)}</strong><span>${escapeHTML(adminRole)}</span></div></div><div class="dropdown-divider"></div><a href="settings.html">${icon("settings")}<span>Settings</span></a><a href="issues.html">${icon("help")}<span>Help & Support</span></a><div class="dropdown-divider"></div><button id="topbarLogout" class="danger">${icon("logout")}<span>Sign out</span></button></div></div></div>`;
+
+        if (container.tagName.toLowerCase() === "header") {
+            container.className = "topbar";
+            container.innerHTML = topbarContent;
+        } else {
+            container.innerHTML = `<header class="topbar">${topbarContent}</header>`;
+        }
         renderNotifications();
         bindTopbarEvents();
     }
@@ -161,7 +185,8 @@
     }
 
     function bindTopbarEvents(){
-        const nb=document.getElementById("notificationBtn"),nd=document.getElementById("notificationDropdown"),ub=document.getElementById("userMenuBtn"),ud=document.getElementById("userDropdown"),lo=document.getElementById("topbarLogout"),gs=document.getElementById("globalSearch");
+        const nb=document.getElementById("notificationBtn"),nd=document.getElementById("notificationDropdown"),ub=document.getElementById("userMenuBtn"),ud=document.getElementById("userDropdown"),lo=document.getElementById("topbarLogout"),gs=document.getElementById("globalSearch"),mb=document.getElementById("mobileMenuBtn");
+        mb?.addEventListener("click",openMobileSidebar);
         nb?.addEventListener("click",e=>{e.stopPropagation();closeUserDropdown();nd?.classList.toggle("show");});
         ub?.addEventListener("click",e=>{e.stopPropagation();closeNotificationDropdown();ud?.classList.toggle("show");});
         lo?.addEventListener("click",handleLogout);
@@ -370,6 +395,16 @@
         ensureModalRoot();
         setTimeout(()=>document.body.classList.add("app-ready"),50);
     }
+
+    window.addEventListener("ekabadi:settings_updated", event => {
+        const updated = event.detail;
+        if (updated?.platformName) {
+            const brand = document.querySelector(".brand-text strong");
+            if (brand) brand.textContent = updated.platformName;
+            const ver = document.querySelector(".sidebar-version");
+            if (ver) ver.textContent = `${updated.platformName} v2.0.0 · Unified Platform`;
+        }
+    });
 
     window.EKABADI_COMPONENTS={icon,renderSidebar,renderTopbar,renderNotifications,showToast,removeToast,openModal,closeModal,confirmAction,renderEmptyState,statusBadge,avatar,renderPagination,getInitials,escapeHTML,escapeAttribute,debounce,throttle,openMobileSidebar,closeMobileSidebar};
     window.icon=icon;

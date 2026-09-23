@@ -1944,6 +1944,15 @@
             document.getElementById("newPickupWeight")?.focus();
             return;
         }
+
+        const settings = typeof storageGetSettings === "function" ? storageGetSettings() : (window.EKABADI_DATA?.settings || {});
+        const minWeight = Number(settings?.minimumPickupWeight || 0.1);
+        if (weight < minWeight) {
+            showToast(`Estimated weight must be at least ${minWeight} kg according to System Settings.`, "warning", "Below Minimum Weight");
+            document.getElementById("newPickupWeight")?.focus();
+            return;
+        }
+
         if (!Number.isFinite(amount) || amount < 0) {
             showToast("Estimated amount must be a valid non-negative number.", "warning", "Invalid Amount");
             document.getElementById("newPickupAmount")?.focus();
@@ -1958,6 +1967,14 @@
         const citizen =
             getCitizen(citizenId);
 
+        let assignedCollectorId = null;
+        if (settings?.autoAssignCollectors) {
+            const collectors = typeof storageGetCollectors === "function" ? storageGetCollectors() : [];
+            const activeCollector = collectors.find(c => c.status === "active" || c.status === "verified");
+            if (activeCollector) {
+                assignedCollectorId = activeCollector.id;
+            }
+        }
 
         const pickup = {
 
@@ -1968,7 +1985,7 @@
 
             citizenId: citizenId,
 
-            collectorId: null,
+            collectorId: assignedCollectorId,
 
             area: getPickupArea({}, citizen),
 
@@ -1984,7 +2001,7 @@
             amount: amount,
             estimatedAmount: amount,
             finalAmount: null,
-            status: "pending",
+            status: assignedCollectorId ? "assigned" : "pending",
 
             createdAt:
                 new Date().toISOString(),
