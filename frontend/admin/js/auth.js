@@ -49,6 +49,14 @@ const AUTH_CONFIG = {
 };
 
 
+function isSupabaseAdminMode() {
+    return !!(window.EKABADI_ENV && window.EKABADI_ENV.isSupabaseMode && window.EKABADI_ENV.isSupabaseMode());
+}
+function getSupabaseClient() {
+    return window.EKABADI_SUPABASE && window.EKABADI_SUPABASE.getClient
+        ? window.EKABADI_SUPABASE.getClient() : null;
+}
+
 /* =========================================================
    AUTH ERROR MESSAGES
    ========================================================= */
@@ -132,26 +140,16 @@ function validateLoginCredentials(
     }
 
 
-    if (
-        email !==
-        AUTH_CONFIG.demoAdmin.email
-            .toLowerCase()
-        ||
-        password !==
-        AUTH_CONFIG.demoAdmin.password
-    ) {
+    if (isSupabaseAdminMode()) return { valid: true };
 
-        return {
-            valid: false,
-            error:
-                AUTH_ERRORS.INVALID_CREDENTIALS
-        };
+    if (
+        email !== AUTH_CONFIG.demoAdmin.email.toLowerCase() ||
+        password !== AUTH_CONFIG.demoAdmin.password
+    ) {
+        return { valid: false, error: AUTH_ERRORS.INVALID_CREDENTIALS };
     }
 
-
-    return {
-        valid: true
-    };
+    return { valid: true };
 }
 
 
@@ -204,39 +202,63 @@ function createAdminSession() {
    LOGIN
    ========================================================= */
 
-function loginAdmin(
-    email,
-    password
-) {
+async function loginAdmin(email, password) {
+    const validation = validateLoginCredentials(email, password);
+    if (!validation.valid) return { success: false, error: validation.error };
 
-    const validation =
-        validateLoginCredentials(
-            email,
-            password
-        );
+    if (isSupabaseAdminMode()) {
+        const client = getSupabaseClient();
+        if (!client) return { success: false, error: "Supabase is not configured correctly." };
 
+        try {
+            const result = await client.auth.signInWithPassword({
+                email: String(email).trim().toLowerCase(),
+                password: String(password)
+            });
+            if (result.error || !result.data || !result.data.user) {
+                return { success: false, error: result.error ? result.error.message : AUTH_ERRORS.INVALID_CREDENTIALS };
+            }
 
-    if (!validation.valid) {
+            const profileResult = await client.from("profiles").select("*").eq("id", result.data.user.id).single();
+            if (profileResult.error || !profileResult.data) {
+                await client.auth.signOut();
+                return { success: false, error: "Admin profile was not found for this account." };
+            }
+            if (profileResult.data.role !== "admin") {
+                await client.auth.signOut();
+                return { success: false, error: "This account does not have administrator access." };
+            }
 
-        return {
-            success: false,
+            const profile = profileResult.data;
+            const now = Date.now();
+            const session = {
+                loggedIn: true,
+                user: {
+                    id: result.data.user.id,
+                    name: ((profile.first_name || "") + " " + (profile.last_name || "")).trim() || result.data.user.email,
+                    email: profile.email || result.data.user.email,
+                    role: "Super Admin",
+                    avatar: profile.avatar || "SA"
+                },
+                role: "admin",
+                loginTime: new Date(now).toISOString(),
+                expiresAt: result.data.session && result.data.session.expires_at
+                    ? new Date(result.data.session.expires_at * 1000).toISOString()
+                    : new Date(now + AUTH_CONFIG.sessionDuration).toISOString()
+            };
 
-            error:
-                validation.error
-        };
+            saveAdminSession(session);
+            if (window.EKABADI_SUPABASE_ADAPTER && window.EKABADI_SUPABASE_ADAPTER.setSession) {
+                await window.EKABADI_SUPABASE_ADAPTER.setSession(session);
+            }
+            return { success: true, session: session };
+        } catch (error) {
+            console.error("[E-Kabaadi Auth] Supabase login failed:", error);
+            return { success: false, error: error.message || AUTH_ERRORS.INVALID_CREDENTIALS };
+        }
     }
 
-
-    const session =
-        createAdminSession();
-
-
-    return {
-
-        success: true,
-
-        session
-    };
+    return { success: true, session: createAdminSession() };
 }
 
 
@@ -247,6 +269,14 @@ function loginAdmin(
 function logoutAdmin(
     redirect = true
 ) {
+
+    if (isSupabaseAdminMode()) {
+        const client = getSupabaseClient();
+        if (client) client.auth.signOut().catch(console.error);
+        if (window.EKABADI_SUPABASE_ADAPTER && window.EKABADI_SUPABASE_ADAPTER.clearSession) {
+            window.EKABADI_SUPABASE_ADAPTER.clearSession();
+        }
+    }
 
     clearAdminSession();
 
@@ -784,11 +814,10 @@ function initializeLoginForm() {
                authentication request.
             */
 
-            setTimeout(
-                () => {
+            setTimeout(async () => {
 
                     const result =
-                        loginAdmin(
+                        await loginAdmin(
                             email,
                             password
                         );
