@@ -82,6 +82,7 @@ CREATE TRIGGER trg_prevent_profile_tampering
 
 -- Harden profiles INSERT: self-registration only allows citizen/collector in pending_approval
 DROP POLICY IF EXISTS "Service role can insert profiles" ON profiles;
+DROP POLICY IF EXISTS "Users can insert own profile on signup" ON profiles;
 CREATE POLICY "Users can insert own profile on signup"
     ON profiles FOR INSERT
     WITH CHECK (
@@ -233,6 +234,7 @@ $$ LANGUAGE sql STABLE;
 -- Disallow arbitrary direct INSERT on payments.
 -- Payments may ONLY be inserted by atomic RPCs or Admins.
 DROP POLICY IF EXISTS "Service can insert payments" ON payments;
+DROP POLICY IF EXISTS "Admin can insert payments" ON payments;
 CREATE POLICY "Admin can insert payments"
     ON payments FOR INSERT
     WITH CHECK (get_user_role() = 'admin');
@@ -240,6 +242,7 @@ CREATE POLICY "Admin can insert payments"
 -- Disallow arbitrary direct INSERT on reward_transactions.
 -- Rewards may ONLY be awarded by atomic RPCs or Admins.
 DROP POLICY IF EXISTS "Service can insert reward transactions" ON reward_transactions;
+DROP POLICY IF EXISTS "Admin can insert reward transactions" ON reward_transactions;
 CREATE POLICY "Admin can insert reward transactions"
     ON reward_transactions FOR INSERT
     WITH CHECK (get_user_role() = 'admin');
