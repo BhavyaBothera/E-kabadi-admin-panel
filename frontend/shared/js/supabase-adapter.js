@@ -54,7 +54,9 @@
         citizenSavedLocations: "citizen_saved_locations",
         financialLedger: "financial_ledger",
         paymentProviderEvents: "payment_provider_events",
-        paymentAdjustments: "payment_adjustments"
+        paymentAdjustments: "payment_adjustments",
+        notificationPreferences: "notification_preferences",
+        notificationOutbox: "notification_outbox"
     };
 
     // ── Column name mapping (camelCase → snake_case) ──

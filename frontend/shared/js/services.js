@@ -2198,14 +2198,31 @@
     };
 
     /* =========================================================
-       8. NOTIFICATION SERVICE (Event-Driven)
+       8. NOTIFICATION SERVICE (Event-Driven & Outbox Architecture)
        ========================================================= */
+    function getNotificationEngineModule() {
+        if (typeof notificationEngine !== "undefined") return notificationEngine;
+        if (typeof root !== "undefined" && root.notificationEngine) return root.notificationEngine;
+        if (typeof require === "function") {
+            try {
+                return require("./notification-engine.js");
+            } catch (e) {
+                try {
+                    const path = require("path");
+                    return require(path.join(__dirname, "notification-engine.js"));
+                } catch (e2) {}
+            }
+        }
+        return null;
+    }
+
     const notificationService = {
         getAll() {
             return storage.getCollection("notifications");
         },
 
         getForUser(userId) {
+            if (!userId) return [];
             return this.getAll().filter(n => n.userId === userId).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         },
 
@@ -2217,32 +2234,199 @@
             return this.getForUser(userId).filter(n => !n.read).length;
         },
 
-        markAsRead(notificationId) {
-            return storage.update("notifications", notificationId, { read: true });
+        markAsRead(notificationId, currentUserId) {
+            const notifs = storage.getCollection("notifications");
+            const item = notifs.find(n => n.id === notificationId);
+            if (!item) return null;
+
+            if (currentUserId && item.userId && item.userId !== currentUserId) {
+                throw new Error("Security violation: Cannot mark another user's notification as read.");
+            }
+
+            return storage.update("notifications", notificationId, {
+                read: true,
+                readAt: new Date().toISOString(),
+                status: "read"
+            });
         },
 
         markAllAsRead(userId) {
             const notifs = storage.getCollection("notifications");
             notifs.forEach(n => {
-                if (n.userId === userId) n.read = true;
+                if (!userId || n.userId === userId) {
+                    n.read = true;
+                    n.readAt = new Date().toISOString();
+                    n.status = "read";
+                }
             });
             storage.saveCollection("notifications", notifs, "markRead");
             return true;
         },
 
         create(data) {
+            // Deduplication check if idempotencyKey is supplied
+            if (data.idempotencyKey) {
+                const existing = storage.getCollection("notifications").find(n => n.idempotencyKey === data.idempotencyKey);
+                if (existing) {
+                    return { ...existing, duplicate: true };
+                }
+            }
+
             const notification = {
                 id: genId("NOTIF"),
                 userId: data.userId,
                 role: data.role || "citizen",
                 type: data.type || "pickup",
+                eventType: data.eventType || "",
+                entityType: data.entityType || "",
+                entityId: data.entityId || "",
+                pickupId: data.pickupId || "",
                 title: data.title,
                 message: data.message,
                 read: false,
+                readAt: null,
+                priority: data.priority || "normal",
+                channel: data.channel || "in_app",
+                status: "unread",
+                actionUrl: data.actionUrl || "",
+                idempotencyKey: data.idempotencyKey || null,
+                metadata: data.metadata || {},
                 createdAt: new Date().toISOString()
             };
             storage.insert("notifications", notification);
             return notification;
+        },
+
+        getPreferences(userId) {
+            if (typeof storage.getNotificationPreferences === "function") {
+                return storage.getNotificationPreferences(userId);
+            }
+            return {
+                userId,
+                emailEnabled: true,
+                smsEnabled: true,
+                pushEnabled: true,
+                pickupUpdates: true,
+                paymentUpdates: true,
+                rewardUpdates: true,
+                accountUpdates: true,
+                issueUpdates: true,
+                marketingUpdates: false,
+                quietHoursEnabled: false
+            };
+        },
+
+        updatePreferences(userId, updates, currentUserId) {
+            if (currentUserId && userId !== currentUserId) {
+                throw new Error("Security violation: Cannot update another user's notification preferences.");
+            }
+            if (typeof storage.updateNotificationPreferences === "function") {
+                return storage.updateNotificationPreferences(userId, updates, currentUserId);
+            }
+            return { userId, ...updates };
+        },
+
+        // Transactional Outbox & Business Event Emission
+        emitBusinessEvent(eventType, aggregateType, aggregateId, payload = {}, actorId = "system", actorRole = "system") {
+            const engine = getNotificationEngineModule();
+            const event = engine ? 
+                engine.createBusinessEvent(eventType, aggregateType, aggregateId, payload, actorId, actorRole) :
+                {
+                    id: "EVT-" + Math.floor(Math.random() * 900000 + 100000),
+                    eventType,
+                    aggregateType,
+                    aggregateId,
+                    actorId,
+                    actorRole,
+                    payload,
+                    createdAt: new Date().toISOString()
+                };
+
+            // Write to Outbox table
+            const outboxId = "OUT-" + Math.floor(Math.random() * 900000 + 100000);
+            const idempotencyKey = engine ? 
+                engine.generateIdempotencyKey(eventType, aggregateId, payload.citizenId || payload.userId || actorId) :
+                `idmp:${eventType}:${aggregateId}`;
+
+            const outboxItem = {
+                id: outboxId,
+                eventType,
+                aggregateType,
+                aggregateId,
+                recipientId: payload.citizenId || payload.userId || actorId,
+                payload,
+                idempotencyKey,
+                status: "pending",
+                attempts: 0,
+                maxAttempts: 3,
+                lastError: null,
+                createdAt: new Date().toISOString()
+            };
+
+            const outbox = storage.getCollection("notificationOutbox") || [];
+            // Check outbox duplicate
+            const existingOutbox = outbox.find(o => o.idempotencyKey === idempotencyKey);
+            if (existingOutbox) {
+                return Promise.resolve({ event, outboxItem: existingOutbox, duplicate: true });
+            }
+
+            outbox.push(outboxItem);
+            storage.saveCollection("notificationOutbox", outbox, "insert");
+
+            // Process immediately through engine if present
+            if (engine) {
+                return engine.dispatchEvent(event, storage, false).then(result => {
+                    // Mark outbox processed
+                    outboxItem.status = "processed";
+                    outboxItem.processedAt = new Date().toISOString();
+                    storage.saveCollection("notificationOutbox", outbox, "update");
+                    return { event, outboxItem, notifications: result.notificationsCreated };
+                }).catch(err => {
+                    outboxItem.attempts = (outboxItem.attempts || 0) + 1;
+                    outboxItem.lastError = err.message;
+                    if (outboxItem.attempts >= outboxItem.maxAttempts) {
+                        outboxItem.status = "failed";
+                    }
+                    storage.saveCollection("notificationOutbox", outbox, "update");
+                    throw err;
+                });
+            }
+
+            return Promise.resolve({ event, outboxItem, duplicate: false });
+        },
+
+        getOutboxPending() {
+            const outbox = storage.getCollection("notificationOutbox") || [];
+            return outbox.filter(item => item.status === "pending");
+        },
+
+        processOutbox() {
+            const engine = getNotificationEngineModule();
+            const outbox = storage.getCollection("notificationOutbox") || [];
+            const processed = [];
+
+            outbox.forEach(item => {
+                if (item.status === "pending") {
+                    try {
+                        if (engine) {
+                            const evt = engine.createBusinessEvent(item.eventType, item.aggregateType, item.aggregateId, item.payload);
+                            engine.dispatchEvent(evt, storage, false);
+                        }
+                        item.status = "processed";
+                        item.processedAt = new Date().toISOString();
+                        processed.push(item);
+                    } catch (e) {
+                        item.attempts = (item.attempts || 0) + 1;
+                        item.lastError = e.message;
+                        if (item.attempts >= (item.maxAttempts || 3)) {
+                            item.status = "failed";
+                        }
+                    }
+                }
+            });
+
+            storage.saveCollection("notificationOutbox", outbox, "update");
+            return processed;
         }
     };
 

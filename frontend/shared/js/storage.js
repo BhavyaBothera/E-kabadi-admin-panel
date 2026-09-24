@@ -155,6 +155,45 @@
             financialLedger: [],
             paymentProviderEvents: [],
             paymentAdjustments: [],
+            notificationPreferences: [
+                {
+                    id: "PREF-CIT-001",
+                    userId: "USR-CIT-001",
+                    emailEnabled: true,
+                    smsEnabled: true,
+                    pushEnabled: true,
+                    pickupUpdates: true,
+                    paymentUpdates: true,
+                    rewardUpdates: true,
+                    accountUpdates: true,
+                    issueUpdates: true,
+                    marketingUpdates: false,
+                    quietHoursEnabled: false,
+                    quietHoursStart: "22:00",
+                    quietHoursEnd: "07:00",
+                    createdAt: "2026-01-14T10:00:00Z",
+                    updatedAt: "2026-01-14T10:00:00Z"
+                },
+                {
+                    id: "PREF-COL-001",
+                    userId: "USR-COL-001",
+                    emailEnabled: true,
+                    smsEnabled: true,
+                    pushEnabled: true,
+                    pickupUpdates: true,
+                    paymentUpdates: true,
+                    rewardUpdates: true,
+                    accountUpdates: true,
+                    issueUpdates: true,
+                    marketingUpdates: false,
+                    quietHoursEnabled: false,
+                    quietHoursStart: "22:00",
+                    quietHoursEnd: "07:00",
+                    createdAt: "2025-12-11T10:00:00Z",
+                    updatedAt: "2025-12-11T10:00:00Z"
+                }
+            ],
+            notificationOutbox: [],
             version: "2.0.0"
         };
     }
@@ -240,6 +279,22 @@
                 }
             }
 
+            // Security Rule: Notification recipient, event type, and idempotency key are immutable
+            if (collectionName === "notifications") {
+                if (updates.userId && updates.userId !== collection[index].userId) {
+                    throw new Error("Security violation: Notification recipient is immutable.");
+                }
+                if (updates.eventType && updates.eventType !== collection[index].eventType) {
+                    throw new Error("Security violation: Notification event type is immutable.");
+                }
+                if (updates.idempotencyKey && updates.idempotencyKey !== collection[index].idempotencyKey) {
+                    throw new Error("Security violation: Notification idempotency key is immutable.");
+                }
+                if (updates.createdAt && updates.createdAt !== collection[index].createdAt) {
+                    throw new Error("Security violation: Notification timestamp is immutable.");
+                }
+            }
+
             const updated = { ...collection[index], ...updates, updatedAt: new Date().toISOString() };
             collection[index] = updated;
             this.saveCollection(collectionName, collection, "update");
@@ -249,6 +304,9 @@
         delete(collectionName, id) {
             if (collectionName === "financialLedger") {
                 throw new Error("Security violation: Financial ledger entries are strictly immutable.");
+            }
+            if (collectionName === "notifications") {
+                throw new Error("Security violation: Notification audit records cannot be deleted.");
             }
             let collection = this.getCollection(collectionName);
             collection = collection.filter(item => item.id !== id);
@@ -278,6 +336,57 @@
         clearSession() {
             localStorage.removeItem(SESSION_KEY);
             dispatchStateChange("session", "logout", null);
+        },
+
+        getNotificationPreferences(userId) {
+            const prefs = this.getCollection("notificationPreferences");
+            const found = prefs.find(p => p.userId === userId);
+            if (found) return found;
+            return {
+                userId,
+                emailEnabled: true,
+                smsEnabled: true,
+                pushEnabled: true,
+                pickupUpdates: true,
+                paymentUpdates: true,
+                rewardUpdates: true,
+                accountUpdates: true,
+                issueUpdates: true,
+                marketingUpdates: false,
+                quietHoursEnabled: false
+            };
+        },
+
+        updateNotificationPreferences(userId, updates, currentUserId) {
+            if (currentUserId && userId !== currentUserId) {
+                throw new Error("Security violation: Cannot update another user's notification preferences.");
+            }
+            const prefs = this.getCollection("notificationPreferences");
+            let idx = prefs.findIndex(p => p.userId === userId);
+            if (idx === -1) {
+                const newPref = {
+                    id: "PREF-" + Math.floor(Math.random() * 90000 + 10000),
+                    userId,
+                    emailEnabled: true,
+                    smsEnabled: true,
+                    pushEnabled: true,
+                    pickupUpdates: true,
+                    paymentUpdates: true,
+                    rewardUpdates: true,
+                    accountUpdates: true,
+                    issueUpdates: true,
+                    marketingUpdates: false,
+                    quietHoursEnabled: false,
+                    ...updates,
+                    updatedAt: new Date().toISOString()
+                };
+                prefs.push(newPref);
+                this.saveCollection("notificationPreferences", prefs);
+                return newPref;
+            }
+            prefs[idx] = { ...prefs[idx], ...updates, updatedAt: new Date().toISOString() };
+            this.saveCollection("notificationPreferences", prefs);
+            return prefs[idx];
         }
     };
 
@@ -361,18 +470,87 @@
 
         storageGetNotifications() { return StateAdapter.getCollection("notifications"); },
         storageSaveNotifications(items) { return StateAdapter.saveCollection("notifications", items); },
-        markNotificationRead(id) {
+        markNotificationRead(id, currentUserId) {
             const notifs = StateAdapter.getCollection("notifications");
             const item = notifs.find(n => n.id === id);
-            if (item) { item.read = true; StateAdapter.saveCollection("notifications", notifs); }
+            if (item) {
+                if (currentUserId && item.userId && item.userId !== currentUserId) {
+                    throw new Error("Security violation: Cannot mark another user's notification as read.");
+                }
+                item.read = true;
+                item.readAt = new Date().toISOString();
+                item.status = "read";
+                StateAdapter.saveCollection("notifications", notifs);
+                return item;
+            }
+            return null;
         },
-        markAllNotificationsRead() {
+        markAllNotificationsRead(userId) {
             const notifs = StateAdapter.getCollection("notifications");
-            notifs.forEach(n => n.read = true);
+            notifs.forEach(n => {
+                if (!userId || n.userId === userId) {
+                    n.read = true;
+                    n.readAt = new Date().toISOString();
+                    n.status = "read";
+                }
+            });
             StateAdapter.saveCollection("notifications", notifs);
         },
-        getUnreadNotificationCount() {
-            return StateAdapter.getCollection("notifications").filter(n => !n.read).length;
+        getUnreadNotificationCount(userId) {
+            const notifs = StateAdapter.getCollection("notifications");
+            if (userId) {
+                return notifs.filter(n => n.userId === userId && !n.read).length;
+            }
+            return notifs.filter(n => !n.read).length;
+        },
+        getNotificationPreferences(userId) {
+            const prefs = StateAdapter.getCollection("notificationPreferences");
+            const found = prefs.find(p => p.userId === userId);
+            if (found) return found;
+            return {
+                userId,
+                emailEnabled: true,
+                smsEnabled: true,
+                pushEnabled: true,
+                pickupUpdates: true,
+                paymentUpdates: true,
+                rewardUpdates: true,
+                accountUpdates: true,
+                issueUpdates: true,
+                marketingUpdates: false,
+                quietHoursEnabled: false
+            };
+        },
+        updateNotificationPreferences(userId, updates, currentUserId) {
+            if (currentUserId && userId !== currentUserId) {
+                throw new Error("Security violation: Cannot update another user's notification preferences.");
+            }
+            const prefs = StateAdapter.getCollection("notificationPreferences");
+            let idx = prefs.findIndex(p => p.userId === userId);
+            if (idx === -1) {
+                const newPref = {
+                    id: "PREF-" + Math.floor(Math.random() * 90000 + 10000),
+                    userId,
+                    emailEnabled: true,
+                    smsEnabled: true,
+                    pushEnabled: true,
+                    pickupUpdates: true,
+                    paymentUpdates: true,
+                    rewardUpdates: true,
+                    accountUpdates: true,
+                    issueUpdates: true,
+                    marketingUpdates: false,
+                    quietHoursEnabled: false,
+                    ...updates,
+                    updatedAt: new Date().toISOString()
+                };
+                prefs.push(newPref);
+                StateAdapter.saveCollection("notificationPreferences", prefs);
+                return newPref;
+            }
+            prefs[idx] = { ...prefs[idx], ...updates, updatedAt: new Date().toISOString() };
+            StateAdapter.saveCollection("notificationPreferences", prefs);
+            return prefs[idx];
         },
 
         getAdminSession() { return StateAdapter.getSession(); },

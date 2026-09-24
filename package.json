@@ -14,7 +14,8 @@
     "test:phase4d": "node tests/test-phase4d-gemini.js",
     "test:phase4e": "node tests/test-phase4e-location.js",
     "test:phase4f": "node tests/test-phase4f-payments.js",
-    "test:all": "npm test && node tests/test-supabase-integration.js && node tests/test-phase4b-cloud-integration.js && node tests/test-phase4c-security.js && node tests/test-phase4d-gemini.js && node tests/test-phase4e-location.js && node tests/test-phase4f-payments.js",
+    "test:phase4g": "node tests/test-phase4g-notifications.js",
+    "test:all": "npm test && node tests/test-supabase-integration.js && node tests/test-phase4b-cloud-integration.js && node tests/test-phase4c-security.js && node tests/test-phase4d-gemini.js && node tests/test-phase4e-location.js && node tests/test-phase4f-payments.js && node tests/test-phase4g-notifications.js",
     "start": "npx serve -p 3000 ."
   },
   "keywords": [

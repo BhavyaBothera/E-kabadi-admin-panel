@@ -166,8 +166,9 @@
                     <span>Scale Synced</span>
                 </div>
 
-                <a href="notifications.html" class="icon-btn has-badge" title="Notifications">
+                <a href="notifications.html" class="icon-btn ${(typeof notificationService !== 'undefined' && collector && notificationService.getUnreadCount(collector.id || collector.userId) > 0) ? 'has-badge' : ''}" style="position:relative;" title="Notifications">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    ${(typeof notificationService !== 'undefined' && collector && notificationService.getUnreadCount(collector.id || collector.userId) > 0) ? `<span style="position:absolute;top:0;right:0;width:8px;height:8px;background:#e53e3e;border-radius:50%;border:2px solid #fff;"></span>` : ''}
                 </a>
 
                 <a href="profile.html" class="sidebar-avatar" style="width:38px;height:38px;font-size:14px;text-decoration:none;" title="Partner Profile">

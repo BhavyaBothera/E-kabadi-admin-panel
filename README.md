@@ -127,7 +127,24 @@ Phase 4F introduces a production-oriented, server-authoritative payment and sett
 - **Strict Key Isolation & Zero Secrets**: `RAZORPAY_KEY_SECRET` and `RAZORPAY_WEBHOOK_SECRET` reside exclusively in Supabase Edge Function secrets. Zero live secrets in frontend code.
 - **Dual Engine Determinism**: `MockPaymentProvider` provides full offline deterministic testing (SUCCESS, FAILURE, TIMEOUT, DUPLICATE, ALREADY_PAID, REFUND) alongside production-ready `RazorpayPaymentProvider`.
 
+---
+
+## 🔔 Phase 4G — Real-Time Notifications, Communication & Event Intelligence
+
+Phase 4G establishes a production-grade, event-driven notification architecture across Citizen, Collector, and Admin roles:
+
+- **Derived Communication Layer**: Notifications follow authoritative database transactions and state machines—they never define business state.
+- **Standardized Business Event Catalog**: Normalized lifecycle events (`PICKUP_CREATED`, `PICKUP_ACCEPTED`, `PAYMENT_SETTLED`, `REWARD_CREDITED`, `ACCOUNT_APPROVED`, `ISSUE_CREATED`, etc.) with strict schema validation.
+- **Role-Based Policy Routing**: Recipient resolution strictly directs notifications to authorized participants (e.g. `PICKUP_CREATED` alerts only the citizen and the selected collector—never broadcast platform-wide).
+- **Transactional Outbox Pattern**: Stored procedure `emit_business_event_atomic` persists business state and outbox events in a single atomic transaction, preventing lost notifications.
+- **Notification Immutability & Anti-Tampering**: Trigger `trg_prevent_notification_tampering` and storage guards lock `user_id`, `event_type`, `idempotency_key`, and `created_at`. Deletions are strictly blocked.
+- **Privacy & Sanitization**: Doorstep addresses are masked to neighborhood localities (`Sector 62, Noida`), financial amounts are safely formatted without leaking accounts/UPI, and dynamic variables are HTML-escaped to prevent XSS.
+- **Open Redirect Defense**: Action URLs are strictly validated against internal relative routes; arbitrary external URLs and protocol schemes are blocked.
+- **Supabase Realtime & Offline Resilience**: Recipient-scoped WebSocket subscriptions (`user_id = auth.uid()`) deliver instant alerts, while persistent database outbox ensures unread notifications survive browser offline/reconnect cycles.
+- **Multi-Channel Adapters & Fallback**: Modular providers for In-App, Email, SMS, and Push with configurable retry and channel fallback—external delivery failures never break pickup operations or in-app alerts.
+
 ### Documentation Index
+- 🔔 [Phase 4G Real-Time Notifications & Communication Guide](docs/phase-4g-notifications.md) — Comprehensive event-driven architecture, outbox pattern, RLS policies, privacy sanitization, and channel adapters.
 - 💳 [Phase 4F Real Payment & Financial Ledger Guide](docs/phase-4f-payments.md) — Comprehensive server-authoritative payment lifecycle, Razorpay Edge Functions, integer paise arithmetic, and append-only ledger.
 - 🗺️ [Phase 4E Location & Maps Intelligence](docs/phase-4e-location-maps.md) — Privacy-first nearby collector discovery, Haversine calculations, and immutable collector selection.
 - 🤖 [Phase 4D Gemini AI Scrap Intelligence Guide](docs/phase-4d-gemini-ai.md) — Comprehensive multimodal vision pipeline, schema validation, financial integrity, and scale authority specification.
@@ -142,10 +159,10 @@ Phase 4F introduces a production-oriented, server-authoritative payment and sett
 
 ## 🧪 Automated Testing
 
-Run the automated test suites using Node.js (**266 passing assertions across 9 suites**):
+Run the automated test suites using Node.js (**316 passing assertions across 10 suites**):
 
 ```bash
-# Run ALL 9 test suites (266/266 assertions across all tiers)
+# Run ALL 10 test suites (316/316 assertions across all tiers)
 npm run test:all
 
 # Run core verification & audit test suites (mock mode — 81 tests)
@@ -177,6 +194,9 @@ npm run test:phase4e
 
 # Run Phase 4F Real Payment Infrastructure & Ledger suite (50 assertions)
 npm run test:phase4f
+
+# Run Phase 4G Real-Time Notifications & Event Intelligence suite (50 assertions)
+npm run test:phase4g
 ```
 
 ---
