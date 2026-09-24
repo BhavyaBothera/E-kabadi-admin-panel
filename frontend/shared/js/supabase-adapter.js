@@ -51,7 +51,10 @@
         issues: "issues",
         approvalAuditTrail: "approval_audit_trail",
         aiAnalyses: "ai_analyses",
-        citizenSavedLocations: "citizen_saved_locations"
+        citizenSavedLocations: "citizen_saved_locations",
+        financialLedger: "financial_ledger",
+        paymentProviderEvents: "payment_provider_events",
+        paymentAdjustments: "payment_adjustments"
     };
 
     // ── Column name mapping (camelCase → snake_case) ──

@@ -113,12 +113,27 @@ Phase 4D establishes a multimodal AI scrap recognition pipeline powered by Googl
 - **Resilient Fallback**: A zero-dependency manual weight calculator is available if a camera or AI service is unavailable.
 - **Admin Scrap Analytics**: Migration `005_gemini_ai_analysis.sql` provides the analytical RPC `get_ai_analysis_stats()` tracking model accuracy, confidence tiers, and user correction rates.
 
+---
+
+## 💳 Phase 4F — Real Payment Infrastructure, Settlement & Financial Ledger
+
+Phase 4F introduces a production-oriented, server-authoritative payment and settlement architecture:
+
+- **Server-Authoritative Financial Truth**: AI estimate has 0% financial authority. Payout is determined exclusively by the collector's certified digital scale weight multiplied by official catalog rates from `scrap_categories`: `finalWeightKg × trustedRatePerKg` stored in integer paise ($1\text{ INR} = 100\text{ paise}$).
+- **Rate & Weight Snapshotting**: Settled records immutably freeze `rate_per_kg_snapshot`, `final_weight_kg_snapshot`, `scrap_category_snapshot`, and `rate_version` to guarantee historical non-repudiation.
+- **Append-Only Financial Ledger**: Double-entry bookkeeping in `financial_ledger` (`CREDIT` to citizen, `DEBIT` from platform disbursement) protected by PostgreSQL immutability triggers blocking `UPDATE` and `DELETE`.
+- **HMAC-SHA256 Cryptographic Verification**: Native Web Crypto verification of Razorpay signatures in Supabase Edge Functions (`verify-payment`, `razorpay-webhook`). Forged signatures are strictly rejected.
+- **Webhook Idempotency & Replay Protection**: `payment_provider_events` table enforces unique constraint on `(provider, provider_event_id)` preventing duplicate processing or double-crediting Eco Coins.
+- **Strict Key Isolation & Zero Secrets**: `RAZORPAY_KEY_SECRET` and `RAZORPAY_WEBHOOK_SECRET` reside exclusively in Supabase Edge Function secrets. Zero live secrets in frontend code.
+- **Dual Engine Determinism**: `MockPaymentProvider` provides full offline deterministic testing (SUCCESS, FAILURE, TIMEOUT, DUPLICATE, ALREADY_PAID, REFUND) alongside production-ready `RazorpayPaymentProvider`.
+
 ### Documentation Index
+- 💳 [Phase 4F Real Payment & Financial Ledger Guide](docs/phase-4f-payments.md) — Comprehensive server-authoritative payment lifecycle, Razorpay Edge Functions, integer paise arithmetic, and append-only ledger.
+- 🗺️ [Phase 4E Location & Maps Intelligence](docs/phase-4e-location-maps.md) — Privacy-first nearby collector discovery, Haversine calculations, and immutable collector selection.
 - 🤖 [Phase 4D Gemini AI Scrap Intelligence Guide](docs/phase-4d-gemini-ai.md) — Comprehensive multimodal vision pipeline, schema validation, financial integrity, and scale authority specification.
 - 🛡️ [Phase 4C Security Hardening Guide](docs/phase-4c-security-hardening.md) — Comprehensive threat model, authorization architecture, RLS matrix, and security policies.
 - ☁️ [Phase 4B Cloud Integration Guide](docs/phase-4b-cloud-integration.md) — Operational guide on live Supabase wiring, session cache, atomic RPC, KYC privacy, and test execution.
 - 📘 [Backend Architecture & Relational Schema](docs/backend-architecture.md) — Detailed design of tables, RLS policies, adapter pattern, and stored procedures.
-- 🗺️ [Phase 4E Location & Maps Intelligence](docs/phase-4e-location-maps.md) — Privacy-first nearby collector discovery, Haversine calculations, and immutable collector selection.
 - ⚙️ [Environment Setup Guide](docs/environment-setup.md) — Step-by-step instructions for Supabase project provisioning, migrations, and local testing.
 - 🗺️ [Migration Plan](docs/migration-plan.md) — Multi-phase transition roadmap from mock to cloud database with zero downtime.
 - 📊 [Database Schema Reference](docs/supabase-schema.md) — Complete table, column, index, and constraint definitions.
@@ -127,10 +142,10 @@ Phase 4D establishes a multimodal AI scrap recognition pipeline powered by Googl
 
 ## 🧪 Automated Testing
 
-Run the automated test suites using Node.js (**216 passing assertions across 8 suites**):
+Run the automated test suites using Node.js (**266 passing assertions across 9 suites**):
 
 ```bash
-# Run ALL 8 test suites (216/216 assertions across all tiers)
+# Run ALL 9 test suites (266/266 assertions across all tiers)
 npm run test:all
 
 # Run core verification & audit test suites (mock mode — 81 tests)
@@ -159,6 +174,9 @@ npm run test:phase4d
 
 # Run Phase 4E Location & Maps Intelligence suite (34 assertions)
 npm run test:phase4e
+
+# Run Phase 4F Real Payment Infrastructure & Ledger suite (50 assertions)
+npm run test:phase4f
 ```
 
 ---

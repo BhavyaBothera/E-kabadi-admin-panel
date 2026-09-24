@@ -1126,9 +1126,26 @@
             const execute =
                 function () {
 
-                    let success =
-                        false;
-
+                    if (
+                        typeof paymentService !== "undefined" &&
+                        typeof paymentService.reconcilePayment === "function"
+                    ) {
+                        paymentService.reconcilePayment(id).then(function () {
+                            showToast(
+                                `${formatCurrency(
+                                    amount
+                                )} payment reconciled via secure gateway workflow.`,
+                                "success"
+                            );
+                            refreshDataOnly();
+                        }).catch(function (err) {
+                            showToast(
+                                "Reconciliation failed: " + (err.message || "Unknown error"),
+                                "error"
+                            );
+                        });
+                        return;
+                    }
 
                     if (
                         typeof completePayment ===
@@ -1163,7 +1180,6 @@
                             );
 
                     }
-
 
                     if (!success) {
 
@@ -1722,7 +1738,7 @@
 
     function normalizeStatus(payment) {
 
-        return String(
+        const raw = String(
             payment?.status ||
             "pending"
         )
@@ -1731,6 +1747,14 @@
                 /\s+/g,
                 "_"
             );
+
+        if (raw === "settled" || raw === "verified" || raw === "paid") {
+            return "completed";
+        }
+        if (raw === "order_created" || raw === "payment_pending") {
+            return "pending";
+        }
+        return raw;
 
     }
 

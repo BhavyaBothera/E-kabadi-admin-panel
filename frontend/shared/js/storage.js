@@ -152,6 +152,9 @@
                     createdAt: "2026-02-01T10:00:00Z"
                 }
             ],
+            financialLedger: [],
+            paymentProviderEvents: [],
+            paymentAdjustments: [],
             version: "2.0.0"
         };
     }
@@ -172,6 +175,12 @@
 
         saveDatabase(data) {
             localStorage.setItem(DB_KEY, safeStringify(data));
+        },
+
+        resetDatabase() {
+            const data = getSeedDatabase();
+            this.saveDatabase(data);
+            return data;
         },
 
         getCollection(name) {
@@ -209,6 +218,28 @@
                 throw new Error("Security violation: Selected collector is immutable and cannot be reassigned once pickup is created.");
             }
 
+            // Security Rule: Final verified scale weight is strictly immutable once pickup is settled
+            if (collectionName === "pickups" && (collection[index].status === "completed" || collection[index].paymentStatus === "paid")) {
+                if (updates.finalWeight !== undefined && updates.finalWeight !== collection[index].finalWeight) {
+                    throw new Error("Security violation: Final scale weight is immutable once collection is settled.");
+                }
+            }
+
+            // Security Rule: Financial ledger entries cannot be mutated
+            if (collectionName === "financialLedger") {
+                throw new Error("Security violation: Financial ledger entries are strictly immutable.");
+            }
+
+            // Security Rule: Settled payments are immutable
+            if (collectionName === "payments" && (collection[index].status === "settled" || collection[index].status === "paid")) {
+                if (updates.amount !== undefined && updates.amount !== collection[index].amount) {
+                    throw new Error("Security violation: Settled payment amount is immutable. Use adjustments ledger.");
+                }
+                if (updates.pickupId && updates.pickupId !== collection[index].pickupId) {
+                    throw new Error("Security violation: Payment pickup reference is strictly immutable.");
+                }
+            }
+
             const updated = { ...collection[index], ...updates, updatedAt: new Date().toISOString() };
             collection[index] = updated;
             this.saveCollection(collectionName, collection, "update");
@@ -216,6 +247,9 @@
         },
 
         delete(collectionName, id) {
+            if (collectionName === "financialLedger") {
+                throw new Error("Security violation: Financial ledger entries are strictly immutable.");
+            }
             let collection = this.getCollection(collectionName);
             collection = collection.filter(item => item.id !== id);
             this.saveCollection(collectionName, collection, "delete");

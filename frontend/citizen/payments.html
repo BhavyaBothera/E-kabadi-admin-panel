@@ -150,71 +150,18 @@
                     <thead>
                         <tr>
                             <th>Txn ID</th>
-                            <th>Date</th>
+                            <th>Pickup / Date</th>
                             <th>Collector</th>
-                            <th>Scrap Items</th>
-                            <th>Weight</th>
-                            <th>Amount</th>
-                            <th>Mode</th>
+                            <th>Category & Rate</th>
+                            <th>Verified Scale Weight</th>
+                            <th>Authoritative Payout</th>
                             <th>Status</th>
-                            <th>Receipt</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="paymentsTableBody">
                         <tr>
-                            <td><strong style="color:var(--forest-deep);">#TXN-9024</strong></td>
-                            <td>Today, 10:55 AM</td>
-                            <td>Ramesh Kumar</td>
-                            <td>Paper & Cartons</td>
-                            <td>25.5 kg</td>
-                            <td><strong style="color:var(--forest);">₹330.75</strong></td>
-                            <td>UPI</td>
-                            <td><span class="status-pill success">Settled</span></td>
-                            <td><button type="button" onclick="openReceipt('TXN-9024', 'Today', 'Ramesh Kumar', '25.5 kg', '₹330.75', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:var(--forest-deep);">#TXN-8812</strong></td>
-                            <td>Sep 21, 2026</td>
-                            <td>Ramesh Kumar</td>
-                            <td>Old Newspapers</td>
-                            <td>14.5 kg</td>
-                            <td><strong style="color:var(--forest);">₹235.00</strong></td>
-                            <td>UPI</td>
-                            <td><span class="status-pill success">Settled</span></td>
-                            <td><button type="button" onclick="openReceipt('TXN-8812', 'Sep 21, 2026', 'Ramesh Kumar', '14.5 kg', '₹235.00', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:var(--forest-deep);">#TXN-8671</strong></td>
-                            <td>Sep 14, 2026</td>
-                            <td>Vikram Singh</td>
-                            <td>Iron & Steel Scrap</td>
-                            <td>18.0 kg</td>
-                            <td><strong style="color:var(--forest);">₹576.00</strong></td>
-                            <td>UPI</td>
-                            <td><span class="status-pill success">Settled</span></td>
-                            <td><button type="button" onclick="openReceipt('TXN-8671', 'Sep 14, 2026', 'Vikram Singh', '18.0 kg', '₹576.00', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:var(--forest-deep);">#TXN-8450</strong></td>
-                            <td>Aug 29, 2026</td>
-                            <td>Suresh Kabadiwala</td>
-                            <td>E-Waste & Electronics</td>
-                            <td>10.1 kg</td>
-                            <td><strong style="color:var(--forest);">₹454.00</strong></td>
-                            <td>Cash</td>
-                            <td><span class="status-pill success">Settled</span></td>
-                            <td><button type="button" onclick="openReceipt('TXN-8450', 'Aug 29, 2026', 'Suresh Kabadiwala', '10.1 kg', '₹454.00', 'Cash')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong style="color:var(--forest-deep);">#TXN-8120</strong></td>
-                            <td>Aug 12, 2026</td>
-                            <td>Ramesh Kumar</td>
-                            <td>Cardboard Boxes</td>
-                            <td>35.0 kg</td>
-                            <td><strong style="color:var(--forest);">₹402.50</strong></td>
-                            <td>UPI</td>
-                            <td><span class="status-pill success">Settled</span></td>
-                            <td><button type="button" onclick="openReceipt('TXN-8120', 'Aug 12, 2026', 'Ramesh Kumar', '35.0 kg', '₹402.50', 'UPI')" style="color:var(--forest);font-weight:700;cursor:pointer;">View Slip 📄</button></td>
+                            <td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted);">Loading payment records...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -232,23 +179,27 @@
                     <div class="sidebar-logo" style="width:28px;height:28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m7 7 3-4 3 4M10 3v7M17 10h5l-3 5M22 10l-6-1M7 17l-4 4M3 21l2-6M7 17h7a4 4 0 0 0 3-7M10 10a4 4 0 0 0-3 7"/></svg></div>
                     <strong style="color:var(--forest-deep);font-size:16px;">E-Kabaadi Certified Receipt</strong>
                 </div>
-                <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Zero Waste Circular Recycling Network</div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Clean Tech Recycling & Certified Scale Settlement</div>
             </div>
-            <button type="button" onclick="closeReceipt()" style="font-size:20px;color:var(--text-muted);cursor:pointer;">✕</button>
+            <button type="button" onclick="closeReceipt()" style="font-size:20px;color:var(--text-muted);cursor:pointer;background:none;border:none;">✕</button>
         </div>
 
         <div style="text-align:center;padding:12px 0 16px;">
-            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Settlement Amount</span>
-            <div style="font-size:32px;font-weight:800;color:var(--forest);margin-top:2px;" id="modalAmount">₹330.75</div>
-            <span class="status-pill success" style="margin-top:4px;">Verified Direct Deposit</span>
+            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Certified Payout Amount</span>
+            <div style="font-size:32px;font-weight:800;color:var(--forest);margin-top:2px;" id="modalAmount">₹0.00</div>
+            <span class="status-pill success" style="margin-top:4px;" id="modalStatusBadge">Verified Settlement</span>
         </div>
 
         <div style="background:rgba(247,244,234,0.6);border-radius:10px;padding:14px;margin-bottom:16px;">
-            <div class="receipt-line"><span style="color:var(--text-muted);">Receipt Ref</span><strong id="modalTxnId">#TXN-9024</strong></div>
-            <div class="receipt-line"><span style="color:var(--text-muted);">Date & Time</span><span id="modalDate">Today, 10:55 AM</span></div>
-            <div class="receipt-line"><span style="color:var(--text-muted);">Collector Partner</span><span id="modalCollector">Ramesh Kumar</span></div>
-            <div class="receipt-line"><span style="color:var(--text-muted);">Total Certified Weight</span><strong id="modalWeight">25.5 kg</strong></div>
-            <div class="receipt-line"><span style="color:var(--text-muted);">Payment Mode</span><span id="modalMode">UPI (aarav@okhdfc)</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Receipt Ref</span><strong id="modalTxnId">#TXN-0000</strong></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Pickup Reference</span><span id="modalPickupId">#PK-0000</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Date & Time</span><span id="modalDate">Today</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Collector Partner</span><span id="modalCollector">Partner</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Scrap Category</span><strong id="modalCategory">Mixed Scrap</strong></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Catalog Rate</span><span id="modalRate">₹14.00/kg</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Certified Scale Weight</span><strong id="modalWeight">0.0 kg</strong></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Payment Mode</span><span id="modalMode">Razorpay UPI</span></div>
+            <div class="receipt-line"><span style="color:var(--text-muted);">Eco Coins Awarded</span><span id="modalEcoCoins" style="color:var(--forest);font-weight:700;">+0 Coins</span></div>
         </div>
 
         <div style="display:flex;gap:10px;">
@@ -265,6 +216,8 @@
 <div id="toastRoot" class="toast-container"></div>
 
 <script src="../data/mock-payments.js"></script>
+<script src="../data/mock-scrap.js"></script>
+<script src="../shared/js/payment-provider.js"></script>
 <script src="../shared/js/storage.js"></script>
 <script src="../shared/js/services.js"></script>
 <script src="../shared/js/router.js"></script>
@@ -273,17 +226,9 @@
 <script src="js/citizen-app.js"></script>
 <script src="js/payments.js"></script>
 <script>
-function openReceipt(id, date, col, weight, amount, mode) {
-    document.getElementById("modalTxnId").textContent = "#" + id;
-    document.getElementById("modalDate").textContent = date;
-    document.getElementById("modalCollector").textContent = col;
-    document.getElementById("modalWeight").textContent = weight;
-    document.getElementById("modalAmount").textContent = amount;
-    document.getElementById("modalMode").textContent = mode + " (Instant Settlement)";
-    document.getElementById("receiptModal").classList.add("open");
-}
 function closeReceipt() {
-    document.getElementById("receiptModal").classList.remove("open");
+    var modal = document.getElementById("receiptModal");
+    if (modal) modal.classList.remove("open");
 }
 </script>
 </body>
