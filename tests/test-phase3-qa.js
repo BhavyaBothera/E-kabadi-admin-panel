@@ -113,8 +113,8 @@ htmlFiles.forEach(({ portal, filename, fullPath }) => {
     while ((match = linkRegex.exec(content)) !== null) {
         const link = match[1].trim();
 
-        // Skip external protocols or anchors
-        if (link.startsWith("http://") || link.startsWith("https://") || link.startsWith("//") || link.startsWith("mailto:") || link.startsWith("data:") || link.startsWith("javascript:")) {
+        // Skip external protocols, anchors, or optional local-only config files
+        if (link.startsWith("http://") || link.startsWith("https://") || link.startsWith("//") || link.startsWith("mailto:") || link.startsWith("data:") || link.startsWith("javascript:") || link.endsWith("config.local.js")) {
             continue;
         }
 
