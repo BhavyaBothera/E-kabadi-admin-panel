@@ -167,6 +167,15 @@
                 column: "collector_id",
                 value: session.user.collectorId
             });
+            // Collector: subscribe to own live location and tracking sessions
+            subscribe("collector_live_locations", "collectorLiveLocations", {
+                column: "collector_id",
+                value: session.user.collectorId
+            });
+            subscribe("pickup_tracking_sessions", "pickupTrackingSessions", {
+                column: "collector_id",
+                value: session.user.collectorId
+            });
         } else if (role === "admin") {
             // Admin: subscribe to all pickup changes (unfiltered)
             subscribe("pickups", "pickups");
@@ -177,6 +186,9 @@
                 column: "role",
                 value: "admin"
             });
+            // Admin: subscribe to fleet locations
+            subscribe("collector_live_locations", "collectorLiveLocations");
+            subscribe("pickup_tracking_sessions", "pickupTrackingSessions");
         }
 
         _initialized = true;

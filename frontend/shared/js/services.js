@@ -1254,6 +1254,26 @@
                             });
                         }
 
+                        // Phase 5: Manage location tracking session lifecycle
+                        try {
+                            var trkService = (typeof window !== "undefined" && window.trackingService) || 
+                                             (typeof trackingService !== "undefined" ? trackingService : null);
+                            if (!trkService && typeof require === "function") {
+                                try { trkService = require("./tracking-service").trackingService; } catch (e) {}
+                            }
+                            if (trkService) {
+                                if (newStatus === "on_the_way") {
+                                    trkService.startSession(pickup.id, pickup.collectorId, pickup.citizenId);
+                                } else if (newStatus === "arrived" || newStatus === "collecting") {
+                                    trkService.pauseSession("TRK-" + pickup.id);
+                                } else if (newStatus === "completed" || newStatus === "cancelled" || newStatus === "paid") {
+                                    trkService.endSession("TRK-" + pickup.id, "Pickup " + newStatus);
+                                }
+                            }
+                        } catch (err) {
+                            console.warn("[PickupService] Tracking session lifecycle sync notice:", err);
+                        }
+
                         return updated;
                     });
                 });
@@ -2545,6 +2565,20 @@
         notification: notificationService,
         support: supportService,
         phoneVerification: phoneVerificationService,
+        tracking: (function () {
+            if (typeof window !== "undefined" && window.trackingService) return window.trackingService;
+            if (typeof require === "function") {
+                try { return require("./tracking-service").trackingService; } catch (e) {}
+            }
+            return null;
+        })(),
+        routing: (function () {
+            if (typeof window !== "undefined" && window.routingService) return window.routingService;
+            if (typeof require === "function") {
+                try { return require("./routing-service").routingService; } catch (e) {}
+            }
+            return null;
+        })(),
         location: (function () {
             var loc = getLocationService();
             return loc || {};

@@ -194,6 +194,44 @@
                 }
             ],
             notificationOutbox: [],
+            collectorLiveLocations: [
+                {
+                    id: "COL-2001",
+                    collectorId: "COL-2001",
+                    pickupId: "PK-9481",
+                    latitude: 28.6235,
+                    longitude: 77.3590,
+                    heading: 85.0,
+                    speedKmh: 22.5,
+                    accuracyMeters: 8.0,
+                    source: "mock_simulation",
+                    status: "active",
+                    freshnessStatus: "LIVE",
+                    isSimulated: true,
+                    anomalyFlag: null,
+                    updatedAt: new Date().toISOString()
+                }
+            ],
+            pickupTrackingSessions: [
+                {
+                    id: "TRK-PK-9481",
+                    pickupId: "PK-9481",
+                    collectorId: "COL-2001",
+                    citizenId: "CIT-1001",
+                    status: "active",
+                    locationFreshness: "LIVE",
+                    routeFreshness: "FRESH",
+                    etaStatus: "AVAILABLE",
+                    etaSeconds: 540,
+                    distanceMeters: 1650,
+                    isNearDestination: false,
+                    deviationStatus: "ON_ROUTE",
+                    isSimulated: true,
+                    startedAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                }
+            ],
+            collectorLocationHistory: [],
             version: "2.0.0"
         };
     }
@@ -295,6 +333,19 @@
                 }
             }
 
+            // Security Rule: Tracking sessions immutable fields
+            if (collectionName === "pickupTrackingSessions") {
+                if (updates.collectorId && updates.collectorId !== collection[index].collectorId) {
+                    throw new Error("Security violation: Cannot modify immutable field collectorId (Collector cannot be changed on a tracking session).");
+                }
+                if (updates.citizenId && updates.citizenId !== collection[index].citizenId) {
+                    throw new Error("Security violation: Cannot modify immutable field citizenId (Citizen cannot be changed on a tracking session).");
+                }
+                if (updates.pickupId && updates.pickupId !== collection[index].pickupId) {
+                    throw new Error("Security violation: Cannot modify immutable field pickupId (Pickup reference is immutable on a tracking session).");
+                }
+            }
+
             const updated = { ...collection[index], ...updates, updatedAt: new Date().toISOString() };
             collection[index] = updated;
             this.saveCollection(collectionName, collection, "update");
@@ -307,6 +358,9 @@
             }
             if (collectionName === "notifications") {
                 throw new Error("Security violation: Notification audit records cannot be deleted.");
+            }
+            if (collectionName === "pickupTrackingSessions" || collectionName === "collectorLiveLocations") {
+                throw new Error("Security violation: Active tracking session and live location records cannot be arbitrarily deleted by clients.");
             }
             let collection = this.getCollection(collectionName);
             collection = collection.filter(item => item.id !== id);

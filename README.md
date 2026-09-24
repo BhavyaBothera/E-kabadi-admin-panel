@@ -159,10 +159,10 @@ Phase 4G establishes a production-grade, event-driven notification architecture 
 
 ## 🧪 Automated Testing
 
-Run the automated test suites using Node.js (**316 passing assertions across 10 suites**):
+Run the automated test suites using Node.js (**366 passing assertions across 11 suites**):
 
 ```bash
-# Run ALL 10 test suites (316/316 assertions across all tiers)
+# Run ALL 11 test suites (366/366 assertions across all tiers — 0 regressions)
 npm run test:all
 
 # Run core verification & audit test suites (mock mode — 81 tests)
@@ -197,6 +197,9 @@ npm run test:phase4f
 
 # Run Phase 4G Real-Time Notifications & Event Intelligence suite (50 assertions)
 npm run test:phase4g
+
+# Run Phase 5 Real-Time Fleet Tracking, Routing & Geo-Spatial Operations suite (50 assertions)
+npm run test:phase5
 ```
 
 ---
@@ -204,6 +207,10 @@ npm run test:phase4g
 ## 🔒 Security Summary
 - **Citizen Selects Collector**: Citizen remains 100% authoritative over collector choice. Admin and automated algorithms never assign collectors.
 - **Selected Collector Immutability**: Once created, `selectedCollectorId` is locked at PostgreSQL trigger, storage, and service layers.
+- **No Surveillance Architecture**: Precise collector telemetry is strictly restricted to active pickup tracking sessions. Historical telemetry is ephemeral and purged automatically via `purge_stale_location_history(24)`.
+- **Explicit Routing Simulation Transparency**: Mock routing is unambiguously flagged (`isSimulated: true`, `source: "simulated_mock"`). In production mode, failures return `ROUTE_UNAVAILABLE` and `ETA_UNAVAILABLE` with ZERO silent fallback to fake data.
+- **Non-Destructive Movement Anomaly Detection**: Speeds $>120\text{ km/h}$ trigger an `EXCESSIVE_SPEED` diagnostic flag without corrupting or deleting raw GPS coordinates.
+- **Informational Geofencing**: Doorstep proximity ($<150\text{m}$) alerts the citizen and collector without mutating the pickup state machine.
 - **Location Privacy First**: Citizen door addresses remain private; collector public locations represent approximate service areas or masked neighborhood coordinates (~100m).
 - **Zero Frontend Secrets**: Zero `service_role` keys, map secrets, database passwords, or `GEMINI_API_KEY` credentials exist in frontend code or browser storage.
 - **Aadhaar Masking**: Displays only last 4 digits (`XXXX-XXXX-9012`). No unmasked Aadhaar numbers are persisted in database tables.

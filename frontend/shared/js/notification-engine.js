@@ -66,6 +66,13 @@
 
         // Fleet / Operations
         COLLECTOR_AVAILABILITY_CHANGED: "COLLECTOR_AVAILABILITY_CHANGED",
+        COLLECTOR_LOCATION_ACTIVE: "COLLECTOR_LOCATION_ACTIVE",
+        COLLECTOR_LOCATION_STALE: "COLLECTOR_LOCATION_STALE",
+        COLLECTOR_LOCATION_UNAVAILABLE: "COLLECTOR_LOCATION_UNAVAILABLE",
+        ETA_UPDATED: "ETA_UPDATED",
+        ROUTE_DEVIATION_DETECTED: "ROUTE_DEVIATION_DETECTED",
+        COLLECTOR_NEAR_DESTINATION: "COLLECTOR_NEAR_DESTINATION",
+        ROUTING_PROVIDER_FAILURE: "ROUTING_PROVIDER_FAILURE",
         SYSTEM_ALERT: "SYSTEM_ALERT"
     });
 
@@ -362,6 +369,36 @@
                 priority: PRIORITIES.NORMAL,
                 actionUrl: "support.html"
             }
+        },
+
+        [EVENT_TYPES.COLLECTOR_NEAR_DESTINATION]: {
+            citizen: {
+                title: "Collector Approaching Doorstep! 📍",
+                body: "{{collectorName}} is within 150m of your location. Please ensure scrap is accessible.",
+                type: "pickup",
+                priority: PRIORITIES.HIGH,
+                actionUrl: "tracking.html"
+            }
+        },
+
+        [EVENT_TYPES.ROUTE_DEVIATION_DETECTED]: {
+            admin: {
+                title: "Fleet Route Deviation Alert",
+                body: "Collector {{collectorName}} on pickup #{{pickupId}} reported an unexpected route deviation.",
+                type: "fleet",
+                priority: PRIORITIES.NORMAL,
+                actionUrl: "collectors.html"
+            }
+        },
+
+        [EVENT_TYPES.ROUTING_PROVIDER_FAILURE]: {
+            admin: {
+                title: "Routing Service Warning",
+                body: "External routing provider failure reported: {{error}}.",
+                type: "system",
+                priority: PRIORITIES.HIGH,
+                actionUrl: "settings.html"
+            }
         }
     };
 
@@ -541,6 +578,27 @@
                             priority: PRIORITIES.NORMAL
                         });
                     }
+                    break;
+
+                case EVENT_TYPES.COLLECTOR_NEAR_DESTINATION:
+                    if (event.recipientId || payload.citizenId) {
+                        recipients.push({
+                            userId: event.recipientId || payload.citizenId,
+                            role: "citizen",
+                            targetRole: "citizen",
+                            priority: PRIORITIES.HIGH
+                        });
+                    }
+                    break;
+
+                case EVENT_TYPES.ROUTE_DEVIATION_DETECTED:
+                case EVENT_TYPES.ROUTING_PROVIDER_FAILURE:
+                    recipients.push({
+                        userId: "USR-ADMIN-001",
+                        role: "admin",
+                        targetRole: "admin",
+                        priority: PRIORITIES.HIGH
+                    });
                     break;
 
                 default:
@@ -808,6 +866,10 @@
                 eventType: event.eventType,
                 notificationsCreated
             };
+        },
+
+        resolveRecipients(event) {
+            return policyEngine.resolveRecipients(event);
         }
     };
 

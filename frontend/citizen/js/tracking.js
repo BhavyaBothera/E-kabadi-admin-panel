@@ -43,10 +43,12 @@
         if (totalAmountEl) totalAmountEl.textContent = "₹" + (pickup.finalValue || pickup.estimatedValue || 0).toFixed(2);
 
         // Update Timeline Nodes & Badges
-        updateTimelineUI(pickup.status);
+        updateTimelineUI(pickup);
     }
 
-    function updateTimelineUI(status) {
+    function updateTimelineUI(pickup) {
+        if (!pickup) return;
+        const status = pickup.status;
         const badge = document.getElementById("orderStatusBadge");
         const bar = document.getElementById("timelineBar");
         const n1 = document.getElementById("node1");
@@ -63,6 +65,22 @@
 
         if (!badge || !bar) return;
 
+        // Query live tracking data if trackingService is loaded
+        let liveLoc = null;
+        let freshness = null;
+        if (typeof trackingService !== "undefined" && typeof trackingService.getPickupCollectorLocation === "function") {
+            try {
+                const authUser = (typeof authService !== "undefined" && typeof authService.getCurrentUser === "function") ? authService.getCurrentUser() : null;
+                const locRes = trackingService.getPickupCollectorLocation(pickup.id, authUser);
+                if (locRes && locRes.available) {
+                    liveLoc = locRes;
+                    freshness = locRes.freshness;
+                }
+            } catch (e) {
+                console.warn("[TrackingUI] Location check notice:", e.message);
+            }
+        }
+
         if (status === "requested") {
             bar.style.width = "10%";
             badge.className = "pickup-badge assigned";
@@ -78,19 +96,50 @@
             if (n1) n1.className = "tracking-node done";
             if (n2) n2.className = "tracking-node done";
             if (n3) n3.className = "tracking-node current";
+            if (hudDist) hudDist.textContent = "Standby";
+            if (hudEta) hudEta.textContent = "Preparing departure";
             if (receiptBadge) { receiptBadge.className = "status-pill warning"; receiptBadge.textContent = "Dispatched"; }
             if (successNotice) successNotice.style.display = "none";
         } else if (status === "on_the_way") {
             bar.style.width = "55%";
             badge.className = "pickup-badge enroute active-pulse";
-            badge.textContent = "● Out for Pickup • ETA ~14 mins";
+
+            let etaLabel = "ETA ~14 mins";
+            let distLabel = "1.2 km";
+
+            if (liveLoc && typeof routingService !== "undefined") {
+                const origin = { lat: liveLoc.latitude, lng: liveLoc.longitude };
+                const dest = { lat: pickup.pickupLatitude || 28.6208, lng: pickup.pickupLongitude || 77.3639 };
+                const freshStatus = freshness ? freshness.status : "LIVE";
+
+                routingService.calculateETA(origin, dest, { locationFreshness: freshStatus }).then(function (etaRes) {
+                    if (etaRes && etaRes.formattedEta) {
+                        if (hudEta) hudEta.textContent = etaRes.formattedEta;
+                        if (hudDist) hudDist.textContent = etaRes.formattedDistance || distLabel;
+                        if (badge) {
+                            if (freshStatus === "STALE") {
+                                badge.textContent = `⚠️ Stale Location • Last seen ${freshness.ageSeconds}s ago`;
+                                badge.className = "pickup-badge assigned";
+                            } else if (freshStatus === "OFFLINE") {
+                                badge.textContent = `● Collector Offline`;
+                                badge.className = "pickup-badge cancelled";
+                            } else {
+                                badge.textContent = `● Out for Pickup • ${etaRes.formattedEta} (${freshness ? freshness.label : "Live"})`;
+                            }
+                        }
+                    }
+                }).catch(function () {});
+            } else {
+                if (hudDist) hudDist.textContent = distLabel;
+                if (hudEta) hudEta.textContent = etaLabel;
+                badge.textContent = "● Out for Pickup • " + etaLabel;
+            }
+
             if (n1) n1.className = "tracking-node done";
             if (n2) n2.className = "tracking-node done";
             if (n3) n3.className = "tracking-node current";
             if (colPin) colPin.style.left = "40%";
-            if (bubble) bubble.textContent = "Partner (1.2 km away)";
-            if (hudDist) hudDist.textContent = "1.2 km";
-            if (hudEta) hudEta.textContent = "ETA ~14 mins";
+            if (bubble) bubble.textContent = (pickup.collectorName ? pickup.collectorName.split(" ")[0] : "Partner") + " (" + (hudDist ? hudDist.textContent : "1.2 km") + " away)";
             if (receiptBadge) { receiptBadge.className = "status-pill warning"; receiptBadge.textContent = "Transit Active"; }
             if (successNotice) successNotice.style.display = "none";
         } else if (status === "arrived" || status === "collecting") {

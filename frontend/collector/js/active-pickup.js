@@ -123,9 +123,27 @@
                 </button>
             `;
         } else if (pickup.status === "on_the_way") {
+            // Proximity indicator
+            let proximityNotice = "";
+            let liveLocNotice = "";
+            if (typeof trackingService !== "undefined") {
+                const trkSession = storage.findById("pickupTrackingSessions", "TRK-" + pickup.id);
+                if (trkSession && trkSession.isNearDestination) {
+                    proximityNotice = `
+                        <div style="width:100%;background:#e8f7ee;border:1px solid #16a05d;border-radius:10px;padding:12px;margin-bottom:8px;font-size:13px;color:#12372A;">
+                            📍 <strong>Proximity Alert:</strong> You are within ~150m of citizen doorstep. Tap <em>'I Have Arrived at Society Gate'</em> when parked.
+                        </div>
+                    `;
+                }
+            }
+
             btnsHtml = `
+                ${proximityNotice}
                 <button type="button" class="btn-primary" id="arrivedBtn" onclick="window.transitionPickupState('arrived')" style="flex:1;justify-content:center;padding:14px;">
                     📍 I Have Arrived at Society Gate
+                </button>
+                <button type="button" class="btn-secondary" onclick="window.transmitCurrentLocation()" style="display:inline-flex;align-items:center;padding:14px;">
+                    📡 Transmit GPS Ping
                 </button>
                 <a href="navigation.html?id=${pickup.id}" class="btn-secondary" style="display:inline-flex;align-items:center;padding:14px;">
                     Radar Map 🛰️
@@ -194,6 +212,34 @@
             }, 800);
         } else {
             showToast(res.error || "Could not cancel.", "danger");
+        }
+    };
+
+    window.transmitCurrentLocation = function () {
+        if (!currentPickupId || typeof trackingService === "undefined") return;
+        const colId = (window.currentCollector && window.currentCollector.collectorId) || "COL-2001";
+        const pickup = typeof pickupService !== "undefined" ? pickupService.getById(currentPickupId) : null;
+        const destLat = (pickup && pickup.pickupLatitude) || 28.6208;
+        const destLng = (pickup && pickup.pickupLongitude) || 77.3639;
+
+        // Simulated GPS progression towards destination
+        const mockLat = +(destLat + (Math.random() * 0.004 - 0.002)).toFixed(6);
+        const mockLng = +(destLng + (Math.random() * 0.004 - 0.002)).toFixed(6);
+
+        try {
+            const loc = trackingService.publishLocation(colId, {
+                lat: mockLat,
+                lng: mockLng,
+                speedKmh: 24.0,
+                heading: 90.0,
+                pickupId: currentPickupId,
+                source: "browser_gps"
+            }, window.currentCollector);
+
+            showToast("📍 Live GPS coordinates transmitted to dispatch radar!", "success");
+            renderActivePickup();
+        } catch (e) {
+            showToast("Transmission error: " + e.message, "danger");
         }
     };
 

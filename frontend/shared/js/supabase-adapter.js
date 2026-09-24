@@ -56,7 +56,10 @@
         paymentProviderEvents: "payment_provider_events",
         paymentAdjustments: "payment_adjustments",
         notificationPreferences: "notification_preferences",
-        notificationOutbox: "notification_outbox"
+        notificationOutbox: "notification_outbox",
+        collectorLiveLocations: "collector_live_locations",
+        pickupTrackingSessions: "pickup_tracking_sessions",
+        collectorLocationHistory: "collector_location_history"
     };
 
     // ── Column name mapping (camelCase → snake_case) ──
