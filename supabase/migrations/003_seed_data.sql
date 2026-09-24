@@ -40,13 +40,16 @@ INSERT INTO reward_catalog (id, name, description, cost, icon, category) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ─────────────────────────────────────────────
--- SEED DATA NOTES
+-- SEED DATA NOTES & COMPLETE DATASET
 -- ─────────────────────────────────────────────
--- The following tables require auth users to be created FIRST:
---   profiles, citizens, collectors
+-- For hackathon judging and live demonstrations, use the comprehensive,
+-- all-in-one migration file:
+--   supabase/migrations/010_hackathon_demo_seed.sql
 --
--- After running seed-auth-users.js, use the returned UUIDs
--- to populate these tables. The seed script handles this.
+-- Migration 010 automatically sets up auth accounts with verified bcrypt
+-- passwords, application profiles, citizens, collectors, live GPS telemetry,
+-- tracking sessions, pickups across the full lifecycle, payments, double-entry
+-- financial ledger, Eco Coins reward history, and admin KYC audit trails.
 --
 -- For reference, the demo accounts are:
 --
@@ -85,4 +88,5 @@ ON CONFLICT (id) DO NOTHING;
 --   password: password123
 --   role: collector, status: pending_approval
 --
--- See docs/environment-setup.md for the full seed process.
+-- See supabase/migrations/010_hackathon_demo_seed.sql for instant execution.
+
