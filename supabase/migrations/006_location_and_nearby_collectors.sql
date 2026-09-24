@@ -135,7 +135,11 @@ CREATE TRIGGER trg_prevent_pickup_collector_reassignment
 -- ─────────────────────────────────────────────
 -- 5. UPDATE PUBLIC COLLECTOR DIRECTORY VIEW
 -- ─────────────────────────────────────────────
-CREATE OR REPLACE VIEW public.public_collectors_directory
+-- Drop dependent wrapper and view to allow changing column names/order
+DROP FUNCTION IF EXISTS public.get_public_collectors() CASCADE;
+DROP VIEW IF EXISTS public.public_collectors_directory CASCADE;
+
+CREATE VIEW public.public_collectors_directory
 WITH (security_barrier = true) AS
 SELECT
     id,
@@ -145,6 +149,7 @@ SELECT
     vehicle_number,
     service_area,
     COALESCE(service_radius_km, service_radius, 8.0) AS service_radius_km,
+    COALESCE(service_radius_km, service_radius, 8.0) AS service_radius,
     COALESCE(service_area_locality, 'Noida') AS service_area_locality,
     approx_latitude,
     approx_longitude,
@@ -160,6 +165,12 @@ FROM public.collectors
 WHERE status = 'active';
 
 GRANT SELECT ON public.public_collectors_directory TO authenticated, anon;
+
+-- Recreate function wrapper for programmatic query
+CREATE OR REPLACE FUNCTION public.get_public_collectors()
+RETURNS SETOF public.public_collectors_directory AS $$
+    SELECT * FROM public.public_collectors_directory WHERE status = 'active';
+$$ LANGUAGE sql STABLE;
 
 -- ─────────────────────────────────────────────
 -- 6. GEOGRAPHIC PROXIMITY RPC (HAVERSINE)
