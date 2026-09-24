@@ -8,6 +8,12 @@
     "test:verify": "node tests/test-verification.js",
     "test:e2e": "node tests/test-golden-flow-e2e.js",
     "test:qa": "node tests/test-phase3-qa.js",
+    "test:supabase": "node tests/test-supabase-integration.js",
+    "test:phase4b": "node tests/test-phase4b-cloud-integration.js",
+    "test:phase4c": "node tests/test-phase4c-security.js",
+    "test:phase4d": "node tests/test-phase4d-gemini.js",
+    "test:phase4e": "node tests/test-phase4e-location.js",
+    "test:all": "npm test && node tests/test-supabase-integration.js && node tests/test-phase4b-cloud-integration.js && node tests/test-phase4c-security.js && node tests/test-phase4d-gemini.js && node tests/test-phase4e-location.js",
     "start": "npx serve -p 3000 ."
   },
   "keywords": [

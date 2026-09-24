@@ -7,12 +7,105 @@
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
     <link rel="stylesheet" href="css/citizen.css">
     <style>
-        .filter-toolbar {
+        /* Location Bar */
+        .location-panel {
             background: #fff;
             border-radius: var(--radius-md);
             border: 1px solid var(--border-subtle);
             padding: 16px 20px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .loc-current-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 260px;
+        }
+        .loc-icon-bubble {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(22, 160, 93, 0.12);
+            color: var(--forest);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .loc-details h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin: 0 0 2px 0;
+        }
+        .loc-details p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+        .loc-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-detect-loc {
+            background: #f4f8f5;
+            color: var(--forest);
+            border: 1px solid #c8dbcf;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-detect-loc:hover {
+            background: var(--forest);
+            color: #fff;
+            border-color: var(--forest);
+        }
+        .loc-select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #c8dbcf;
+            font-size: 13px;
+            color: var(--charcoal);
+            background: #fff;
+        }
+
+        /* Consent / Privacy Banner */
+        .privacy-strip {
+            background: rgba(247, 244, 234, 0.9);
+            border: 1px solid rgba(22, 160, 93, 0.2);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: #526E48;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* Filter & Search Toolbar */
+        .filter-toolbar {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            padding: 14px 18px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -22,14 +115,14 @@
         .filter-search-wrap {
             position: relative;
             flex: 1;
-            min-width: 240px;
+            min-width: 220px;
         }
         .filter-search-wrap input {
             width: 100%;
-            padding: 10px 14px 10px 38px;
-            border-radius: 10px;
+            padding: 9px 14px 9px 36px;
+            border-radius: 8px;
             border: 1.5px solid #e4e9e6;
-            font-size: 14px;
+            font-size: 13.5px;
             color: var(--charcoal);
         }
         .filter-search-wrap svg {
@@ -37,19 +130,20 @@
             left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             color: #96a19b;
         }
         .filter-chips {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .chip {
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 7px 12px;
+            border-radius: 18px;
+            font-size: 12.5px;
             font-weight: 600;
             background: rgba(247, 244, 234, 0.8);
             border: 1px solid var(--border-subtle);
@@ -66,56 +160,173 @@
             border-color: var(--forest);
         }
 
-        /* Map Radar Preview */
-        .radar-box {
-            background: linear-gradient(135deg, #12372A, #194835);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            color: #fff;
-            margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+        /* Map Container */
+        .map-section {
+            margin-bottom: 20px;
         }
-        .radar-rings {
-            position: absolute;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 180px;
-            height: 180px;
-            border: 1px solid rgba(197, 216, 109, 0.2);
-            border-radius: 50%;
-        }
-        .radar-rings::before {
-            content: '';
-            position: absolute;
-            inset: 30px;
-            border: 1px solid rgba(197, 216, 109, 0.3);
-            border-radius: 50%;
-        }
-        .radar-rings::after {
-            content: '';
-            position: absolute;
-            inset: 65px;
-            background: rgba(197, 216, 109, 0.4);
-            border-radius: 50%;
-            box-shadow: 0 0 16px #C5D86D;
-            animation: pulse-dot 1.8s infinite;
-        }
-        @keyframes pulse-dot { 0%, 100% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
 
+        /* Collector Cards */
         .collectors-list {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
+        .collector-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border-subtle);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .collector-card:hover {
+            border-color: #a8c4b2;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        }
+        .collector-card.selected-highlight {
+            border-color: var(--forest);
+            background: #fbfdfc;
+            box-shadow: 0 0 0 2px rgba(22, 160, 93, 0.2);
+        }
+        .collector-card.ineligible-card {
+            opacity: 0.65;
+            background: #fafafa;
+        }
+        .collector-avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .collector-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #12372A, #1e5a44);
+            color: #fff;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .collector-status-dot {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2.5px solid #fff;
+        }
+        .collector-status-dot.online { background: #16a05d; }
+        .collector-status-dot.busy { background: #e09f18; }
+        .collector-status-dot.offline { background: #8c9b93; }
+
+        .collector-details {
+            flex: 1;
+            min-width: 220px;
+        }
+        .collector-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--charcoal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+        .verified-icon {
+            font-size: 11px;
+            font-weight: 700;
+            color: #16a05d;
+            background: rgba(22, 160, 93, 0.1);
+            padding: 2px 7px;
+            border-radius: 10px;
+        }
+        .collector-rating {
+            font-size: 13px;
+            font-weight: 700;
+            color: #b78103;
+            margin-bottom: 4px;
+        }
+        .collector-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .tag-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #f1f5f3;
+            color: #3b5045;
+            font-weight: 600;
+        }
+
+        .collector-action {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            min-width: 150px;
+            flex-shrink: 0;
+        }
+        .collector-distance {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--forest);
+        }
+        .collector-op-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .op-available { background: rgba(22, 160, 93, 0.12); color: #16a05d; }
+        .op-busy { background: rgba(224, 159, 24, 0.15); color: #b07807; }
+        .op-offline { background: #edeef0; color: #738079; }
+        .op-outofradius { background: #fde8e8; color: #c81e1e; }
+
+        /* Empty State */
+        .empty-collectors-card {
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1.5px dashed #c4d4cc;
+            padding: 40px 24px;
+            text-align: center;
+        }
+        .empty-collectors-card h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--charcoal);
+            margin: 12px 0 6px 0;
+        }
+        .empty-collectors-card p {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            max-width: 440px;
+            margin: 0 auto 16px auto;
+            line-height: 1.5;
+        }
+
         @media (max-width: 768px) {
-            .radar-box { flex-direction: column; text-align: center; }
-            .radar-rings { display: none; }
+            .collector-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .collector-action {
+                align-items: flex-start;
+                width: 100%;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #f0f4f2;
+            }
+            .collector-action button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -131,7 +342,7 @@
         <div class="page-header">
             <div>
                 <h1 class="page-title">Find Nearby Scrap Collectors</h1>
-                <p class="page-subtitle">Background-verified collectors operating around Sector 62, Noida with zero-tamper certified digital scales.</p>
+                <p class="page-subtitle">Select an eligible, verified collector servicing your pickup locality. You remain in complete control.</p>
             </div>
             <div class="header-actions">
                 <a href="sell-scrap.html" class="btn-secondary">
@@ -140,164 +351,69 @@
             </div>
         </div>
 
-        <!-- Radar Dispatch Banner -->
-        <div class="radar-box">
-            <div style="position:relative;z-index:2;max-width:480px;">
-                <div style="display:inline-block;padding:3px 10px;background:rgba(255,255,255,0.15);border-radius:20px;font-size:12px;font-weight:700;margin-bottom:8px;">
-                    📡 Live Collector Radar
+        <!-- Privacy & Consent Strip -->
+        <div class="privacy-strip">
+            <span>🔒</span>
+            <span><strong>Privacy Guarantee:</strong> Your exact residential address is kept private and shared only with the collector you choose after booking confirmation.</span>
+        </div>
+
+        <!-- Location Selection Panel -->
+        <div class="location-panel">
+            <div class="loc-current-wrap">
+                <div class="loc-icon-bubble">📍</div>
+                <div class="loc-details">
+                    <h4 id="locLabelText">Pickup Location: Sector 62, Noida</h4>
+                    <p id="locSubText">Coords: ~28.621, 77.364 • Showing collectors serving this locality</p>
                 </div>
-                <h2 style="font-size:20px;font-weight:800;margin-bottom:6px;">4 Collectors Available for Immediate Pickup</h2>
-                <p style="font-size:13px;opacity:0.85;line-height:1.5;">
-                    Current address detected: <strong>Sector 62, Noida (201309)</strong>. Average arrival ETA is 20-35 minutes from booking confirmation.
-                </p>
             </div>
-            <div class="radar-rings"></div>
+
+            <div class="loc-actions">
+                <select id="savedAddressDropdown" class="loc-select" onchange="onSavedAddressChange(this)">
+                    <option value="current">Current Location (Sector 62)</option>
+                    <option value="home">Home (Sector 62, Noida)</option>
+                    <option value="office">Office (Logix Cyber Park)</option>
+                    <option value="sector18">Sector 18, Noida</option>
+                    <option value="sector45">Sector 45, Noida</option>
+                    <option value="sector55">Sector 55, Noida</option>
+                </select>
+
+                <button type="button" class="btn-detect-loc" onclick="handleDetectLocationClick()">
+                    <span>🎯</span> Detect GPS Location
+                </button>
+            </div>
+        </div>
+
+        <!-- Compact Radar / Map Preview -->
+        <div class="map-section">
+            <div id="collectorMapContainer"></div>
         </div>
 
         <!-- Filter & Search Toolbar -->
         <div class="filter-toolbar">
             <div class="filter-search-wrap">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="collectorSearchInput" placeholder="Search by name, vehicle, or area..." oninput="filterCollectors()">
+                <input type="text" id="collectorSearchInput" placeholder="Search by name, vehicle, or area..." oninput="handleSearchInput()">
             </div>
 
             <div class="filter-chips">
-                <button type="button" class="chip active" data-filter="all" onclick="setFilter(this, 'all')">All Fleet</button>
-                <button type="button" class="chip" data-filter="tempo" onclick="setFilter(this, 'tempo')">🛺 Three-Wheeler Auto</button>
-                <button type="button" class="chip" data-filter="erickshaw" onclick="setFilter(this, 'erickshaw')">⚡ E-Rickshaw</button>
-                <button type="button" class="chip" data-filter="truck" onclick="setFilter(this, 'truck')">🚛 Mini Truck</button>
+                <button type="button" class="chip active" data-filter="all" onclick="setMaterialFilter(this, 'all')">All Materials</button>
+                <button type="button" class="chip" data-filter="paper" onclick="setMaterialFilter(this, 'Paper')">📄 Paper</button>
+                <button type="button" class="chip" data-filter="plastic" onclick="setMaterialFilter(this, 'Plastic')">♻️ Plastic</button>
+                <button type="button" class="chip" data-filter="metal" onclick="setMaterialFilter(this, 'Metal')">🔩 Metal</button>
+                <button type="button" class="chip" data-filter="cardboard" onclick="setMaterialFilter(this, 'Cardboard')">📦 Cardboard</button>
+
+                <select id="sortDropdown" class="loc-select" onchange="handleSortChange(this)" style="margin-left:8px;">
+                    <option value="distance">Sort: Nearest</option>
+                    <option value="queue">Sort: Lowest Queue</option>
+                    <option value="rating">Sort: Top Rated</option>
+                </select>
             </div>
         </div>
 
-        <!-- Collectors Cards List -->
+        <!-- Dynamic Collectors Cards List -->
         <div class="collectors-list" id="collectorsListContainer">
-            <!-- Collector 1 -->
-            <div class="collector-card" data-category="tempo" data-name="Ramesh Kumar">
-                <div class="collector-avatar-wrap">
-                    <div class="collector-avatar">RK</div>
-                    <div class="collector-status-dot" title="Online & Available"></div>
-                </div>
-                <div class="collector-details">
-                    <div class="collector-name">
-                        Ramesh Kumar <span class="verified-icon" title="KYC & Police Verified">✓ Verified</span>
-                    </div>
-                    <div class="collector-rating">
-                        <span>★ 4.8</span>
-                        <span style="color:var(--text-muted);font-weight:400;">(342 completed pickups)</span>
-                    </div>
-                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
-                        Vehicle: <strong>Three-Wheeler Tempo (UP 16 AB 1234)</strong>
-                    </div>
-                    <div class="collector-tags">
-                        <span class="tag-badge">⚖️ Certified Digital Scale</span>
-                        <span class="tag-badge">📄 Paper & Cardboard</span>
-                        <span class="tag-badge">♻️ Plastics</span>
-                        <span class="tag-badge">🔩 Scrap Metals</span>
-                    </div>
-                </div>
-                <div class="collector-action">
-                    <div class="collector-distance">📍 1.2 km away</div>
-                    <span style="font-size:12px;color:#16a05d;font-weight:600;">⚡ ETA ~15 mins</span>
-                    <button type="button" class="btn-primary" onclick="selectCollector('Ramesh Kumar', 'Three-Wheeler Tempo', 'UP 16 AB 1234', '4.8', '1.2 km')">
-                        Book Ramesh →
-                    </button>
-                </div>
-            </div>
-
-            <!-- Collector 2 -->
-            <div class="collector-card" data-category="erickshaw" data-name="Vikram Singh">
-                <div class="collector-avatar-wrap">
-                    <div class="collector-avatar" style="background:linear-gradient(135deg,#1F6F43,#4F8F45);">VS</div>
-                    <div class="collector-status-dot" title="Online"></div>
-                </div>
-                <div class="collector-details">
-                    <div class="collector-name">
-                        Vikram Singh <span class="verified-icon">✓ Verified</span>
-                    </div>
-                    <div class="collector-rating">
-                        <span>★ 4.9</span>
-                        <span style="color:var(--text-muted);font-weight:400;">(518 completed pickups)</span>
-                    </div>
-                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
-                        Vehicle: <strong>Eco Cargo E-Rickshaw (UP 16 ER 5521)</strong>
-                    </div>
-                    <div class="collector-tags">
-                        <span class="tag-badge">🌱 Zero Emissions Fleet</span>
-                        <span class="tag-badge">⚡ Instant UPI Payout</span>
-                        <span class="tag-badge">📦 Bulk Cardboard</span>
-                    </div>
-                </div>
-                <div class="collector-action">
-                    <div class="collector-distance">📍 2.4 km away</div>
-                    <span style="font-size:12px;color:#16a05d;font-weight:600;">⚡ ETA ~25 mins</span>
-                    <button type="button" class="btn-primary" onclick="selectCollector('Vikram Singh', 'Cargo E-Rickshaw', 'UP 16 ER 5521', '4.9', '2.4 km')">
-                        Book Vikram →
-                    </button>
-                </div>
-            </div>
-
-            <!-- Collector 3 -->
-            <div class="collector-card" data-category="truck" data-name="Suresh Kabadiwala">
-                <div class="collector-avatar-wrap">
-                    <div class="collector-avatar" style="background:linear-gradient(135deg,#12372A,#3b5e4f);">SK</div>
-                    <div class="collector-status-dot" title="Online"></div>
-                </div>
-                <div class="collector-details">
-                    <div class="collector-name">
-                        Suresh Kabadiwala <span class="verified-icon">✓ Verified</span>
-                    </div>
-                    <div class="collector-rating">
-                        <span>★ 4.7</span>
-                        <span style="color:var(--text-muted);font-weight:400;">(210 completed pickups)</span>
-                    </div>
-                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
-                        Vehicle: <strong>Tata Ace Mini Truck (DL 1L AA 9081)</strong>
-                    </div>
-                    <div class="collector-tags">
-                        <span class="tag-badge">🚛 Heavy Bulk Capacity</span>
-                        <span class="tag-badge">💻 E-Waste Certified</span>
-                        <span class="tag-badge">❄️ Appliances Disposal</span>
-                    </div>
-                </div>
-                <div class="collector-action">
-                    <div class="collector-distance">📍 3.8 km away</div>
-                    <span style="font-size:12px;color:#c48b00;font-weight:600;">⏱️ ETA ~40 mins</span>
-                    <button type="button" class="btn-primary" onclick="selectCollector('Suresh Kabadiwala', 'Mini Truck', 'DL 1L AA 9081', '4.7', '3.8 km')">
-                        Book Suresh →
-                    </button>
-                </div>
-            </div>
-
-            <!-- Collector 4 -->
-            <div class="collector-card" data-category="truck" data-name="Eco-Recycle Agency Hub">
-                <div class="collector-avatar-wrap">
-                    <div class="collector-avatar" style="background:linear-gradient(135deg,#2673b3,#12372A);">ER</div>
-                    <div class="collector-status-dot" title="Online"></div>
-                </div>
-                <div class="collector-details">
-                    <div class="collector-name">
-                        Eco-Recycle Agency Hub <span class="verified-icon">✓ Authorized Partner</span>
-                    </div>
-                    <div class="collector-rating">
-                        <span>★ 4.9</span>
-                        <span style="color:var(--text-muted);font-weight:400;">(1,240 pickups)</span>
-                    </div>
-                    <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
-                        Fleet: <strong>Commercial Aggregator (Canter & Weighbridge)</strong>
-                    </div>
-                    <div class="collector-tags">
-                        <span class="tag-badge">🏭 Society / Bulk Lots</span>
-                        <span class="tag-badge">📜 ISO 14001 Recycling Slip</span>
-                        <span class="tag-badge">🏢 Corporate Pickups</span>
-                    </div>
-                </div>
-                <div class="collector-action">
-                    <div class="collector-distance">📍 4.5 km away</div>
-                    <span style="font-size:12px;color:#c48b00;font-weight:600;">⏱️ Slot Booking</span>
-                    <button type="button" class="btn-primary" onclick="selectCollector('Eco-Recycle Hub', 'Commercial Fleet', 'UP 16 TR 8890', '4.9', '4.5 km')">
-                        Book Agency →
-                    </button>
-                </div>
+            <div style="text-align:center;padding:30px;color:var(--text-muted);">
+                Finding nearby verified collectors...
             </div>
         </div>
     </main>
@@ -305,54 +421,351 @@
 
 <div id="toastRoot" class="toast-container"></div>
 
+<!-- Core Scripts -->
+<script src="../config/config-loader.js"></script>
+<script src="../config/environment.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../shared/js/supabase-client.js"></script>
+<script src="../shared/js/supabase-adapter.js"></script>
+<script src="../shared/js/realtime.js"></script>
+<script src="../shared/js/ui-states.js"></script>
 <script src="../data/mock-collectors.js"></script>
 <script src="../shared/js/storage.js"></script>
+<script src="../shared/js/security-utils.js"></script>
+<script src="../shared/js/location-service.js"></script>
+<script src="../shared/js/map-service.js"></script>
 <script src="../shared/js/services.js"></script>
 <script src="../shared/js/router.js"></script>
 <script src="../shared/js/notifications.js"></script>
 <script src="../shared/js/utilities.js"></script>
 <script src="js/citizen-app.js"></script>
-<script>
-let activeFilter = "all";
 
-function setFilter(btn, filter) {
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    btn.classList.add("active");
-    activeFilter = filter;
-    filterCollectors();
+<script>
+// State
+let currentCitizenLocation = {
+    lat: 28.6208,
+    lng: 77.3639,
+    locality: "Sector 62, Noida",
+    address: "Flat B-402, Green Valley Apartments, Sector 62, Noida - 201309"
+};
+let activeMaterialFilter = "all";
+let currentSort = "distance";
+let searchQuery = "";
+let activeMapInstance = null;
+let currentNearbyResult = null;
+
+// Initialize
+document.addEventListener("DOMContentLoaded", function () {
+    // Check if location was already saved in session
+    try {
+        const savedLoc = JSON.parse(sessionStorage.getItem("ekabadi_pickup_location") || "null");
+        if (savedLoc && savedLoc.lat && savedLoc.lng) {
+            currentCitizenLocation = savedLoc;
+        }
+    } catch (e) {}
+
+    updateLocationHeader();
+    renderCollectorsAndMap();
+});
+
+function updateLocationHeader() {
+    const lbl = document.getElementById("locLabelText");
+    const sub = document.getElementById("locSubText");
+    if (lbl) lbl.textContent = "Pickup Location: " + (currentCitizenLocation.locality || "Sector 62, Noida");
+    if (sub) sub.textContent = `Approx. coords: ${currentCitizenLocation.lat.toFixed(3)}, ${currentCitizenLocation.lng.toFixed(3)} • Showing eligible collectors`;
 }
 
-function filterCollectors() {
-    const query = (document.getElementById("collectorSearchInput")?.value || "").toLowerCase();
-    const cards = document.querySelectorAll(".collector-card");
+function renderCollectorsAndMap() {
+    const container = document.getElementById("collectorsListContainer");
+    if (!container) return;
 
-    cards.forEach(card => {
-        const cat = card.dataset.category;
-        const name = (card.dataset.name || "").toLowerCase();
-        const matchesCat = activeFilter === "all" || cat === activeFilter;
-        const matchesQuery = !query || name.includes(query);
+    // Use services layer to discover nearby collectors
+    const discoveryPromise = (typeof collectorService !== "undefined" && typeof collectorService.discoverNearby === "function")
+        ? collectorService.discoverNearby(currentCitizenLocation, {
+            material: activeMaterialFilter,
+            searchQuery: searchQuery,
+            sortBy: currentSort
+        })
+        : (typeof nearbyCollectorService !== "undefined"
+            ? Promise.resolve(nearbyCollectorService.findNearbyCollectors(
+                currentCitizenLocation,
+                typeof MOCK_COLLECTORS !== "undefined" ? MOCK_COLLECTORS : [],
+                { material: activeMaterialFilter, searchQuery: searchQuery, sortBy: currentSort }
+            ))
+            : Promise.resolve({ collectors: [], eligibleCount: 0 })
+        );
 
-        if (matchesCat && matchesQuery) {
-            card.style.display = "flex";
-        } else {
-            card.style.display = "none";
+    EKABADI_SERVICES.resolveData(discoveryPromise, function (result) {
+        currentNearbyResult = result;
+        const collectors = (result && result.collectors) ? result.collectors : [];
+
+        // 1. Update Map
+        updateMap(collectors);
+
+        // 2. Render Cards List
+        if (collectors.length === 0) {
+            container.innerHTML = `
+                <div class="empty-collectors-card">
+                    <div style="font-size:36px;">🚛</div>
+                    <h3>No Collectors Available Nearby</h3>
+                    <p>There are currently no active collectors servicing <strong>${currentCitizenLocation.locality || "this area"}</strong>. You can try changing your pickup location or selecting another saved address.</p>
+                    <button type="button" class="btn-primary" onclick="handleDetectLocationClick()">
+                        Change Pickup Location
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        let html = "";
+        collectors.forEach(function (c) {
+            const isEligible = c.eligible !== false;
+            const opClass = c.operationalStatus === "AVAILABLE" ? "op-available" : (c.operationalStatus === "BUSY" ? "op-busy" : (c.operationalStatus === "OFFLINE" ? "op-offline" : "op-outofradius"));
+            const dotClass = c.isOnline ? (c.queueLength >= 5 ? "busy" : "online") : "offline";
+
+            const tagsHtml = (c.acceptedMaterials || []).slice(0, 4).map(m => `<span class="tag-badge">♻️ ${m}</span>`).join("");
+
+            html += `
+                <div class="collector-card ${isEligible ? "" : "ineligible-card"}" id="card-${c.id}" data-collector-id="${c.id}">
+                    <div class="collector-avatar-wrap">
+                        <div class="collector-avatar">${c.avatar || "CP"}</div>
+                        <div class="collector-status-dot ${dotClass}" title="${c.statusLabel}"></div>
+                    </div>
+
+                    <div class="collector-details">
+                        <div class="collector-name">
+                            ${c.name}
+                            ${c.verificationStatus === "verified" ? `<span class="verified-icon">✓ Verified Partner</span>` : ""}
+                        </div>
+                        <div class="collector-rating">
+                            <span>★ ${Number(c.rating).toFixed(1)}</span>
+                            <span style="color:var(--text-muted);font-weight:400;">(${c.completedPickups} completed)</span>
+                            <span style="margin:0 4px;color:#c0cdc6;">•</span>
+                            <span style="color:#526E48;font-weight:600;">${c.responseTime || "~20 min"} ETA</span>
+                        </div>
+                        <div style="font-size:13px;color:var(--text-muted);margin:2px 0;">
+                            Vehicle: <strong>${c.vehicleType} (${c.vehicleNumber})</strong>
+                        </div>
+                        <div style="font-size:12px;color:#526E48;margin:2px 0;">
+                            Coverage: <strong>${c.serviceArea}</strong> (Serving up to ${c.serviceRadiusKm || 8} km)
+                        </div>
+                        <div class="collector-tags">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+
+                    <div class="collector-action">
+                        <div class="collector-distance">${c.distanceFormatted}</div>
+                        <span class="collector-op-badge ${opClass}">${c.statusLabel}</span>
+                        ${isEligible ? `
+                            <button type="button" class="btn-primary" onclick="selectCollector('${c.id}', '${c.name.replace(/'/g, "\\'")}', '${c.vehicleType}', '${c.vehicleNumber}', '${c.rating}', '${c.distanceFormatted}')">
+                                Book ${c.name.split(" ")[0]} →
+                            </button>
+                        ` : `
+                            <button type="button" class="btn-secondary" disabled style="opacity:0.6;cursor:not-allowed;" title="${c.ineligibilityReason || "Unavailable"}">
+                                ${c.statusLabel}
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    });
+}
+
+function updateMap(collectors) {
+    if (typeof mapService === "undefined") return;
+
+    if (!activeMapInstance) {
+        mapService.createMap("collectorMapContainer", {
+            center: currentCitizenLocation,
+            zoom: 13,
+            onMarkerSelect: function (colId) {
+                highlightCard(colId);
+            }
+        }).then(function (map) {
+            activeMapInstance = map;
+            populateMapMarkers(collectors);
+        });
+    } else {
+        populateMapMarkers(collectors);
+    }
+}
+
+function populateMapMarkers(collectors) {
+    if (!activeMapInstance) return;
+    activeMapInstance.clearMarkers();
+
+    // 1. Citizen marker
+    activeMapInstance.addMarker("citizen-loc", {
+        type: "citizen",
+        lat: currentCitizenLocation.lat,
+        lng: currentCitizenLocation.lng,
+        title: "Your Location"
+    });
+
+    // 2. Collector markers
+    collectors.forEach(function (c) {
+        if (c.approxLocation && c.approxLocation.lat && c.approxLocation.lng) {
+            activeMapInstance.addMarker(c.id, {
+                type: "collector",
+                id: c.id,
+                name: c.name,
+                vehicleType: c.vehicleType,
+                lat: c.approxLocation.lat,
+                lng: c.approxLocation.lng,
+                eligible: c.eligible,
+                distanceFormatted: c.distanceFormatted
+            });
         }
     });
 }
 
-function selectCollector(name, vehicle, number, rating, distance, id = "COL-2001") {
-    // If id is not specified, determine from name
-    if (name.includes("Ramesh")) id = "COL-2001";
-    else if (name.includes("Suresh")) id = "COL-2002";
-    else if (name.includes("Mohan")) id = "COL-2003";
+function highlightCard(colId) {
+    document.querySelectorAll(".collector-card").forEach(c => c.classList.remove("selected-highlight"));
+    const targetCard = document.getElementById("card-" + colId);
+    if (targetCard) {
+        targetCard.classList.add("selected-highlight");
+        targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+}
 
+// Location Change Handlers
+function onSavedAddressChange(selectEl) {
+    const val = selectEl.value;
+    if (val === "office") {
+        currentCitizenLocation = {
+            lat: 28.6235,
+            lng: 77.3680,
+            locality: "Logix Cyber Park, Sector 62",
+            address: "Tower 3, Logix Cyber Park, Sector 62, Noida - 201309"
+        };
+    } else if (val === "sector18") {
+        currentCitizenLocation = {
+            lat: 28.5712,
+            lng: 77.3224,
+            locality: "Sector 18, Noida",
+            address: "House 24, Sector 18, Noida - 201301"
+        };
+    } else if (val === "sector45") {
+        currentCitizenLocation = {
+            lat: 28.5520,
+            lng: 77.3420,
+            locality: "Sector 45, Noida",
+            address: "Sector 45, Noida - 201303"
+        };
+    } else if (val === "sector55") {
+        currentCitizenLocation = {
+            lat: 28.5980,
+            lng: 77.3510,
+            locality: "Sector 55, Noida",
+            address: "Sector 55, Noida - 201307"
+        };
+    } else {
+        currentCitizenLocation = {
+            lat: 28.6208,
+            lng: 77.3639,
+            locality: "Sector 62, Noida",
+            address: "Flat B-402, Green Valley Apartments, Sector 62, Noida - 201309"
+        };
+    }
+
+    try {
+        sessionStorage.setItem("ekabadi_pickup_location", JSON.stringify(currentCitizenLocation));
+    } catch (e) {}
+
+    updateLocationHeader();
+    if (activeMapInstance) activeMapInstance.setCenter(currentCitizenLocation.lat, currentCitizenLocation.lng);
+    renderCollectorsAndMap();
+    showToast("Pickup area updated to " + currentCitizenLocation.locality, "info");
+}
+
+function handleDetectLocationClick() {
+    if (typeof citizenLocationManager === "undefined") {
+        showToast("Location service not available.", "warning");
+        return;
+    }
+
+    // Explicit User Consent Notice
+    const proceed = confirm("Use your browser location to find nearby collectors?\\n\\nPrivacy Note: Your exact address is never published and is shared only with your selected collector.");
+    if (!proceed) return;
+
+    showToast("Detecting your location via GPS...", "info");
+
+    citizenLocationManager.requestCurrentPosition().then(function (pos) {
+        currentCitizenLocation = {
+            lat: pos.lat,
+            lng: pos.lng,
+            locality: "Detected Location",
+            address: `Detected Location (~${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)})`,
+            accuracy: pos.accuracyMeters
+        };
+
+        // Attempt reverse geocode locality name
+        if (typeof geocodingService !== "undefined") {
+            geocodingService.reverseGeocode(pos.lat, pos.lng).then(function (rev) {
+                if (rev && rev.locality) {
+                    currentCitizenLocation.locality = rev.locality;
+                    currentCitizenLocation.address = rev.address;
+                }
+                updateLocationHeader();
+                renderCollectorsAndMap();
+            });
+        }
+
+        try {
+            sessionStorage.setItem("ekabadi_pickup_location", JSON.stringify(currentCitizenLocation));
+        } catch (e) {}
+
+        updateLocationHeader();
+        if (activeMapInstance) activeMapInstance.setCenter(pos.lat, pos.lng);
+        renderCollectorsAndMap();
+        showToast("Location updated successfully! Accuracy: ~" + pos.accuracyMeters + "m", "success");
+    }).catch(function (err) {
+        showToast(err.message || "Failed to detect location.", "warning");
+    });
+}
+
+// Filter & Sort
+function setMaterialFilter(btn, mat) {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    btn.classList.add("active");
+    activeMaterialFilter = mat;
+    renderCollectorsAndMap();
+}
+
+function handleSearchInput() {
+    const input = document.getElementById("collectorSearchInput");
+    searchQuery = input ? input.value : "";
+    renderCollectorsAndMap();
+}
+
+function handleSortChange(selectEl) {
+    currentSort = selectEl.value;
+    renderCollectorsAndMap();
+}
+
+// Core Selection Action
+function selectCollector(id, name, vehicle, number, rating, distance) {
+    // 1. Immutable Selection Rule: Store selected collector in session
     sessionStorage.setItem("ekabadi_selected_collector", JSON.stringify({
-        id, name, vehicle, number, rating, distance
+        id: id,
+        name: name,
+        vehicle: vehicle,
+        number: number,
+        rating: rating,
+        distance: distance
     }));
-    showToast("Selected " + name + ". Proceeding to booking...", "success");
-    setTimeout(() => {
+
+    // 2. Persist confirmed pickup location in session
+    sessionStorage.setItem("ekabadi_pickup_location", JSON.stringify(currentCitizenLocation));
+
+    showToast("Selected " + name + ". Proceeding to booking confirmation...", "success");
+    setTimeout(function () {
         window.location.href = "pickup.html";
-    }, 500);
+    }, 450);
 }
 </script>
 </body>

@@ -42,6 +42,17 @@
             subTitle.textContent = `Order #${activePickup.id} • Citizen: ${activePickup.citizenName} • Scale #EKB-402 (Zero Calibrated)`;
         }
 
+        // Populate AI Estimate Banner if element exists
+        const aiEstDetailsEl = document.getElementById("aiEstimateDetails");
+        if (aiEstDetailsEl) {
+            if (activePickup.aiMetadata && activePickup.aiMetadata.detectedMaterial) {
+                const meta = activePickup.aiMetadata;
+                aiEstDetailsEl.textContent = `${meta.detectedMaterial} (~${meta.estimatedWeightKg || activePickup.estimatedWeight} kg • Est. ₹${meta.estimatedValue || activePickup.estimatedValue} • ${Math.round((meta.confidence || 0.95)*100)}% Match)`;
+            } else {
+                aiEstDetailsEl.textContent = `${activePickup.scrapType || "Mixed Scrap"} (~${activePickup.estimatedWeight || 0} kg • Est. ₹${Number(activePickup.estimatedValue || 0).toFixed(2)})`;
+            }
+        }
+
         // Initialize items from pickup or standard defaults
         if (activePickup.items && activePickup.items.length > 0) {
             itemsList = activePickup.items.map(it => ({

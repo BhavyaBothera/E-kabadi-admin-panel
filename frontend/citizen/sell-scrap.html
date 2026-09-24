@@ -207,12 +207,14 @@
 
             <!-- Right: AI Results Card -->
             <div class="ai-result-panel" id="aiResultCard">
-                <div class="ai-badge">✨ E-Kabaadi Neural Scrap Vision v2.4</div>
-                <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);margin-bottom:16px;">Analysis & Valuation Breakdown</h2>
+                <div class="ai-badge" id="aiBadgeContainer">
+                    ✨ E-Kabaadi Neural Scrap Vision <span id="aiConfidenceBadge" style="margin-left:6px;padding:2px 8px;border-radius:12px;font-size:11px;background:rgba(31,111,67,0.15);">95% Match</span>
+                </div>
+                <h2 style="font-size:18px;font-weight:800;color:var(--forest-deep);margin-bottom:16px;" id="aiAnalysisHeading">Analysis & Valuation Breakdown</h2>
 
                 <div class="scanner-loader" id="scannerLoader">
                     <div class="spinner"></div>
-                    <div style="font-weight:700;color:var(--forest-deep);margin-bottom:4px;">Scanning Material Contours & Density...</div>
+                    <div style="font-weight:700;color:var(--forest-deep);margin-bottom:4px;" id="loaderStatus">Scanning Material Contours & Density...</div>
                     <div style="font-size:13px;color:var(--text-muted);">Comparing against verified recycling commodity price index</div>
                 </div>
 
@@ -223,7 +225,7 @@
                             <span style="font-size:12px;color:var(--text-muted);">98% Match • Clean & Dry Grade A</span>
                         </div>
                         <div style="text-align:right;">
-                            <strong style="color:var(--forest);font-size:15px;display:block;">15.0 kg</strong>
+                            <strong style="color:var(--forest);font-size:15px;display:block;">15.0 kg (AI Estimate)</strong>
                             <span style="font-size:12px;color:var(--text-muted);">@ ₹14.00/kg = ₹210.00</span>
                         </div>
                     </div>
@@ -234,9 +236,20 @@
                             <span style="font-size:12px;color:var(--text-muted);">95% Match • Folded Cartons</span>
                         </div>
                         <div style="text-align:right;">
-                            <strong style="color:var(--forest);font-size:15px;display:block;">10.5 kg</strong>
+                            <strong style="color:var(--forest);font-size:15px;display:block;">10.5 kg (AI Estimate)</strong>
                             <span style="font-size:12px;color:var(--text-muted);">@ ₹11.50/kg = ₹120.75</span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- User Manual Correction Drawer -->
+                <div id="aiCorrectionBox" style="display:none;margin-top:14px;padding:14px;background:#fdfbf4;border:1px solid #ebd9b8;border-radius:10px;">
+                    <label style="font-size:12px;font-weight:700;color:var(--forest-deep);display:block;margin-bottom:6px;">
+                        ✏️ Correct Material Category:
+                    </label>
+                    <div style="display:flex;gap:8px;">
+                        <select id="correctionCategorySelect" style="flex:1;padding:8px 10px;border:1px solid #d4cbb8;border-radius:8px;font-size:13px;background:#fff;"></select>
+                        <button type="button" class="btn-secondary" onclick="applyUserCorrection()" style="padding:8px 14px;font-size:12px;">Apply</button>
                     </div>
                 </div>
 
@@ -247,15 +260,28 @@
                         <strong style="color:var(--forest-deep);font-size:16px;" id="aiTotalWeight">25.5 kg</strong>
                     </div>
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                        <span style="color:var(--text-muted);font-size:14px;">Total Estimated Cash</span>
+                        <span style="color:var(--text-muted);font-size:14px;">Estimated Payout (Doorstep Verification)</span>
                         <strong style="color:var(--forest);font-size:22px;" id="aiTotalCash">₹330.75</strong>
                     </div>
-                    <div style="font-size:12px;color:#96a19b;margin-bottom:16px;">
-                        *Final payout certified at door with digital scale. Zero deduction guaranteed.
+                    <div style="font-size:12px;color:#96a19b;margin-bottom:14px;" id="aiNoticeText">
+                        *AI estimate only. Final payout determined by collector's certified digital scale on doorstep.
                     </div>
-                    <button type="button" class="btn-primary" style="width:100%;justify-content:center;" onclick="proceedToBooking()">
-                        Confirm Lot & Book Collector →
-                    </button>
+                    <div style="display:flex;gap:8px;margin-bottom:8px;">
+                        <button type="button" class="btn-primary" style="flex:1;justify-content:center;" onclick="proceedToBooking()">
+                            Confirm Lot & Book Collector →
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="toggleCorrectionBox()" title="Correct Category" style="padding:10px 14px;font-size:13px;">
+                            ✏️ Edit
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="resetAiScanner()" title="Try Again" style="padding:10px 14px;font-size:13px;">
+                            ↻ Retry
+                        </button>
+                    </div>
+                    <div style="text-align:center;">
+                        <a href="#manualWeightSection" onclick="focusManualSection()" style="font-size:12px;color:var(--forest);font-weight:600;text-decoration:underline;">
+                            Or enter weights manually below ↓
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -367,12 +393,15 @@
 
 <script src="../data/mock-scrap.js"></script>
 <script src="../shared/js/storage.js"></script>
+<script src="../shared/js/ai-provider.js"></script>
 <script src="../shared/js/services.js"></script>
 <script src="../shared/js/router.js"></script>
 <script src="../shared/js/notifications.js"></script>
 <script src="../shared/js/utilities.js"></script>
 <script src="js/citizen-app.js"></script>
 <script>
+let activeAnalysis = null;
+
 const rates = {
     paper: 14.0,
     carton: 11.5,
@@ -389,6 +418,19 @@ let quantities = {
     brass: 0,
     ewaste: 0
 };
+
+function populateCorrectionDropdown() {
+    const select = document.getElementById("correctionCategorySelect");
+    if (!select || typeof scrapAnalysisService === "undefined") return;
+
+    const resolveFn = typeof resolveData === "function" ? resolveData : function(v, cb) { return (v && v.then) ? v.then(cb) : cb(v); };
+    resolveFn(scrapAnalysisService.getCategories(), function(cats) {
+        const list = Array.isArray(cats) ? cats : [];
+        select.innerHTML = list.map(c => `
+            <option value="${c.category}">${c.icon || "📦"} ${c.name} (₹${c.ratePerKg || c.rate}/kg)</option>
+        `).join("");
+    });
+}
 
 function updateTotals() {
     let totalWeight = 0;
@@ -418,73 +460,212 @@ function resetCalculator() {
     showToast("Calculator reset", "info");
 }
 
-// Demo quick-scan simulator
+function renderAiAnalysisResult(analysis) {
+    activeAnalysis = analysis;
+    const badge = document.getElementById("aiConfidenceBadge");
+    const heading = document.getElementById("aiAnalysisHeading");
+    const list = document.getElementById("aiItemsList");
+    const notice = document.getElementById("aiNoticeText");
+
+    if (badge) {
+        const pct = Math.round((analysis.confidence || 0.95) * 100);
+        const tier = (analysis.confidenceTier || "high").toUpperCase();
+        badge.textContent = `${pct}% Match • ${tier} Confidence`;
+        badge.style.background = analysis.confidence >= 0.85 ? "rgba(31,111,67,0.15)" : (analysis.confidence >= 0.65 ? "#fff3cd" : "#f8d7da");
+        badge.style.color = analysis.confidence >= 0.85 ? "var(--forest-deep)" : (analysis.confidence >= 0.65 ? "#856404" : "#721c24");
+    }
+
+    if (heading) {
+        heading.textContent = `AI Identification: ${analysis.detectedMaterial || analysis.category}`;
+    }
+
+    if (list) {
+        const items = (analysis.detectedItems && analysis.detectedItems.length) ? analysis.detectedItems : [{
+            material: analysis.detectedMaterial || analysis.category,
+            category: analysis.category,
+            weight: analysis.estimatedWeight,
+            rate: analysis.ratePerKg,
+            subtotal: analysis.estimatedValue,
+            confidence: analysis.confidence
+        }];
+
+        list.innerHTML = items.map(it => `
+            <div class="detected-item">
+                <div>
+                    <strong style="color:var(--forest-deep);font-size:14px;display:block;">${it.material || it.name}</strong>
+                    <span style="font-size:12px;color:var(--text-muted);">${Math.round((it.confidence || analysis.confidence) * 100)}% Match • ${analysis.condition || "Clean & Dry"}</span>
+                </div>
+                <div style="text-align:right;">
+                    <strong style="color:var(--forest);font-size:15px;display:block;">${Number(it.weight).toFixed(1)} kg (AI Estimate)</strong>
+                    <span style="font-size:12px;color:var(--text-muted);">@ ₹${Number(it.rate).toFixed(2)}/kg = ₹${Number(it.subtotal).toFixed(2)}</span>
+                </div>
+            </div>
+        `).join("");
+    }
+
+    if (notice) {
+        if (analysis.reviewRequired) {
+            notice.innerHTML = `<strong style="color:#b91c1c;">⚠️ Moderate confidence:</strong> Please inspect or edit the scrap category before proceeding. Doorstep digital scale reading is authoritative.`;
+        } else {
+            notice.innerHTML = `*AI estimate only. Final payout determined by collector's certified digital scale on doorstep.`;
+        }
+    }
+
+    // Sync quantities object
+    quantities = { paper: 0, carton: 0, plastic: 0, iron: 0, brass: 0, ewaste: 0 };
+    const catLower = (analysis.category || "").toLowerCase();
+    if (catLower.includes("paper")) quantities.paper = analysis.estimatedWeight;
+    else if (catLower.includes("cardboard") || catLower.includes("carton")) quantities.carton = analysis.estimatedWeight;
+    else if (catLower.includes("plastic")) quantities.plastic = analysis.estimatedWeight;
+    else if (catLower.includes("metal") || catLower.includes("iron")) quantities.iron = analysis.estimatedWeight;
+    else if (catLower.includes("brass")) quantities.brass = analysis.estimatedWeight;
+    else if (catLower.includes("e-waste") || catLower.includes("ewaste")) quantities.ewaste = analysis.estimatedWeight;
+    else quantities.paper = analysis.estimatedWeight;
+
+    for (const key of Object.keys(quantities)) {
+        const el = document.getElementById("qty-" + key);
+        if (el) el.textContent = quantities[key];
+    }
+
+    document.getElementById("aiTotalWeight").textContent = Number(analysis.estimatedWeight).toFixed(1) + " kg";
+    document.getElementById("aiTotalCash").textContent = "₹" + Number(analysis.estimatedValue).toFixed(2);
+    document.getElementById("basketWeight").textContent = Number(analysis.estimatedWeight).toFixed(1);
+    document.getElementById("basketCash").textContent = "₹" + Number(analysis.estimatedValue).toFixed(2);
+}
+
+// Sample button handler
 document.querySelectorAll(".sample-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-        const type = btn.dataset.sample;
+        const sampleType = btn.dataset.sample;
         const loader = document.getElementById("scannerLoader");
         const list = document.getElementById("aiItemsList");
 
         loader.style.display = "block";
         list.style.display = "none";
-        showToast("AI analyzing sample photograph...", "info");
+        showToast("Processing scrap image through AI Vision pipeline...", "info");
 
-        setTimeout(() => {
-            loader.style.display = "none";
-            list.style.display = "block";
-
-            if (type === "paper") {
-                quantities = { paper: 15, carton: 0, plastic: 0, iron: 0, brass: 0, ewaste: 0 };
-            } else if (type === "carton") {
-                quantities = { paper: 0, carton: 20, plastic: 0, iron: 0, brass: 0, ewaste: 0 };
-            } else if (type === "metal") {
-                quantities = { paper: 0, carton: 0, plastic: 0, iron: 6, brass: 2, ewaste: 0 };
-            } else if (type === "plastic") {
-                quantities = { paper: 0, carton: 0, plastic: 10, iron: 0, brass: 0, ewaste: 0 };
-            }
-
-            for (const key of Object.keys(quantities)) {
-                document.getElementById("qty-" + key).textContent = quantities[key];
-            }
-            updateTotals();
-            showToast("AI Detection complete: 98% confidence score", "success");
-        }, 800);
+        if (typeof scrapAnalysisService !== "undefined") {
+            scrapAnalysisService.analyzeImage(sampleType, { sample: sampleType }).then(result => {
+                loader.style.display = "none";
+                list.style.display = "block";
+                renderAiAnalysisResult(result);
+                showToast(`AI Identified: ${result.detectedMaterial} (${result.estimatedWeight} kg)`, "success");
+            }).catch(err => {
+                loader.style.display = "none";
+                list.style.display = "block";
+                showToast(err.message || "Failed to analyze scrap sample.", "danger");
+            });
+        }
     });
 });
 
-// File upload simulation
+// File upload handler
 document.getElementById("scrapPhotoInput")?.addEventListener("change", (e) => {
     if (e.target.files.length) {
         const file = e.target.files[0];
+
+        // Client-side image validation
+        if (typeof EKABADI_AI_PROVIDER !== "undefined") {
+            const validation = EKABADI_AI_PROVIDER.validateImageFile(file);
+            if (!validation.valid) {
+                showToast(validation.error, "danger");
+                e.target.value = "";
+                return;
+            }
+        }
+
         const loader = document.getElementById("scannerLoader");
         const list = document.getElementById("aiItemsList");
         loader.style.display = "block";
         list.style.display = "none";
-        showToast("Processing " + file.name + " through AI Vision...", "info");
+        showToast("Scanning " + file.name + " through Gemini Vision...", "info");
 
-        setTimeout(() => {
-            loader.style.display = "none";
-            list.style.display = "block";
-            quantities = { paper: 12, carton: 8, plastic: 4, iron: 0, brass: 0, ewaste: 0 };
-            for (const key of Object.keys(quantities)) {
-                document.getElementById("qty-" + key).textContent = quantities[key];
-            }
-            updateTotals();
-            showToast("Scrap image parsed successfully!", "success");
-        }, 1200);
+        if (typeof scrapAnalysisService !== "undefined") {
+            scrapAnalysisService.analyzeImage(file).then(result => {
+                loader.style.display = "none";
+                list.style.display = "block";
+                renderAiAnalysisResult(result);
+                showToast(`AI Identified: ${result.detectedMaterial} (~${result.estimatedWeight} kg)`, "success");
+            }).catch(err => {
+                loader.style.display = "none";
+                list.style.display = "block";
+                showToast(err.message || "Analysis failed. Please select category manually.", "danger");
+            });
+        }
     }
 });
 
+function toggleCorrectionBox() {
+    const box = document.getElementById("aiCorrectionBox");
+    if (!box) return;
+    if (box.style.display === "none" || !box.style.display) {
+        populateCorrectionDropdown();
+        box.style.display = "block";
+    } else {
+        box.style.display = "none";
+    }
+}
+
+function applyUserCorrection() {
+    const select = document.getElementById("correctionCategorySelect");
+    if (!select || !activeAnalysis) return;
+    const chosenCat = select.value;
+
+    if (typeof scrapAnalysisService !== "undefined") {
+        scrapAnalysisService.confirmAnalysis(activeAnalysis.id, { correctedCategory: chosenCat }).then(updated => {
+            renderAiAnalysisResult(updated);
+            toggleCorrectionBox();
+            showToast(`Category updated to ${updated.category}. Rate and value adjusted!`, "success");
+        }).catch(err => {
+            showToast("Failed to apply correction: " + err.message, "danger");
+        });
+    }
+}
+
+function resetAiScanner() {
+    const input = document.getElementById("scrapPhotoInput");
+    if (input) input.value = "";
+    const box = document.getElementById("aiCorrectionBox");
+    if (box) box.style.display = "none";
+    showToast("Ready for new photo capture.", "info");
+}
+
+function focusManualSection() {
+    const el = document.querySelector(".ui-card:has(.calculator-row)") || document.querySelector(".calculator-row");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+}
+
 function proceedToBooking() {
-    sessionStorage.setItem("ekabadi_scrap_basket", JSON.stringify({
+    const lotData = {
         quantities: quantities,
         weight: document.getElementById("basketWeight").textContent,
-        amount: document.getElementById("basketCash").textContent
-    }));
+        amount: document.getElementById("basketCash").textContent,
+        aiAnalysisId: activeAnalysis ? activeAnalysis.id : null,
+        aiMetadata: activeAnalysis ? {
+            analysisId: activeAnalysis.id,
+            detectedMaterial: activeAnalysis.detectedMaterial,
+            primaryCategory: activeAnalysis.category,
+            confidence: activeAnalysis.confidence,
+            confidenceTier: activeAnalysis.confidenceTier,
+            estimatedWeightKg: activeAnalysis.estimatedWeight,
+            appliedRate: activeAnalysis.ratePerKg,
+            estimatedValue: activeAnalysis.estimatedValue,
+            userConfirmed: true,
+            userCorrected: activeAnalysis.userCorrected || false
+        } : null
+    };
+
+    sessionStorage.setItem("ekabadi_scrap_basket", JSON.stringify(lotData));
+    if (activeAnalysis) {
+        sessionStorage.setItem("ekabadi_active_ai_analysis", JSON.stringify(activeAnalysis));
+    }
     window.location.href = "collectors.html";
 }
 
-updateTotals();
+document.addEventListener("DOMContentLoaded", () => {
+    updateTotals();
+    populateCorrectionDropdown();
+});
 </script>
 </body>
 </html>

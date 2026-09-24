@@ -90,6 +90,14 @@
                 return false;
             }
 
+            if (userStatus === "deactivated") {
+                if (typeof storage.clearSession === "function") storage.clearSession();
+                if (typeof window !== "undefined") {
+                    window.location.replace(`${prefix}auth/login.html?error=deactivated`);
+                }
+                return false;
+            }
+
             // 3. Role Authorization Guard
             const userRole = session.role || (session.user && session.user.role);
             if (allowedRole && userRole !== allowedRole) {

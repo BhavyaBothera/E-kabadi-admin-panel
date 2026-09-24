@@ -7,9 +7,17 @@ Thumbs.db
 .idea/
 *.swp
 
+# Node
+node_modules/
+package-lock.json
+
 # Local environment files
 .env
 .env.*
+!.env.example
+
+# Local config (contains Supabase keys)
+frontend/config/config.local.js
 
 # Logs
 *.log
@@ -17,3 +25,8 @@ Thumbs.db
 # Temporary files
 .tmp/
 tmp/
+scratch/
+
+# Supabase local
+.supabase/
+

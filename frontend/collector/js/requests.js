@@ -13,27 +13,39 @@
 
         if (typeof pickupService === "undefined") return;
 
-        const allPickups = pickupService.getAll();
-        // Pickups requested that are either specifically for this collector or unassigned in the sector
-        const requested = allPickups.filter(p => p.status === "requested" && (!p.collectorId || p.collectorId === collectorId));
         const container = document.getElementById("requestsListContainer");
         if (!container) return;
 
-        if (requested.length === 0) {
-            container.innerHTML = `
-                <div style="text-align:center;padding:60px 20px;background:#fff;border-radius:12px;border:1.5px dashed var(--border-subtle);">
-                    <span style="font-size:48px;display:block;margin-bottom:12px;">📡</span>
-                    <h3 style="font-size:18px;font-weight:800;color:var(--forest-deep);">No Pending Requests in Zone</h3>
-                    <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">
-                        Radar scanner active. You will receive an instant audio and visual alert when a citizen books scrap collection.
-                    </p>
-                    <div style="margin-top:20px;">
-                        <a href="dashboard.html" class="btn-secondary">Return to Cockpit</a>
-                    </div>
-                </div>
-            `;
-            return;
+        if (typeof UIStates !== "undefined" && typeof resolveData !== "undefined") {
+            UIStates.showLoading(container, "Scanning for pickup requests in your zone...");
         }
+
+        const resolveFn = typeof resolveData === "function" ? resolveData : function (v, cb) { return (v && v.then) ? v.then(cb) : cb(v); };
+
+        resolveFn(pickupService.getAll(), function (allPickups) {
+            if (typeof UIStates !== "undefined") {
+                UIStates.clearState(container);
+            }
+
+            const list = Array.isArray(allPickups) ? allPickups : [];
+            // Pickups requested that are either specifically for this collector or unassigned in the sector
+            const requested = list.filter(p => p.status === "requested" && (!p.collectorId || p.collectorId === collectorId));
+
+            if (requested.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:60px 20px;background:#fff;border-radius:12px;border:1.5px dashed var(--border-subtle);">
+                        <span style="font-size:48px;display:block;margin-bottom:12px;">📡</span>
+                        <h3 style="font-size:18px;font-weight:800;color:var(--forest-deep);">No Pending Requests in Zone</h3>
+                        <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">
+                            Radar scanner active. You will receive an instant audio and visual alert when a citizen books scrap collection.
+                        </p>
+                        <div style="margin-top:20px;">
+                            <a href="dashboard.html" class="btn-secondary">Return to Cockpit</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
 
         container.innerHTML = requested.map((p, idx) => {
             const weight = p.estimatedWeight || 0;
@@ -88,6 +100,7 @@
                 </div>
             `;
         }).join("");
+        });
     }
 
     let isAccepting = false;

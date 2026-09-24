@@ -1,0 +1,120 @@
+/* =========================================================
+   E-KABAADI PLATFORM
+   UI State Styles (Loading / Empty / Error)
+   File: frontend/shared/css/ui-states.css
+   ========================================================= */
+
+/* ── Container ── */
+.ui-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    min-height: 200px;
+    animation: uiStateFadeIn 0.3s ease;
+}
+
+@keyframes uiStateFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Loading Spinner ── */
+.ui-state-loading .ui-state-spinner {
+    margin-bottom: 1rem;
+}
+
+.ui-spinner-ring {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(46, 204, 113, 0.2);
+    border-top: 3px solid #2ecc71;
+    border-radius: 50%;
+    animation: uiSpinnerRotate 0.8s linear infinite;
+}
+
+@keyframes uiSpinnerRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.ui-state-loading .ui-state-text {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* ── Empty State ── */
+.ui-state-empty .ui-state-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.7;
+}
+
+.ui-state-empty .ui-state-text {
+    color: #95a5a6;
+    font-size: 1rem;
+    font-weight: 500;
+    max-width: 320px;
+    line-height: 1.5;
+}
+
+/* ── Error State ── */
+.ui-state-error .ui-state-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.ui-state-error .ui-state-text {
+    color: #e74c3c;
+    font-size: 0.95rem;
+    font-weight: 500;
+    max-width: 320px;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+/* ── Retry Button ── */
+.ui-state-retry-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+.ui-state-retry-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}
+
+.ui-state-retry-btn:active {
+    transform: translateY(0);
+}
+
+/* ── Dark mode support ── */
+@media (prefers-color-scheme: dark) {
+    .ui-state-loading .ui-state-text {
+        color: #bdc3c7;
+    }
+
+    .ui-state-empty .ui-state-text {
+        color: #7f8c8d;
+    }
+
+    .ui-state-error .ui-state-text {
+        color: #ff6b6b;
+    }
+
+    .ui-spinner-ring {
+        border-color: rgba(46, 204, 113, 0.15);
+        border-top-color: #2ecc71;
+    }
+}

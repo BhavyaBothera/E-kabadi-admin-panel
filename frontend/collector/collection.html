@@ -89,6 +89,15 @@
                         <button type="button" class="btn-secondary" onclick="addNewItemRow()" style="font-size:12px;padding:6px 12px;">+ Add Category</button>
                     </div>
 
+                    <!-- AI Estimate Reference Banner -->
+                    <div id="aiEstimateBanner" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fbfbf5;border:1px solid var(--border-subtle);border-radius:10px;margin-bottom:14px;font-size:13px;">
+                        <div>
+                            <span style="font-weight:700;color:var(--forest-deep);">✨ Citizen Estimate:</span>
+                            <span id="aiEstimateDetails" style="color:var(--text-muted);margin-left:6px;">Paper & Cardboard (~25.5 kg • Est. ₹330.75)</span>
+                        </div>
+                        <span class="status-pill info" style="font-size:11px;">Scale Measurement Authoritative</span>
+                    </div>
+
                     <div id="itemsContainer">
                         <!-- Line Item 1 -->
                         <div class="item-row" id="itemRow1">
@@ -185,6 +194,13 @@
 
 <div id="toastRoot" class="toast-container"></div>
 
+<script src="../config/config-loader.js"></script>
+<script src="../config/environment.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../shared/js/supabase-client.js"></script>
+<script src="../shared/js/supabase-adapter.js"></script>
+<script src="../shared/js/realtime.js"></script>
+<script src="../shared/js/ui-states.js"></script>
 <script src="../data/mock-users.js"></script>
 <script src="../data/mock-collectors.js"></script>
 <script src="../data/mock-scrap.js"></script>

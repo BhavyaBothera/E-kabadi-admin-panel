@@ -465,6 +465,7 @@
                                 pickup.type ||
                                 "Waste Pickup"
                             )}
+                            ${pickup.aiMetadata ? `<span class="badge" style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:10px;margin-left:4px;" title="AI Verified: ${escapeHTML(pickup.aiMetadata.detectedMaterial || '')} (${Math.round((pickup.aiMetadata.confidence || 0.95) * 100)}% Match)">✨ ${escapeHTML(pickup.aiMetadata.primaryCategory || 'AI')}</span>` : ''}
                         </span>
                     </div>
                 </td>

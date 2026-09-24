@@ -29,11 +29,26 @@
         ]
     };
 
+    let locationData = null;
+
     function initPickupForm() {
         // Load chosen collector from session
         try {
             const col = JSON.parse(sessionStorage.getItem("ekabadi_selected_collector") || "null");
             if (col && col.id) chosenCollector = col;
+        } catch (e) {}
+
+        // Load location from session
+        try {
+            const loc = JSON.parse(sessionStorage.getItem("ekabadi_pickup_location") || "null");
+            if (loc && loc.address) {
+                locationData = loc;
+                selectedAddress = loc.address;
+                const defAddr = document.querySelector(".address-card.selected div > div");
+                if (defAddr) {
+                    defAddr.textContent = loc.address;
+                }
+            }
         } catch (e) {}
 
         const colNameEl = document.getElementById("bookColName");
@@ -52,6 +67,8 @@
                 if (basket.weight) basketData.weight = Number(basket.weight);
                 if (basket.amount) basketData.amount = Number(basket.amount.replace("₹", "")) || 330.75;
                 if (basket.items) basketData.items = basket.items;
+                if (basket.aiAnalysisId) basketData.aiAnalysisId = basket.aiAnalysisId;
+                if (basket.aiMetadata) basketData.aiMetadata = basket.aiMetadata;
             }
         } catch (e) {}
 
@@ -119,12 +136,18 @@
                 collectorId: chosenCollector.id,
                 collectorName: chosenCollector.name,
                 address: selectedAddress,
+                pickupAddressSnapshot: selectedAddress,
+                pickupLatitude: locationData ? locationData.latitude : null,
+                pickupLongitude: locationData ? locationData.longitude : null,
+                pickupLocality: locationData ? locationData.locality : null,
                 scheduledDate: selectedDate === "Today" ? new Date().toISOString().split("T")[0] : selectedDate,
                 scheduledTime: selectedSlot,
                 scrapType: basketData.items && basketData.items.length ? basketData.items.map(i => i.name || i.category).join(", ") : "Paper & Cardboard",
                 items: basketData.items || [],
                 estimatedWeight: basketData.weight,
                 estimatedValue: basketData.amount,
+                aiAnalysisId: basketData.aiAnalysisId || null,
+                aiMetadata: basketData.aiMetadata || null,
                 paymentMethod: "UPI"
             });
 

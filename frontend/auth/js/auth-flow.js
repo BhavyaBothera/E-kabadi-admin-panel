@@ -40,6 +40,15 @@
         const errorEl = document.getElementById("loginError");
         const submitBtn = document.getElementById("loginBtn");
 
+        if (typeof window !== "undefined" && window.location.search) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get("error") === "suspended") {
+                showError("Your account has been suspended by administration.");
+            } else if (urlParams.get("error") === "deactivated") {
+                showError("Your account has been deactivated. Please contact support.");
+            }
+        }
+
         loginForm.addEventListener("submit", (e) => {
             e.preventDefault();
             errorEl.classList.remove("show");
@@ -62,31 +71,42 @@
                     return;
                 }
 
-                const result = authService.login(email, password);
+                Promise.resolve(authService.login(email, password)).then(result => {
+                    if (!result) {
+                        showError("Login failed. Please check credentials.");
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove("loading");
+                        return;
+                    }
 
-                if (result.success) {
-                    showToast("Welcome back!", "success");
-                    setTimeout(() => {
-                        if (result.role === "admin") {
-                            window.location.href = "../admin/dashboard.html";
-                        } else if (result.role === "citizen") {
-                            window.location.href = "../citizen/dashboard.html";
-                        } else if (result.role === "collector") {
-                            window.location.href = "../collector/dashboard.html";
+                    if (result.success) {
+                        showToast("Welcome back!", "success");
+                        setTimeout(() => {
+                            if (result.role === "admin") {
+                                window.location.href = "../admin/dashboard.html";
+                            } else if (result.role === "citizen") {
+                                window.location.href = "../citizen/dashboard.html";
+                            } else if (result.role === "collector") {
+                                window.location.href = "../collector/dashboard.html";
+                            }
+                        }, 500);
+                    } else {
+                        showError(result.error || "Login failed");
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove("loading");
+
+                        if (result.status === "pending" || result.status === "pending_approval") {
+                            setTimeout(() => { window.location.href = "pending.html"; }, 1500);
                         }
-                    }, 500);
-                } else {
-                    showError(result.error);
+                        if (result.status === "rejected") {
+                            setTimeout(() => { window.location.href = "rejected.html"; }, 1500);
+                        }
+                    }
+                }).catch(err => {
+                    showError(err && err.message ? err.message : "An error occurred during login.");
                     submitBtn.disabled = false;
                     submitBtn.classList.remove("loading");
-
-                    if (result.status === "pending") {
-                        setTimeout(() => { window.location.href = "pending.html"; }, 1500);
-                    }
-                    if (result.status === "rejected") {
-                        setTimeout(() => { window.location.href = "rejected.html"; }, 1500);
-                    }
-                }
+                });
             }, 600);
         });
 
@@ -304,8 +324,10 @@
 
             setTimeout(() => {
                 if (typeof authService !== "undefined") {
-                    const result = authService.registerUser({
+                    const userData = {
                         name: (formData.firstName || "") + " " + (formData.surname || ""),
+                        firstName: formData.firstName || "New",
+                        lastName: formData.surname || "User",
                         email: formData.email,
                         phone: formData.phone,
                         password: formData.password,
@@ -316,11 +338,12 @@
                             state: formData.state,
                             pin: formData.pin
                         }
-                    });
-                    if (result.success) {
+                    };
+
+                    const handleSuccess = (result) => {
                         try {
                             sessionStorage.setItem("ekabadi_last_application", JSON.stringify({
-                                applicationId: result.applicationId || "APP-CIT-78192",
+                                applicationId: (result && result.applicationId) || "APP-CIT-78192",
                                 name: (formData.firstName || "") + " " + (formData.surname || ""),
                                 email: formData.email,
                                 phone: formData.phone,
@@ -328,9 +351,30 @@
                             }));
                         } catch (e) {}
                         window.location.href = "pending.html";
+                    };
+
+                    const isSupabase = typeof authService.isSupabaseMode === "function" && authService.isSupabaseMode();
+                    if (isSupabase && typeof authService.signupWithSupabase === "function") {
+                        authService.signupWithSupabase(userData).then(res => {
+                            if (res.success) {
+                                handleSuccess(res);
+                            } else {
+                                showToast(res.error || "Registration failed", "error");
+                                if (btn) { btn.disabled = false; btn.classList.remove("loading"); }
+                            }
+                        }).catch(err => {
+                            showToast(err.message || "Registration error", "error");
+                            if (btn) { btn.disabled = false; btn.classList.remove("loading"); }
+                        });
+                        return;
+                    }
+
+                    const result = authService.registerUser(userData);
+                    if (result.success) {
+                        handleSuccess(result);
                         return;
                     } else {
-                        showToast(result.error, "error");
+                        showToast(result.error || "Registration failed", "error");
                     }
                 } else {
                     window.location.href = "pending.html";
@@ -475,19 +519,57 @@
                 if (btn) { btn.disabled = true; btn.classList.add("loading"); }
                 setTimeout(() => {
                     let appId = "APP-COL-" + Math.floor(10000 + Math.random() * 90000);
-                    if (typeof authService !== "undefined") {
-                        const res = authService.registerUser({
-                            name: (formData.firstName || "") + " " + (formData.surname || ""),
-                            email: formData.email, phone: formData.phone,
-                            password: formData.password, role: "collector",
-                            collectorType: formData.collectorType,
-                            vehicleType: formData.vehicleType,
-                            vehicleNumber: formData.vehicleNumber,
-                            scrapCategories: formData.scrapCategories,
-                            serviceRadius: formData.serviceRadius
-                        });
+                    const collectorData = {
+                        name: (formData.firstName || "") + " " + (formData.surname || ""),
+                        firstName: formData.firstName || "New",
+                        lastName: formData.surname || "Collector",
+                        email: formData.email,
+                        phone: formData.phone,
+                        password: formData.password,
+                        role: "collector",
+                        collectorType: formData.collectorType,
+                        vehicleType: formData.vehicleType,
+                        vehicleNumber: formData.vehicleNumber,
+                        scrapCategories: formData.scrapCategories,
+                        serviceRadius: formData.serviceRadius
+                    };
+
+                    const handleCollectorSuccess = (res) => {
                         if (res && res.applicationId) appId = res.applicationId;
+                        try {
+                            sessionStorage.setItem("ekabadi_last_application", JSON.stringify({
+                                applicationId: appId,
+                                name: (formData.firstName || "") + " " + (formData.surname || ""),
+                                email: formData.email,
+                                phone: formData.phone,
+                                role: "collector"
+                            }));
+                        } catch (e) {}
+                        window.location.href = "pending.html";
+                    };
+
+                    if (typeof authService !== "undefined") {
+                        const isSupabase = typeof authService.isSupabaseMode === "function" && authService.isSupabaseMode();
+                        if (isSupabase && typeof authService.signupWithSupabase === "function") {
+                            authService.signupWithSupabase(collectorData).then(res => {
+                                if (res.success) {
+                                    handleCollectorSuccess(res);
+                                } else {
+                                    showToast(res.error || "Registration failed", "error");
+                                    if (btn) { btn.disabled = false; btn.classList.remove("loading"); }
+                                }
+                            }).catch(err => {
+                                showToast(err.message || "Registration error", "error");
+                                if (btn) { btn.disabled = false; btn.classList.remove("loading"); }
+                            });
+                            return;
+                        }
+
+                        const res = authService.registerUser(collectorData);
+                        handleCollectorSuccess(res);
+                        return;
                     }
+
                     try {
                         sessionStorage.setItem("ekabadi_last_application", JSON.stringify({
                             applicationId: appId,

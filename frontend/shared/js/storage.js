@@ -121,6 +121,37 @@
                     createdAt: "2025-12-11T10:00:00Z"
                 }
             ],
+            aiAnalyses: [],
+            citizenSavedLocations: [
+                {
+                    id: "LOC-101",
+                    citizenId: "CIT-1001",
+                    label: "Home",
+                    addressLine: "Flat B-402, Green Valley Apartments, Sector 62",
+                    locality: "Sector 62, Noida",
+                    city: "Noida",
+                    state: "Uttar Pradesh",
+                    postalCode: "201309",
+                    latitude: 28.6208,
+                    longitude: 77.3639,
+                    isDefault: true,
+                    createdAt: "2026-01-14T12:00:00Z"
+                },
+                {
+                    id: "LOC-102",
+                    citizenId: "CIT-1001",
+                    label: "Office",
+                    addressLine: "Tower 3, Logix Cyber Park, Sector 62",
+                    locality: "Sector 62, Noida",
+                    city: "Noida",
+                    state: "Uttar Pradesh",
+                    postalCode: "201309",
+                    latitude: 28.6235,
+                    longitude: 77.3680,
+                    isDefault: false,
+                    createdAt: "2026-02-01T10:00:00Z"
+                }
+            ],
             version: "2.0.0"
         };
     }
@@ -172,6 +203,12 @@
             const collection = this.getCollection(collectionName);
             const index = collection.findIndex(item => item.id === id);
             if (index === -1) return null;
+
+            // Security Rule: Selected collector is strictly immutable once pickup is created
+            if (collectionName === "pickups" && updates.collectorId && updates.collectorId !== collection[index].collectorId) {
+                throw new Error("Security violation: Selected collector is immutable and cannot be reassigned once pickup is created.");
+            }
+
             const updated = { ...collection[index], ...updates, updatedAt: new Date().toISOString() };
             collection[index] = updated;
             this.saveCollection(collectionName, collection, "update");
@@ -187,7 +224,12 @@
 
         // Session Handling
         getSession() {
-            return safeParse(localStorage.getItem(SESSION_KEY), null);
+            var session = safeParse(localStorage.getItem(SESSION_KEY), null);
+            if (session && session.expiresAt && Date.now() > new Date(session.expiresAt).getTime()) {
+                this.clearSession();
+                return null;
+            }
+            return session;
         },
 
         setSession(session) {
@@ -323,9 +365,81 @@
         }
     };
 
+    /* =========================================================
+       ADAPTER FACTORY — Mode-Aware Selection
+       Checks EKABADI_ENV.DATA_MODE:
+         "mock"     → localStorage StateAdapter (default)
+         "supabase" → SupabaseAdapter (from supabase-adapter.js)
+       ========================================================= */
+
+    var activeAdapter = StateAdapter; // Default to localStorage
+
+    // Check if Supabase mode is requested
+    (function selectAdapter() {
+        var env = (typeof self !== "undefined" && self.EKABADI_ENV) ? self.EKABADI_ENV : null;
+        if (!env && typeof self !== "undefined" && self.__EKABADI_CONFIG__) {
+            env = self.__EKABADI_CONFIG__;
+        }
+        if (!env && typeof require === "function") {
+            try {
+                env = require("../../config/environment");
+            } catch (e) {}
+        }
+        if (env && env.DATA_MODE === "supabase") {
+            var supabaseAdapter = (typeof self !== "undefined" && self.EKABADI_SUPABASE_ADAPTER) 
+                ? self.EKABADI_SUPABASE_ADAPTER 
+                : null;
+            if (!supabaseAdapter && typeof require === "function") {
+                try {
+                    supabaseAdapter = require("./supabase-adapter");
+                } catch (e) {}
+            }
+            if (supabaseAdapter) {
+                activeAdapter = supabaseAdapter;
+                if (typeof console !== "undefined") {
+                    console.info("[E-Kabaadi Storage] Using SupabaseAdapter");
+                }
+            } else {
+                if (typeof console !== "undefined") {
+                    console.warn("[E-Kabaadi Storage] Supabase mode requested but SupabaseAdapter not loaded. Falling back to localStorage.");
+                }
+            }
+        } else {
+            if (typeof console !== "undefined") {
+                console.info("[E-Kabaadi Storage] Using localStorage StateAdapter (mock mode)");
+            }
+        }
+    })();
+
     return {
-        adapter: StateAdapter,
+        get adapter() {
+            return activeAdapter;
+        },
+        setAdapter: function (adapter) {
+            if (adapter) activeAdapter = adapter;
+        },
+        setMode: function (mode) {
+            if (mode === "supabase") {
+                var sbAdapter = (typeof self !== "undefined" && self.EKABADI_SUPABASE_ADAPTER) ? self.EKABADI_SUPABASE_ADAPTER : null;
+                if (!sbAdapter && typeof require === "function") {
+                    try { sbAdapter = require("./supabase-adapter"); } catch (e) {}
+                }
+                if (sbAdapter) {
+                    activeAdapter = sbAdapter;
+                    return true;
+                }
+                return false;
+            } else {
+                activeAdapter = StateAdapter;
+                return true;
+            }
+        },
+        mockAdapter: StateAdapter,       // Always available for tests/fallback
         legacyApi,
-        getSeedDatabase
+        getSeedDatabase,
+        getActiveMode: function () {
+            return activeAdapter === StateAdapter ? "mock" : "supabase";
+        }
     };
 }));
+
